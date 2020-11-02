@@ -1,0 +1,676 @@
+﻿@using Models.MemberModels
+@model Models.MemberModels.CMember
+@{
+    ViewBag.Title = "MemberSetup";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+    DateTime MyDate = member.fBirthDay;
+    string MemberDate = MyDate.ToString("yyyy-MM-dd");
+}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<style>
+    /* 彈出畫面+灰底 */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    .modalTrue {
+        display: block;
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    /* 白色視窗 */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 25%;
+        height: 65%
+    }
+
+    /* The Close Button */
+    .close {
+        color: #7B7B7B;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close2 {
+        color: #7B7B7B;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    body {
+        background-color: #F4EFEB;
+        font-family: 'Ubuntu', sans-serif;
+    }
+
+    .main {
+        background-color: #FFFFFF;
+        width: 650px;
+        height: 530px;
+        margin: 7em auto;
+        border-radius: 1.5em;
+        box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+        margin-top: 10px;
+        padding-left: 50px;
+        padding-top:20px
+    }
+
+    .mainImg {
+        background-color: #FFFFFF;
+        width: 300px;
+        height: 280px;
+        margin: 7em auto;
+        border-radius: 1.5em;
+        box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+        margin-top: 20px;
+        margin-bottom: 0px;
+        padding-top: 15px
+    }
+
+    .sign {
+        padding-top: 40px;
+        color: #8C55AA;
+        font-family: 'Ubuntu', sans-serif;
+        font-weight: bold;
+        font-size: 23px;
+    }
+
+    .un {
+        width: 76%;
+        color: rgb(38, 50, 56);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+        background: rgba(136, 126, 126, 0.04);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0.02);
+        margin-bottom: 50px;
+        margin-left: 46px;
+        text-align: center;
+        margin-bottom: 27px;
+        font-family: 'Ubuntu', sans-serif;
+    }
+
+    form.form1 {
+        padding-top: 40px;
+    }
+
+    .pass {
+        width: 76%;
+        color: rgb(38, 50, 56);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+        background: rgba(136, 126, 126, 0.04);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0.02);
+        margin-bottom: 50px;
+        margin-left: 46px;
+        text-align: center;
+        margin-bottom: 27px;
+        font-family: 'Ubuntu', sans-serif;
+    }
+
+
+        .un:focus, .pass:focus {
+            border: 2px solid rgba(0, 0, 0, 0.18) !important;
+        }
+
+    .submit {
+        cursor: pointer;
+        border-radius: 5em;
+        color: #fff;
+        background: linear-gradient(to right, #65C2C6, #A1C3C7 );
+        border: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        font-family: 'Ubuntu', sans-serif;
+        box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+        width:535px;
+    }
+</style>
+
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <title>Sign in</title>
+</head>
+
+@if (ViewBag.PasswordTrue == "密碼相符")
+{
+    <form method="post" id="Form_Edit_Password2">
+        @Html.AntiForgeryToken()
+        <!-- 彈出的視窗-->
+        <div class="modalTrue" id="modalTrue">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header" style="display:contents;text-align:center">
+                    <span class="close" style="text-align:right">&times;</span>
+                    <h4 align="center" style="font-weight:900">變更密碼</h4>
+                </div>
+                <div class="modal-footer" align="center" style="padding-top:5px">
+                    <p style="line-height: 34px; height: 34px; width: 80px; margin-bottom: 0px;margin-right:215px">新密碼:</p>
+                    <input Value="" class="input-validation-error form-control text-box single-line" minlength="5" maxlength="15" id="NewfPassword" name="NewfPassword" style="margin-left:10%" type="password" value="" required autofocus />
+
+                </div>
+
+                <div class="modal-footer" align="center" style="padding-top:5px">
+                    <p style="line-height: 34px; height: 34px; width: 80px; margin-bottom: 0px;margin-right:200px">確認新密碼:</p>
+                    <input Value="" class="input-validation-error form-control text-box single-line" minlength="5" maxlength="15" id="ChackNewfPassword" name="ChackNewfPassword" style="margin-left:10%" type="password" value="" required />
+                    @if (ViewBag.Error == "!與上方密碼不相符")
+                    {
+                        <p style="line-height: 34px; height: 34px; width:160px; margin-bottom: 0px;margin-left:0px ;color:red;margin-right: 70px;font-family: 'cwTeXYen', sans-serif;font-weight:900">！與上方密碼不相符</p>
+                    }
+                    else if (ViewBag.Error == "!新密碼與舊密碼相符")
+                    {
+                        <p style="line-height: 34px; height: 34px; width:200px; margin-bottom: 0px;margin-left:0px ;color:red;margin-right: 75px;font-family: 'cwTeXYen', sans-serif;font-weight:900">！新密碼與舊密碼相符</p>
+                    }
+                    else if (ViewBag.Error == "!不可為空，請輸入密碼")
+                    {
+                        <p style="line-height: 34px; height: 34px; width:100px; margin-bottom: 0px;margin-left:0px ;color:red;margin-right: 80px;font-family: 'cwTeXYen', sans-serif;font-weight:900">！不可為空，請輸入密碼</p>
+
+                    }
+                    else if (ViewBag.Error == "!密碼請符合，5字元-15字元之間")
+                    {
+                        <p style="line-height: 34px; height: 34px; width:100px; margin-bottom: 0px;margin-left:0px ;color:red;margin-right: 90px;font-family: 'cwTeXYen', sans-serif;font-weight:900">！密碼請符合，5字元-15字元之間</p>
+
+                    }
+                    else
+                    {
+                        <p style="line-height: 34px; height: 34px; width: 80%; margin-bottom: 0px;"></p>
+                    }
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10" align="right" style="padding-top:15px;padding-bottom:15px ">
+                        <input type="submit" value="修改" class="btn btn-primary" name="EditorPassword" onclick="fn更換密碼()"style="width: 300px;width: 279.5px;margin-left: 35px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+@if (ViewBag.Passwordfalse == "密碼不符")
+{
+<section class="p-lr-15 p-t-92">
+    <form method="post" enctype="multipart/form-data" action="MemberImage" class="mainImg">
+        <img src="@member.fPhoto" width="200" height="200" style="margin-left:50px; margin-bottom: 20px;" id="MemberPhoto" />
+        <label class="btn btn-info" style="margin-left:105px ; margin-bottom:20px" id="ImageLabel">
+            <input type="file" id="MemberImage" name="MemberImage" onchange="upload()" style="display: none;" accept="Image/*" onclick="ImageEdit()" />
+            <i>上傳相片</i>
+        </label>
+        <input style="display:none;margin-left:105px" type="submit" value="確定上傳" class="btn btn-primary" id="ImageYes" />
+    </form>
+
+    <form method="post" id="Form_Edit" enctype="multipart/form-data" class="main">
+        <div class="form-horizontal">
+            <div class="form-group" style="float:left">
+                <label class="control-label col-md-2" for="fFirstName" style="display:inline">姓氏:</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fFirstName, new { htmlAttributes = new { @class = "form-control", @Value = member.fFirstName, @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.fFirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group" style="float:right">
+                @Html.LabelFor(model => model.fLastName, "名字:", htmlAttributes: new { @class = "control-label col-md-2", @style = "display:inline" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fLastName, new { htmlAttributes = new { @class = "form-control", @Value = member.fLastName, @readonly = "readonly", @style = "width:220px;margin-right:60px" } })
+                    @Html.ValidationMessageFor(model => model.fLastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group" style="float:left">
+                @Html.LabelFor(model => model.fTheNickName, "暱稱:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fTheNickName, new { htmlAttributes = new { @class = "form-control", @Value = member.fTheNickName } })
+                    @Html.ValidationMessageFor(model => model.fTheNickName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            @if (member.fGender == "M")
+            {
+                <div class="form-group" style="float:right;width: 245px;height: 60px;">
+                    @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline;display:inline;right: 50px;" })
+                    <div class="col-md-10" style="float: right; padding-left: 20px; width: 180px; margin-top: 20px;">
+                        @Html.RadioButton("fGender", "F")女(F)
+                    </div>
+                    <div class="col-md-10" style="float:left;width: 65px;">
+                        @Html.RadioButton("fGender", "M", true)男(M)
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group" style="float:right;width: 245px;height: 60px;">
+                    @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                    <div class="col-md-10" style="display:inline">
+                        @Html.RadioButton("fGender", "M")男(M)
+                        @Html.RadioButton("fGender", "F", true)女(F)
+                    </div>
+                </div>
+            }
+
+            <div class="form-group" style="float:left;width: 245px;">
+                @Html.LabelFor(model => model.fBirthDay, "出生日期:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                <div class="col-md-10">
+                    <input class="form-control" data-val="true" data-val-date="欄位 fBirthDay 必須是日期。" data-val-required="!請點選您的出生日期"
+                           type="date" id="fBirthDay" name="fBirthDay" value="@MemberDate" max="@DateTime.UtcNow.AddHours(08)" />
+                    @Html.ValidationMessageFor(model => model.fBirthDay, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group" style="float:right">
+                @Html.LabelFor(model => model.fAccount, "信箱:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fAccount, new { htmlAttributes = new { @class = "form-control", @Value = member.fAccount, @readonly = "readonly", @style = "width:220px;margin-right:60px" } })
+                    @Html.ValidationMessageFor(model => model.fAccount, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group" style="float:left">
+                @Html.LabelFor(model => model.fPassword, "密碼:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                <div class="col-md-10" style="width: 245px;">
+                    <input class="form-control text-box single-line" id="fPassword" name="fPassword" readonly="readonly" type="password" value="@member.fPassword" />
+                </div>
+                <a href="#" onclick="WindForm()" style="line-height:34px; height: 34px;margin-left:75px">更換密碼</a>
+            </div>
+            <div class="form-group" style="float:right">
+                @Html.LabelFor(model => model.fMobilePhone, "手機:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fMobilePhone, new { htmlAttributes = new { @class = "form-control", @Value = member.fMobilePhone, @style = "width:220px;margin-right:60px" } })
+                    @Html.ValidationMessageFor(model => model.fMobilePhone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.fTheAddress, "地址:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.fTheAddress, new { htmlAttributes = new { @class = "form-control", @Value = member.fTheAddress, @style = "width:530px" } })
+                    @Html.ValidationMessageFor(model => model.fTheAddress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" value="修改" class="submit" OnClick="fn彈出視窗()" name="EditorMember" style="font-family: 'cwTeXYen', sans-serif;font-size:18px;font-weight:900;" />
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+    <form method="post" id="Form_Edit_Password">
+        <!-- 彈出的視窗-->
+        <div class="modalTrue">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header" style="display:contents;text-align:center">
+                    <span class="close" style="text-align:right" onclick="CloseForm()">&times;</span>
+                    <h1 align="center">Note$edge</h1>
+                    <h4 align="center">變更密碼</h4>
+                </div>
+
+                <div class="modal-body" align="center">
+                    @Html.EditorFor(model => model.fAccount, new { htmlAttributes = new { @class = "form-control", @Value = member.fAccount, @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.fAccount, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="modal-footer" align="center" style="padding-top:5px;padding-bottom:0px">
+                    <p style="margin-right:40px">如要繼續操作，請先驗證您的身分</p>
+                    <p style="margin-right:260px">舊密碼:</p>
+                    <input class="form-control text-box single-line" minlength="5" maxlength="15" id="NewfPassword" name="NewfPassword" type="password" value="" required autofocus />
+                    @if (ViewBag.Error == "!密碼不符")
+                    {
+                        <p style="color:red;margin-right:125px;font-weight:900;font-family:標楷體">！密碼不符</p>
+                    }
+                    else if (ViewBag.Error == "!密碼請符合，5字元-15字元之間")
+                    {
+                        <p style="">！密碼請符合，5字元-15字元之間</p>
+                    }
+                    else
+                    {
+                        <p style="">！不可為空，請輸入密碼</p>
+                    }
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10" style="padding-right:50px;padding-top:15px;padding-bottom:15px ">
+                        <input type="submit" value="驗證" class="btn btn-primary" name="EditorPassword" OnClick="fn確認密碼()" style="width: 315px"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+}
+else
+{
+    <section class="p-lr-15 p-t-92">
+        <form method="post" enctype="multipart/form-data" action="MemberImage" class="mainImg">
+            <img src="@member.fPhoto" width="200" height="200" style="margin-left:50px; margin-bottom: 20px;" id="MemberPhoto" />
+            <label class="btn btn-info" style="margin-left:105px ; margin-bottom:20px" id="ImageLabel">
+                <input type="file" id="MemberImage" name="MemberImage" onchange="upload()" style="display: none;" accept="Image/*" onclick="ImageEdit()" />
+                <i>上傳相片</i>
+            </label>
+            <input style="display:none;margin-left:105px" type="submit" value="確定上傳" class="btn btn-primary" id="ImageYes" />
+        </form>
+
+        <form method="post" id="Form_Edit" enctype="multipart/form-data" class="main">
+            <div class="form-horizontal">
+                <div class="form-group" style="float:left">
+                    <label class="control-label col-md-2" for="fFirstName" style="display:inline">姓氏:</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fFirstName, new { htmlAttributes = new { @class = "form-control", @Value = member.fFirstName, @readonly = "readonly" } })
+                        @Html.ValidationMessageFor(model => model.fFirstName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="float:right">
+                    @Html.LabelFor(model => model.fLastName, "名字:", htmlAttributes: new { @class = "control-label col-md-2", @style = "display:inline" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fLastName, new { htmlAttributes = new { @class = "form-control", @Value = member.fLastName, @readonly = "readonly" ,@style= "width:220px;margin-right:60px" } })
+                        @Html.ValidationMessageFor(model => model.fLastName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="float:left">
+                    @Html.LabelFor(model => model.fTheNickName, "暱稱:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fTheNickName, new { htmlAttributes = new { @class = "form-control", @Value = member.fTheNickName } })
+                        @Html.ValidationMessageFor(model => model.fTheNickName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                @if (member.fGender == "M")
+                {
+                    <div class="form-group" style="float:right;width: 245px;height: 60px;">
+                        @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline;display:inline;right: 50px;"})
+                        <div class="col-md-10" style="float: right; padding-left: 20px; width: 180px; margin-top: 20px;">
+                            @Html.RadioButton("fGender", "F")女(F)
+                        </div>
+                        <div class="col-md-10" style="float:left;width: 65px;">
+                            @Html.RadioButton("fGender", "M", true)男(M)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group" style="float:right;width: 245px;height: 60px;">
+                        @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                        <div class="col-md-10" style="display:inline">
+                            @Html.RadioButton("fGender", "M")男(M)
+                            @Html.RadioButton("fGender", "F", true)女(F)
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group" style="float:left;width: 245px;">
+                    @Html.LabelFor(model => model.fBirthDay, "出生日期:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                    <div class="col-md-10">
+                        <input class="form-control" data-val="true" data-val-date="欄位 fBirthDay 必須是日期。" data-val-required="!請點選您的出生日期"
+                               type="date" id="fBirthDay" name="fBirthDay" value="@MemberDate" max="@DateTime.UtcNow.AddHours(08)" />
+                        @Html.ValidationMessageFor(model => model.fBirthDay, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="float:right">
+                    @Html.LabelFor(model => model.fAccount, "信箱:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fAccount, new { htmlAttributes = new { @class = "form-control", @Value = member.fAccount, @readonly = "readonly", @style = "width:220px;margin-right:60px" } })
+                        @Html.ValidationMessageFor(model => model.fAccount, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="float:left">
+                    @Html.LabelFor(model => model.fPassword, "密碼:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                    <div class="col-md-10" style="width: 245px;">
+                        <input class="form-control text-box single-line" id="fPassword" name="fPassword" readonly="readonly" type="password" value="@member.fPassword" />
+                    </div>
+                    <a href="#" onclick="WindForm()" style="line-height:34px; height: 34px;margin-left:75px">更換密碼</a>
+                </div>
+                <div class="form-group" style="float:right">
+                    @Html.LabelFor(model => model.fMobilePhone, "手機:", htmlAttributes: new { @class = "control-label col-md-2", style = "display:inline" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fMobilePhone, new { htmlAttributes = new { @class = "form-control", @Value = member.fMobilePhone , @style = "width:220px;margin-right:60px" } })
+                        @Html.ValidationMessageFor(model => model.fMobilePhone, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.fTheAddress, "地址:", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.fTheAddress, new { htmlAttributes = new { @class = "form-control", @Value = member.fTheAddress ,@style= "width:530px"} })
+                        @Html.ValidationMessageFor(model => model.fTheAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="修改" class="submit" OnClick="fn彈出視窗()" name="EditorMember" style="font-family: 'cwTeXYen', sans-serif;font-size:18px;font-weight:900;"/>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <form method="post" id="Form_Edit_Password">
+        <!-- 彈出的視窗-->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header" style="display:contents;text-align:center">
+                    <span class="close2" onclick="CloseForm()" style="text-align:right">&times;</span>
+                    <h1>Note$edge</h1>
+                    <h4>變更密碼</h4>
+                </div>
+                <div class="modal-body" align="center">
+                    @Html.EditorFor(model => model.fAccount, new { htmlAttributes = new { @class = "form-control", @Value = member.fAccount, @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.fAccount, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="modal-footer" align="center" style="padding-top:5px">
+                    <p style="margin-right:40px">如要繼續操作，請先驗證您的身分</p>
+                    <p style="margin-right:260px">舊密碼:</p>
+                    <input class="form-control text-box single-line" minlength="5" maxlength="15" id="NewfPassword" name="NewfPassword" type="password" value="" required autofocus />
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10"style="padding-right:50px;padding-top:15px;padding-bottom:15px;">
+                        <input type="submit" value="驗證" class="btn btn-primary" name="EditorPassword" OnClick="fn確認密碼()" style="width: 315px" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+}
+
+<script>
+    function fn彈出視窗() {
+        Swal.fire({
+            title: '您確定要修改嗎?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: "取消",
+            confirmButtonText: '確定',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var data = $("#Form_Edit").serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "/Member/MemberSetup",
+                    data: data,
+                    success: function (data) {
+                        var status = data;
+                        //var statue = JSON.Parse(data)  JSON
+                        if (status == "修改成功") {
+                            Swal.fire(
+                                status,
+                                '',
+                                'success'
+                            )
+                            return;
+                        };
+                        if (status == "修改失敗") {
+                            Swal.fire(
+                                status,
+                                '',
+                                'error'
+                            )
+                            return;
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    function fn確認密碼() {
+        var data = $("#Form_Edit_Password").serialize();
+        $.ajax({
+            type: "POST",
+            url: "/Member/PasswordEdit",
+            data: data,
+            success: function (data) {
+                var status = data;
+                //var statue = JSON.Parse(data)  JSON
+                if (status == "!不可為空，請輸入密碼") {
+                    return;
+                }
+                else if (status == "!密碼請符合，5字元-15字元之間") {
+                    return;
+                }
+                else {
+                    window.location.href = "../Member/MemberSetup"
+                    return;
+                }
+
+            }
+        })
+    }
+
+
+    function fn更換密碼() {
+        var data = $("#Form_Edit_Password2").serialize();
+        $.ajax({
+            type: "POST",
+            url: "/Member/PasswordChange",
+            data: data,
+            success: function (data) {
+                var modal = document.getElementById("modalTrue");
+                var status = data;
+                //var statue = JSON.Parse(data)  JSON
+                if (status == "!不可為空，請輸入密碼") {
+                    return;
+                };
+                if (status == "!密碼請符合，5字元-15字元之間") {
+                    return;
+                };
+                if (status == "!與上方密碼不相符") {
+                    window.location.href = "../Member/MemberSetup"
+                    return;
+                };
+                if (status == "!新密碼與舊密碼相符") {
+                    window.location.href = "../Member/MemberSetup"
+                    return;
+                };
+                if (status == "修改成功") {
+                    window.location.href = "../Member/MemberSetup"
+                    return;
+                }
+            }
+        })
+    }
+
+    //同步更換相片-----------------------------------------------------------------------------\\\
+    function upload() {
+        var oFReader = new FileReader();
+        var file = document.getElementById("MemberImage").files[0];
+        oFReader.readAsDataURL(file);
+        oFReader.onloadend = function (oFRevent) {
+            var src = oFRevent.target.result;
+            $("#MemberPhoto").attr("src", src);
+        };
+    };
+
+    var Button = document.getElementById("ImageYes");
+    var Label = document.getElementById("ImageLabel");
+    function ImageEdit() {
+        Label.style.display = "none";
+        Button.style.display = "block";
+    }
+
+    //彈出視窗----------------------------------------------------------------------------------\\\
+    //Get the modal
+    var modal = document.getElementById("myModal");
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close2")[0];
+    // When the user clicks the button, open the modal
+    function WindForm() {
+        modal.style.display = "block";
+    }
+    // When the user clicks on <span> (x), close the modal
+    function CloseForm() {
+        modal.style.display = "none";
+    }
+    //彈出視窗----------------------------------------------------------------------------------\\\
+    // Get the modal
+    var modal2 = document.getElementById("modalTrue");
+    // Get the <span> element that closes the modal
+    var span2 = document.getElementsByClassName("close")[0];
+    // When the user clicks on <span> (x), close the modal
+    span2.onclick = function () {
+        modal2.style.display = "none";
+    }
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal2) {
+            modal2.style.display = "none";
+        }
+    }
+</script>

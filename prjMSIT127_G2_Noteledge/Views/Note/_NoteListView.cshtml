@@ -1,0 +1,63 @@
+﻿@model IEnumerable<prjMSIT127_G2_Noteledge.ViewModel.CNoteFolderViewModel>
+
+@helper fnLsNote()
+{
+    foreach (var folder in Model)
+    {
+        <ul>
+            <a class="folder_list" id="folder_list_id_@folder.fFolderId" data-folderid="@folder.fFolderId">@folder.fFolderName</a>
+            @foreach (var note in folder.lsNote)
+            {
+                if (note.fIsTrash) { continue; }
+                <li class="note_list" @*onclick="fn筆記查詢(@note.fFolderId, @note.fNoteId)"*@ data-noteid="@note.fNoteId">
+                    @if (note.fIsMyFavourite)
+                    {
+                        <img src="@Url.Content("~/Image/MemberImage/Starred.png")" />
+                        <a class="favor_note">@note.fNoteListName</a>
+                    }
+                    else
+                    {
+                        <a>@note.fNoteListName</a>
+                    }
+                </li>
+            }
+        </ul>
+    }
+}
+
+@fnLsNote()
+
+<script>
+    fn筆記右鍵選單顯示事件({
+            url_updatefavor: "@Url.Action("UpdateFavor", "Note")",
+            url_movetotrash: "@Url.Action("MoveToTrash", "Note")",
+            url_moveoutrash: "@Url.Action("MoveOutTrash", "Note")",
+            url_deletenote: "@Url.Action("DeleteNote", "Note")",
+            url_noterename: "@Url.Action("NoteRename", "Note")",
+            url_imgstarred: "@Url.Content("~/Image/MemberImage/Starred.png")",
+            url_imgundo: "@Url.Content("~/Image/NoteImage/note_undo.png")",
+            url_imgtrash: "@Url.Content("~/Image/NoteImage/note_trash.png")",
+            selector: ".note_list"
+        });
+
+    fn資料夾右鍵選單顯示事件({
+        url_folderrename: "@Url.Action("FolderRename", "Note")",
+        selector: ".folder_list",
+        url_movetotrash: "@Url.Action("MoveToTrash", "Note")",
+        url_moveoutrash: "@Url.Action("MoveOutTrash", "Note")",
+        url_deletefolder: "@Url.Action("DeleteFolder", "Note")",
+        url_deletenote: "@Url.Action("DeleteNote", "Note")",
+        url_imgundo: "@Url.Content("~/Image/NoteImage/note_undo.png")",
+        url_imgtrash: "@Url.Content("~/Image/NoteImage/note_trash.png")"
+    });
+
+    fn筆記右鍵選單關閉事件();
+
+    fn筆記查詢事件({
+            url_action: "@Url.Action("Search", "Note")",
+            selector: ".note_list"
+    });
+    $(".folder_list").click(function () {
+        $(this).nextAll("li").toggle("fast");
+    });
+</script>

@@ -1,0 +1,229 @@
+﻿@using System.Web.Configuration
+@{
+    Layout = null;
+    ViewBag.Title = "APITest";
+}
+
+<style type="text/css">
+    .login-options {
+        text-align: center;
+        margin: 25px auto 0;
+        min-height: 15px;
+        position: relative;
+        color: #607188;
+        font-family: "Open Sans",sans-serif;
+        font-weight: 400;
+        line-height: 1.8em;
+        -webkit-font-smoothing: subpixel-antialiased;
+        font-size: 100%;
+    }
+
+        .login-options span {
+            position: absolute;
+            top: -9px; /*調整「Or」的上、下位置*/
+            background: #fff;
+            padding: 0 15px;
+            margin: auto;
+            left: 42%;
+        }
+
+    hr {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        height: 1px;
+        width: 100%;
+        background: #E3ECF7;
+    }
+
+    hr {
+        border: 0;
+        border-top: 1px solid #eee;
+    }
+
+    .btn.btn-facebook, .btn.btn-facebook.active, .btn.btn-facebook.active:focus, .btn.btn-facebook.active:hover, .btn.btn-facebook:active, .btn.btn-facebook:active:focus, .btn.btn-facebook:active:hover, .btn.btn-facebook:focus, .btn.btn-facebook:hover, .navbar .navbar-nav > li > a.btn.btn-facebook, .navbar .navbar-nav > li > a.btn.btn-facebook.active, .navbar .navbar-nav > li > a.btn.btn-facebook.active:focus, .navbar .navbar-nav > li > a.btn.btn-facebook.active:hover, .navbar .navbar-nav > li > a.btn.btn-facebook:active, .navbar .navbar-nav > li > a.btn.btn-facebook:active:focus, .navbar .navbar-nav > li > a.btn.btn-facebook:active:hover, .navbar .navbar-nav > li > a.btn.btn-facebook:focus, .navbar .navbar-nav > li > a.btn.btn-facebook:hover, .open > .btn.btn-facebook.dropdown-toggle, .open > .btn.btn-facebook.dropdown-toggle:focus, .open > .btn.btn-facebook.dropdown-toggle:hover, .open > .navbar .navbar-nav > li > a.btn.btn-facebook.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-facebook.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-facebook.dropdown-toggle:hover {
+        background-color: #3b5998;
+        color: #FFF;
+    }
+
+
+
+    .btn {
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        user-select: none;
+        background-image: none;
+        border: none;
+        border-radius: 3px;
+        position: relative;
+        padding: 12px 30px;
+        margin: 10px 1px;
+        text-transform: uppercase;
+        letter-spacing: 0;
+        transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1);
+        outline: 0;
+        font-size: 14px;
+        font-weight: 400;
+        will-change: box-shadow,transform;
+    }
+
+    button {
+        overflow: visible;
+    }
+
+    .btn:not(.btn-fab) i {
+        vertical-align: middle;
+        font-size: 1.5em;
+        position: relative;
+        padding: 0 3px;
+    }
+
+    .btn.btn-facebook:active, .btn.btn-facebook:focus, .btn.btn-facebook:hover, .navbar .navbar-nav > li > a.btn.btn-facebook:active, .navbar .navbar-nav > li > a.btn.btn-facebook:focus, .navbar .navbar-nav > li > a.btn.btn-facebook:hover {
+        box-shadow: 0 14px 26px -12px rgba(59,89,152,.42), 0 4px 23px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(59,89,152,.2);
+    }
+
+    .btn.btn-google:active, .btn.btn-google:focus, .btn.btn-google:hover, .navbar .navbar-nav > li > a.btn.btn-google:active, .navbar .navbar-nav > li > a.btn.btn-google:focus, .navbar .navbar-nav > li > a.btn.btn-google:hover {
+        box-shadow: 0 14px 26px -12px rgba(221,75,57,.42), 0 4px 23px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(221,75,57,.2);
+    }
+
+        .btn.btn-google, .btn.btn-google.active, .btn.btn-google.active:focus, .btn.btn-google.active:hover, .btn.btn-google:active, .btn.btn-google:active:focus, .btn.btn-google:active:hover, .btn.btn-google:focus, .btn.btn-google:hover, .navbar .navbar-nav > li > a.btn.btn-google, .navbar .navbar-nav > li > a.btn.btn-google.active, .navbar .navbar-nav > li > a.btn.btn-google.active:focus, .navbar .navbar-nav > li > a.btn.btn-google.active:hover, .navbar .navbar-nav > li > a.btn.btn-google:active, .navbar .navbar-nav > li > a.btn.btn-google:active:focus, .navbar .navbar-nav > li > a.btn.btn-google:active:hover, .navbar .navbar-nav > li > a.btn.btn-google:focus, .navbar .navbar-nav > li > a.btn.btn-google:hover, .open > .btn.btn-google.dropdown-toggle, .open > .btn.btn-google.dropdown-toggle:focus, .open > .btn.btn-google.dropdown-toggle:hover, .open > .navbar .navbar-nav > li > a.btn.btn-google.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-google.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-google.dropdown-toggle:hover {
+            background-color: #dd4b39;
+            color: #FFF;
+        }
+
+    .btn.focus, .btn:focus, .btn:hover {
+        text-decoration: none;
+    }
+</style>
+
+
+
+
+
+
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Test Google People API</title>
+</head>
+<form method="post">
+    <!--用戶一鍵Google登入或綁定Google帳戶時使用↓-->
+    <button type="button" class="btn btn-google" id="btnSignIn" name="btnSignIn">
+        <i class="fab fa-google-plus-g fa-lg"></i> Google 登入
+    </button>
+    <button type="button" class="btn btn-facebook" id="btnDisconnect" name="btnDisconnect">
+        <i class="fab fa-facebook-f fa-lg"></i> 斷連Google App
+    </button>
+    <input id="HIHI" name="id" type="text" value="0" />
+    @ViewBag.Name
+    <hr />
+    <!--顯示結果↓-->
+    <div id="content"></div>
+</form>
+
+
+<!-- 引用jQuery-->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<!--引用fontawesome，才能制作Facebook、Google的icon-->
+<script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js" integrity="sha384-3LK/3kTpDE/Pkp8gTNp2gR/2gOiwQ6QaO7Td0zV76UFJVhqLl4Vl3KL1We6q6wR9" crossorigin="anonymous"></script>
+
+
+<!--CLIENT_ID請自己改成從 後端組態檔讀取，例如：ASP.net的Web.config-->
+<script type="text/javascript">
+    let CLIENT_ID = "811414016354-c64mk0n6e0m735gfokbi5h72rkkhi391.apps.googleusercontent.com";
+    //let API_KEY = '';//Javascript SDK無須 API 金鑰
+    // Array of API discovery doc URLs for APIs
+    let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/people/v1/rest"];
+
+</script>
+<!--執行Google API必須的.js，callback function名稱請自訂 -->
+<!--↓https://apis.google.com/js/platform.js 或 https://apis.google.com/js/api.js 兩者網址都行得通 這裡採用跟官網寫法一樣-->
+<script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};GoogleClientInit()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
+
+<!--以下請另外放置到 *.js檔案-->
+<script type="text/javascript">
+    //jQuery處理button click event 當畫面DOM都載入時....
+    $(function () {
+        $("#btnSignIn").on("click", function () {
+            $("#content").html("");//清空顯示結果
+            GoogleLogin();//Google 登入
+        });
+        $("#btnDisconnect").on("click", function () {
+            Google_disconnect();//和Google App斷連
+        });
+    });
+
+    function GoogleClientInit() {
+        //官網範例寫client:auth2，但本人實測由於待會要呼叫gapi.client.init而不是gapi.auth2.init，所以給client即可
+        gapi.load('client', function () {
+            gapi.client.init({
+                //client_id 和 scope 兩者參數必填
+                clientId: CLIENT_ID,
+                //scope列表參考：https://developers.google.com/people/api/rest/v1/people/get
+                //"profile"是簡寫，要用完整scope名稱也可以
+                scope: "profile",//"https://www.googleapis.com/auth/userinfo.profile",
+                discoveryDocs: DISCOVERY_DOCS
+            });
+
+
+        });//end gapi.load
+    }//end GoogleClientInit function
+
+
+    function GoogleLogin() {
+        let auth2 = gapi.auth2.getAuthInstance();//取得GoogleAuth物件
+        auth2.signIn().then(function (GoogleUser) {
+            console.log("Google登入成功");
+            let user_id = GoogleUser.getId();//取得user id，不過要發送至Server端的話，為了資安請使用id_token，本人另一篇文章有範例：https://dotblogs.com.tw/shadow/2019/01/31/113026
+            $("#HIHI").val(user_id);
+            console.log(`user_id:${user_id}`);
+            let AuthResponse = GoogleUser.getAuthResponse(true);//true會回傳包含access token ，false則不會
+            let id_token = AuthResponse.id_token;//取得id_token people.get方法參考：https://developers.google.com/people/api/rest/v1/people/get
+            $("#HIHI").val(id_token);
+            var str = id_token;
+            localStorage.setItem("Token", str);
+            gapi.client.people.people.get({
+                'resourceName': 'people/me',
+                //通常你會想要知道的用戶個資↓
+                'personFields': 'names,phoneNumbers,emailAddresses,addresses,residences,genders,birthdays,occupations'
+                
+            }).then(function (res) {
+                console.log(res);
+                //success
+                var str = JSON.stringify(res.result);//將物件列化成string，方便顯示結果在畫面上
+                document.getElementById('content').innerHTML = str;
+                //顯示授權你網站存取的用戶個資
+                $.ajax({
+                    type: "POST",
+                    url: "/Member/APITest",
+                    data: { restr: str },
+                    success: function (data) {
+                        window.location.href = "../Home/MyHome/?name=" + data
+                    }
+                });
+                
+            });
+        },
+            function (error) {
+                console.log("Google登入失敗");
+                console.log(error);
+            });
+
+    }//end function GoogleLogin
+
+
+
+    function Google_disconnect() {
+        let auth2 = gapi.auth2.getAuthInstance(); //取得GoogleAuth物件
+
+        auth2.disconnect().then(function () {
+            console.log('User disconnect.');
+        });
+    }
+</script>

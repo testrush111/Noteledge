@@ -1,0 +1,284 @@
+﻿@using Models.MemberModels
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note$edge | 讓知識變成價值</title>
+
+    <!-- Google Font:圓體字體 -->
+    <link href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css" rel="stylesheet">
+    <!--Google ICON-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <!--CSS here-->
+    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/slick.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/magnific-popup.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/perfect-scrollbar.css">
+    <link rel="stylesheet" href="~/Content/adminlte.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/Shopping/main.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Shopping/util.css">
+    @{
+        CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+    }
+</head>
+<body class="animsition">
+    <!-- Header -->
+    <header>
+        <!-- Header desktop -->
+        <div class="container-menu-desktop">
+            <div class="wrap-menu-desktop">
+                <nav class="limiter-menu-desktop container">
+
+                    <!-- Logo desktop -->
+                    <a href="@Url.Action("MyHome", "Home")" class="logo">
+                        <img src="~/Image/Logo/Logo_text_green2.PNG" alt="Note$edge-LOGO" />
+                    </a>
+
+                    <!-- Menu desktop -->
+                    <div class="menu-desktop">
+                        <ul class="main-menu">
+                            <li class="active-menu">
+                                @Html.ActionLink("關於Note$edge", "MyHome", "Home")
+                            </li>
+                            <li>
+                                @Html.ActionLink("我的筆記", "Index", "Note")
+                            </li>
+
+                            <li class="label1" data-label1="hot">
+                                @Html.ActionLink("筆記商城", "Index", "ShoppingHome")
+                            </li>
+                            <li>
+                                @Html.ActionLink("聯絡我們", "MyHome", "Home")
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Icon header -->
+                    <div class="wrap-icon-header flex-w flex-r-m">
+                        <div class="col-xl-6 col-lg-5">
+                            <form class="header-search-form">
+                                <input type="text" placeholder="搜尋 ....">
+                                <button><i class="material-icons">search</i></button>
+                            </form>
+                        </div>
+                        @if (member == null && ViewBag.name == null)
+                        {
+
+                            <div class="p-r-20">
+                                <span class="material-icons cl0" style="font-size:36px;vertical-align: middle;">
+                                    account_circle
+                                </span>
+                                @Html.ActionLink("登入", "Login", "Member", null, new { @class = "fs-18 cl0 hov-cl2 trans-04 p-l-5 " })
+                            </div>
+
+                            <div class="p-r-20">
+                                <span class="material-icons cl0" style="font-size:36px;vertical-align: middle;">
+                                    login
+                                </span>
+                                @Html.ActionLink("註冊", "SignIn", "Member", null, new { @class = "fs-18 cl0 hov-cl2 trans-04 p-l-5" })
+                            </div>
+                        }
+                        @if (ViewBag.name != null)
+                        {
+                            <div class="btn-group">
+                                <button type="button" class="dropdown-toggle cl0 fs-20 hov-cl2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img src="~/Image/MemberImage/MemberPreset.jpg" class="rounded-circle" style="width:45px">
+                                    <span class="fs-15"> @ViewBag.name </span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("會員設定", "MemberSetup", "Member", null, new { @class = "dropdown-item fs-16" })
+                                    @Html.ActionLink("會員通知", "MemberNotice", "Member", null, new { @class = "dropdown-item fs-16" })
+                                    @Html.ActionLink("會員訂單", "MemberOrder", "Member", null, new { @class = "dropdown-item fs-16" })
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" onclick="fn彈出確認登出視窗()">登出</a>
+                                </div>
+                            </div>
+                        }
+                        else if (member != null && ViewBag.name == null)
+                        {
+                            <div class="btn-group">
+                                <button type="button" class="dropdown-toggle cl0 fs-20 hov-cl2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img src="@member.fPhoto" class="rounded-circle" style="width:45px">
+                                    <span class="fs-15"> @member.fFirstName@member.fLastName </span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    @Html.ActionLink("會員設定", "MemberSetup", "Member", null, new { @class = "dropdown-item" })
+                                    @Html.ActionLink("會員通知", "MemberNotice", "Member", null, new { @class = "dropdown-item" })
+                                    @Html.ActionLink("會員訂單", "MemberOrder", "Member", null, new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" onclick="fn彈出確認登出視窗()">登出</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div>
+        @RenderBody()
+    </div>
+    <!-- Footer -->
+    <footer class="bg3 p-t-20 p-b-10">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2 col-lg-2 p-b-20 m-l-200">
+                    <h4 class="fs-16 stext-301 cl0 p-b-20">
+                        開發團隊
+                    </h4>
+                    <ul>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/Ek110tn.png" class="rounded-circle" style="width:30px"> 蕭良純
+                        </li>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/WCZ3j4g.png" class="rounded-circle" style="width:30px"> 林佑承
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-3 col-lg-3 p-b-20">
+                    <h4 class="fs-16 stext-301 cl0 p-b-20" style="opacity:0">
+                        開發團隊
+                    </h4>
+                    <ul>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/tPzIRQW.png" class="rounded-circle" style="width:30px"> 呂冠德
+                        </li>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/dgdxXKw.png" class="rounded-circle" style="width:30px"> 汪宏陽
+                        </li>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/1u5FSrA.png" class="rounded-circle" style="width:30px"> 郭嘉富
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-4 col-lg-4 p-b-20">
+                    <h4 class="fs-16 stext-301 cl0 p-b-20">
+                        聯絡我們
+                    </h4>
+
+                    <p class="stext-105 cl0">
+                        地址:台北市大安區復興南路一段390號2樓
+                    </p>
+
+                    <p class="stext-105 cl0">
+                        總機：(02) 6631-6666
+                    </p>
+
+                    <p class="stext-105 cl0">
+                        傳真：(02) 6631-6598
+                    </p>
+
+                    <p class="stext-105 cl0">
+                        Email: Note$edge@gmail.com
+                    </p>
+
+                    <div class="p-t-10">
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-facebook' style='font-size:24px'></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-instagram' style='font-size:24px'></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-youtube' style='font-size:24px'></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-twitter' style='font-size:24px'></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-pinterest' style='font-size:24px'></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex-c-m flex-w p-b-5">
+                    <a href="#" class="m-all-1">
+                        <img src="~/Image/icon-pay-01.png" alt="ICON-PAY">
+                    </a>
+                </div>
+
+                <p class="stext-107 cl6 txt-center">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;
+                    <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with
+                    <i class="fa fa-heart-o" aria-hidden="true"></i> by
+                    <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top -->
+    <div class="btn-back-to-top" id="myBtn">
+        <span class="symbol-btn-back-to-top">
+            <i class="material-icons"> keyboard_arrow_up</i>
+        </span>
+    </div>
+</body>
+</html>
+<!-- JS here -->
+<!-- Jquery, Popper, Bootstrap -->
+<script src="~/Scripts/jquery-3.2.1.min.js"></script>
+<script src="~/Scripts/popper.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/animsition.min.js"></script>
+<script src="~/Scripts/select2.min.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/daterangepicker.js"></script>
+<script src="~/Scripts/slick.min.js"></script>
+<script src="~/Scripts/Shopping/slick-custom.js"></script>
+<script src="~/Scripts/parallax100.js"></script>
+<script src="~/Scripts/jquery.magnific-popup.min.js"></script>
+<script src="~/Scripts/isotope.pkgd.min.js"></script>
+<script src="~/Scripts/perfect-scrollbar.min.js"></script>
+<script src="~/Scripts/Shopping/main.js"></script>
+<!-- sweetalert2 cdn -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- AdminLTE App -->
+<script src="~/Scripts/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="~/Scripts/demo.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    function fn彈出確認登出視窗()
+    {
+        Swal.fire({
+            title: '您確定要登出帳號嗎??',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: "取消",
+            confirmButtonText: '確定',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: '您成功登出!!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "/Member/Login"
+                    }
+                });
+            }
+        });
+    }
+</script>
+@RenderSection("scripts", required: false)

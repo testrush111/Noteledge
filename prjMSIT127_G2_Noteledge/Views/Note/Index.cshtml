@@ -1,0 +1,640 @@
+﻿@using Models.MemberModels
+@model IEnumerable<prjMSIT127_G2_Noteledge.ViewModel.CNoteFolderViewModel>
+@{
+    ViewBag.Title = "Index";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@helper fnLsNote()
+{
+    foreach (var folder in Model)
+    {
+        <ul class="connectedSortable" style="cursor: pointer;">
+            <i class="fas fa-caret-right fs-20"></i>
+            <a class="folder_list fs-20" id="folder_list_id_@folder.fFolderId" data-folderid="@folder.fFolderId" oncontextmenu="return false;">@folder.fFolderName</a>
+            @foreach (var note in folder.lsNote)
+            {
+                if (note.fIsTrash) { continue; }
+                <li class="note_list p-l-20 m-tb-5" data-noteid="@note.fNoteId" oncontextmenu="return false;">
+                    @if (note.fIsMyFavourite)
+                    {
+                        <i class="fas fa-star text-warning"></i>
+                        <a class="favor_note fs-17 ">@note.fNoteListName</a>
+                    }
+                    else
+                    {
+                        <a class="fs-17 m-l-20">@note.fNoteListName</a>
+                    }
+                </li>
+            }
+        </ul>
+        <hr>
+    }
+}
+
+
+<link href="~/Content/Note/monokai-sublime.min.css" rel="stylesheet" />
+<link href="~/Content/Note/quill.snow.css" rel="stylesheet" />
+<link href="~/Content/Note/quill.bubble.css" rel="stylesheet" />
+<link href="~/Content/note.css" rel="stylesheet" />
+@*<script src="~/Scripts/Note/highlight.min.js"></script>
+    <script src="~/Scripts/Note/quill.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/Note/note.js"></script>
+    <script src="~/Scripts/Note/note-event.js"></script>*@
+
+<!--筆記系統導覽列-->
+<!-- Main Sidebar Container -->
+<section class="p-t-80">
+    <div class="wrapper">
+        <aside class="main-sidebar sidebar-dark-primary">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="@member.fPhoto" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info" id="myprofile1" style="margin-top:auto;margin-bottom:auto" data-memberid="@member.fMemberId">
+                        <span class="float-left  p-lr-5 fs-20">@member.fTheNickName</span>
+                        @if (member.fIsVIP == true)
+                        {
+                            <span class="fs-18"><span class="badge badge-pill badge-warning">VIP</span></span>
+                        }
+
+                    </div>
+                </div>
+                <!-- Sidebar Menu -->
+                <nav class="mt-2 lsSlideNav">
+                    <button id="btnAddNote" type="button" class="btn btn-info w-full fs-20" data-toggle="modal" data-target="#modal-default">
+                        <i class="fas fa-plus" aria-hidden="true"> </i> 新增筆記
+                    </button>
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                        <li class="nav-item myfavornote">
+                            <a class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <i class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    stars
+                                </i>
+                                <p class="fs-18">
+                                    我的最愛
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item selected mynote">
+                            <a class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <i class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    library_books
+                                </i>
+                                <p class="fs-18">
+                                    筆記本
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item template">
+                            <a class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <i class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    style
+                                </i>
+                                <p class="fs-18">
+                                    模板使用
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item trash">
+                            <a class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <i class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    delete
+                                </i>
+                                <p class="fs-18">
+                                    垃圾桶
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+
+        <div class="content-wrapper">
+            <section class="content-header ">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="fs-18">
+                                筆記編輯區
+                            </h1>
+                        </div>
+                        <div class="col-sm-1 pl-5">
+                            <button class="btn btn-warning demo1">憲法筆記</button>
+                        </div>
+                        <div class="col-sm-1 pl-5">
+                            <button class="btn btn-warning demo2">程式筆記</button>
+                        </div>
+                        <div class="col-sm-4">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item">
+                                    @Html.ActionLink("Note$edge首頁", "MyHome", "Home")
+                                </li>
+                                <li class="breadcrumb-item active">我的筆記</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="content">
+                <div class="row p-lr-8">
+                    <!--筆記資料夾清單-->
+                    <div class="col-md-3 p-t-25">
+                        <button id="add_version" class="btn btn-info btn-block mb-3 fs-18 op-07">新增版本紀錄</button>
+                        <div class="card card-info card-outline" style="height: 455px; overflow-y: scroll;">
+                            <div class="card-body box-profile">
+                                <div class="lsNote">
+                                    @fnLsNote()
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--筆記編輯區-->
+                    <div class="col-md-9">
+                        <div id="content" class="content p-lr-30">
+                            <br />
+                            <img id="loading-image-version" src="~/Image/NoteImage/ajax-loader.gif" style="display:none;" />
+                            <div id="editor" style="background: #fff; height:450px;margin-bottom:20px" class="ql-container ql-snow">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+        <button class="alert-note-deleted btn btn-danger" style="position: fixed; display: none; left: 1400px; top: 130px;">筆記已刪除</button>
+        <button class="alert-note-restore btn btn-success" style="position: fixed; display: none; left: 1400px; top: 130px;">筆記已還原</button>
+    </div>
+</section>
+
+<!--筆記資料夾與筆記的新增選單-->
+<div class="modal fade p-t-90" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h4 class="modal-title" id="version_block_title">筆記新增</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 10px; padding-bottom:0;">
+                    <p class="fs-18">新增資料夾</p>
+                    <input class="w-full p-l-10 fs-17" style="height:40px;border-style:groove;border-radius: 10px;" id="txtNewFolderName" placeholder="請輸入資料夾名稱" />
+                    <br />
+                    <p class="fs-18">新增筆記</p>
+                    <select id="selFolder" class="w-full p-l-10 fs-17" style="height:40px">
+                        @foreach (var folder in Model)
+                        {
+                            <option data-folderid="@folder.fFolderId">@folder.fFolderName</option>
+                        }
+                    </select>
+                    <input class="w-full p-l-10 fs-17" style="height:40px;border-style:groove;border-radius: 10px;" id="txtNewNoteName" placeholder="筆記名稱:xxx" />
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_cancel_add_note" class="btn btn-default fs-16" data-dismiss="modal">取消</button>
+                <button type="button" id="btn_check_add_note" class="btn btn-warning fs-16" data-dismiss="modal">確定儲存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--資料夾右鍵選單-->
+<div id="folder_menu" oncontextmenu="return false;">
+    <p class="fs-16 p-all-5" style="cursor:pointer" id="delete_folder">
+        <span class="material-icons" style="vertical-align: middle;">remove_circle</span> 刪除
+    </p>
+    <p class="fs-16 p-all-5" style="cursor:pointer" id="rename_folder">
+        <span class='fas fa-edit' style='font-size:20px;vertical-align: middle;'></span> 重新命名
+    </p>
+</div>
+
+<!--筆記右鍵選單-->
+<div id="note_menu" oncontextmenu="return false;">
+    <p class="fs-16 p-all-5" style="cursor:pointer" id="delete_note">
+        <span class="material-icons" style="vertical-align: middle;">remove_circle</span> 刪除
+    </p>
+    <p class="fs-16 p-all-5" style="cursor:pointer" id="rename_note">
+        <span class='fas fa-edit' style='font-size:20px;vertical-align: middle;'></span> 重新命名
+    </p>
+    <p class="fs-16 p-all-5" style="cursor:pointer" id="favor_note">
+        <span class="material-icons" style="vertical-align: middle;">folder_special</span> 加入我的最愛
+    </p>
+    <p class="fs-16 p-all-5" style="cursor:pointer" id="version_note">
+        <span class="material-icons" style="vertical-align: middle;">history</span> 版本紀錄
+    </p>
+</div>
+
+<!--模板使用區塊-->
+<div id="template_block">
+
+</div>
+
+<!--版本記錄選單-->
+<div id="version_block">
+    <div id="version_block_title" style="background: #65C2C6;">版本紀錄</div>
+    <br />
+    <img id="loading-image" src="~/Image/NoteImage/ajax-loader.gif" style="display:none;" />
+    <div class="lsVersion">
+
+    </div>
+</div>
+
+<!--垃圾桶區塊-->
+<div id="trash_block">
+    @Html.Partial("_TrashView")
+</div>
+
+
+
+<!--======================================原始內容==========================================-->
+@*<section class="p-t-80">
+        <div class="lsSlideNav">
+            <button id="btnAddNote" class="btn btn-info">新增筆記</button>
+            <ul>
+                <li class="myfavornote">我的最愛</li>
+                <li class="selected mynote">筆記本</li>
+                <li class="template">模板使用</li>
+                <li class="trash">垃圾桶</li>
+            </ul>
+        </div>
+    </section>*@
+
+
+<!-- /.modal -->
+@*<div id="add_note_menu" style="z-index:9999">
+        <div id="version_block_title">筆記新增</div>
+        <div style="padding: 10px; padding-bottom:0;">
+            <select id="selFolder">
+                @foreach (var folder in Model)
+                {
+                    <option data-folderid="@folder.fFolderId">@folder.fFolderName</option>
+                }
+            </select>
+            <br />新增資料夾
+            <input id="txtNewFolderName" placeholder="請輸入資料夾名稱" />
+            <br />或新增筆記
+            <input id="txtNewNoteName" placeholder="筆記名稱:xxx" />
+        </div>
+
+        <div style="display:block;padding: 10px;">
+            <button id="btn_cancel_add_note" class="btn btn-danger">取消</button>
+            <button id="btn_check_add_note" class="btn btn-success col-md-offset-3">確認</button>
+        </div>
+    </div>*@
+
+<!--資料夾右鍵選單-->
+@*<div id="folder_menu" oncontextmenu="return false;">
+        <p id="delete_folder">刪除</p>
+        <p id="rename_folder">重新命名</p>
+    </div>*@
+
+<!--筆記右鍵選單-->
+@*<div id="note_menu" oncontextmenu="return false;">
+        <p id="delete_note">刪除</p>
+        <p id="copy_note">複製</p>
+        <p id="rename_note">重新命名</p>
+        <p id="favor_note">+我的最愛</p>
+        <p id="version_note">版本紀錄</p>
+    </div>*@
+<!--筆記資料夾清單-->
+@*<div class="lsNote">
+        @fnLsNote()
+    </div>*@
+
+<!--筆記編輯區-->
+@*<div id="content" class="content">
+        <button id="add_version" class="btn btn-info">新增版本紀錄</button>
+        <br />
+        <img id="loading-image-version" src="~/Image/NoteImage/ajax-loader.gif" style="display:none;" />
+        <div id="editor" style="background: #fff; height:450px;" class="ql-container ql-snow">
+        </div>
+    </div>*@
+<!--模板使用區塊-->
+@*<div id="template_block">
+
+    </div>*@
+<!--版本記錄選單-->
+@*<div id="version_block">
+        <div id="version_block_title">版本紀錄</div>
+        <br />
+        <img id="loading-image" src="~/Image/NoteImage/ajax-loader.gif" style="display:none;" />
+        <div class="lsVersion">
+
+        </div>
+    </div>*@
+<!--垃圾桶區塊-->
+@*<div id="trash_block">
+        @Html.Partial("_TrashView")
+    </div>*@
+
+
+@section scripts{
+    <script src="~/Scripts/Note/highlight.min.js"></script>
+    <script src="~/Scripts/Note/quill.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/Note/note-demo.js"></script>
+    <script src="~/Scripts/Note/note.js"></script>
+    <script src="~/Scripts/Note/note-event.js"></script>
+    <script>
+//--------------------------------------------------------------------
+//============================建立Quill物件============================
+//--------------------------------------------------------------------
+var quill = new Quill("#editor", {
+    theme: "snow", // 模板
+    modules: {
+        syntax: true,   //程式碼高亮度辨識
+        toolbar: [
+            ['bold', 'italic', 'underline', 'strike'], // 粗體、斜體、底線和刪節線
+            ['link', 'image'],
+            ['blockquote', 'code-block'], // 區塊、程式區塊
+            [{ 'header': 1 }, { 'header': 2 }], // 標題1、標題2
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }], // 清單
+            [{ 'script': 'sub' }, { 'script': 'super' }], // 上標、下標
+            [{ 'indent': '-1' }, { 'indent': '+1' }], // 縮排
+            [{ 'direction': 'rtl' }], // 文字方向
+            [{ 'size': ['small', false, 'large', 'huge'] }], // 文字大小
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],// 標題
+            [{ 'color': [] }, { 'background': [] }], // 顏色
+            [{ 'font': [] }], // 字體
+            [{ 'align': [] }], // 文字方向
+            ['clean'] // 清除文字格式
+        ]
+    }
+});
+//--------------------------------------------------------------------
+//============================筆記文字改變事件============================
+//--------------------------------------------------------------------
+quill.on('text-change', function (delta, oldDelta, source) {
+    if (source == 'api') {
+        //console.log("An API call triggered this change.");
+    } else if (source == 'user') {
+        console.log("A user action triggered this change.");
+        fn筆記儲存("@Url.Action("Update", "Note")");
+    }
+});
+
+    $(document).ready(function () {
+        //demo憲法筆記
+        $(".demo1").click(function () {
+            quill.setContents("");
+            quill.setContents(JSON.parse(demodata1));
+            fn筆記儲存("@Url.Action("Update", "Note")");
+        });
+        //demo程式筆記
+        $(".demo2").click(function () {
+            quill.setContents("");
+            quill.setContents(JSON.parse(demodata2));
+            fn筆記儲存("@Url.Action("Update", "Note")");
+        });
+        //============================筆記永久刪除按鍵事件註冊============================
+        //------------------------------------------------------------------------
+        //url_action, selector
+        fn筆記永久刪除按鍵事件({
+            url_action: "@Url.Action("DeleteNote", "Note")",
+            url_moveoutrash: "@Url.Action("MoveOutTrash", "Note")",
+            url_deletenote: "@Url.Action("DeleteNote", "Note")",
+            selector: ".note_trash_list .note_trash"
+        });
+        //------------------------------------------------------------------------
+        //============================筆記還原按鍵事件註冊============================
+        //------------------------------------------------------------------------
+        //url_action, selector
+        fn筆記還原按鍵事件({
+            url_action: "@Url.Action("MoveOutTrash", "Note")",
+            selector: ".note_trash_list .note_undo"
+        });
+
+        $(".folder_list").click(function () {
+            if ($(this).parent().hasClass("open_folder")) {
+                $(this).parent().removeClass("open_folder");
+            }
+            else {
+                $(this).parent().addClass("open_folder");
+            }
+    });
+    $(".connectedSortable").sortable({
+        connectWith: ".open_folder",
+        cancel: ".connectedSortable .folder_list",
+        update: function (event, ui) {
+            $(this).children("li").each(function (index) {
+                $(this).attr("data-sortid", index);
+                let Level = index;
+                let FolderId = $(this).prevAll(".folder_list").data("folderid");
+                let NoteId = $(this).data("noteid");
+                //UpdateNoteLevel
+                $.ajax({
+                    url: "@Url.Action("UpdateNoteLevel", "Note")",
+                    type: "POST",
+                    dataType: "html",
+                    data: { FolderId: FolderId, NoteId: NoteId, Level: Level},
+                    success: function (msg) {
+                        console.log(msg);
+                    }
+                });
+            });
+        }
+    });
+    //新增版本紀錄Button
+    $("#add_version").click(function () {
+        console.log("版本紀錄新增！");
+        let noteid = $(".select_note").data("noteid");
+        $.ajax({
+            url: "@Url.Action("AddVersion", "Note")",
+            type: "POST",
+            dataType: "html",
+            data: {NoteId: noteid},
+            success: function (msg) {
+                console.log(msg);
+                const swal = Swal.mixin();
+
+                swal.fire({
+                    title: '版本紀錄新增',
+                    text: "已經新增一筆版本紀錄！",
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: '確認',
+                    reverseButtons: true
+                });
+            }
+        });
+    });
+    //版本紀錄區可以拖曳
+    $("#version_block").draggable();
+    //版本紀錄區可以拖曳
+    $("#template_block").draggable();
+    //左側導覽列頁籤
+    $(".lsSlideNav li").click(function () {
+        //移除所有選取效果
+        $(".selected").removeClass("selected");
+        //選到的頁籤加入選取效果
+        $(this).addClass("selected");
+        //選到的頁籤選擇器
+        let li = $(this);
+        //我的最愛頁籤
+        if (li.is(".myfavornote")) {
+            //隱藏非我的最愛筆記的筆記
+            $(".note_list a:not(.favor_note)").css("display", "none");
+        }
+        //我的筆記頁籤
+        else if (li.is(".mynote")) {
+            //顯示我的最愛筆記的筆記
+            $(".note_list a:not(.favor_note)").css("display", "list-item");
+        }
+        //垃圾桶頁籤
+        else if (li.is(".trash")) {
+            //垃圾桶區塊選擇器
+            let display = $("#trash_block").css("display");
+            if (display == "none") {
+                //垃圾桶區塊顯示
+                $("#trash_block").show();
+            }
+            else {
+                //垃圾桶區塊關閉
+                $("#trash_block").hide();
+            }
+        }
+        //模板使用頁籤
+        else if (li.is(".template")) {
+            $("#template_block").show();
+            console.log("模板使用頁籤");
+            $.ajax({
+                url: "@Url.Action("SearchTemplate", "Note")",
+                type: "POST",
+                dataType: "html",
+                beforeSend: function () {
+                    $("#loading-image-version").show();
+                },
+                success: function (msg) {
+                    $("#template_block").html(msg);
+                    $("#loading-image-version").hide();
+                }
+            });
+        }
+    });
+    //筆記資料夾點擊時展開所有筆記
+    $(".lsNote").delegate(".folder_list", "click", function () {
+        $(this).nextAll("li").toggle("fast");
+        let icon = $(this).prev(".fas");
+        if (icon.hasClass("fa-caret-right")) {
+            icon.removeClass("fa-caret-right");
+            icon.addClass("fa-caret-down");
+        }
+        else {
+            icon.removeClass("fa-caret-down");
+            icon.addClass("fa-caret-right");
+        }
+    });
+
+    fn筆記右鍵選單顯示事件({
+        selector: ".note_list",
+        url_updatefavor: "@Url.Action("UpdateFavor", "Note")",
+        url_movetotrash: "@Url.Action("MoveToTrash", "Note")",
+        url_moveoutrash: "@Url.Action("MoveOutTrash", "Note")",
+        url_deletenote: "@Url.Action("DeleteNote", "Note")",
+        url_noterename: "@Url.Action("NoteRename", "Note")",
+        url_imgstarred: "@Url.Content("~/Image/MemberImage/Starred.png")",
+        url_imgundo: "@Url.Content("~/Image/NoteImage/note_undo.png")",
+        url_imgtrash: "@Url.Content("~/Image/NoteImage/note_trash.png")",
+        url_searchversion: "@Url.Action("SearchVersion", "Note")"
+    });
+
+    fn筆記右鍵選單關閉事件();
+
+    fn資料夾右鍵選單顯示事件({
+        selector: ".folder_list",
+        url_folderrename: "@Url.Action("FolderRename", "Note")",
+        url_movetotrash: "@Url.Action("MoveToTrash", "Note")",
+        url_moveoutrash: "@Url.Action("MoveOutTrash", "Note")",
+        url_deletefolder: "@Url.Action("DeleteFolder", "Note")",
+        url_deletenote: "@Url.Action("DeleteNote", "Note")",
+        url_imgundo: "@Url.Content("~/Image/NoteImage/note_undo.png")",
+        url_imgtrash: "@Url.Content("~/Image/NoteImage/note_trash.png")"
+    });
+
+    fn資料夾右鍵選單關閉事件()
+
+    fn筆記查詢事件({
+        selector: ".note_list",
+        url_action: "@Url.Action("Search", "Note")"
+    });
+    //新增筆記時新增筆記選單顯示
+    $("#btnAddNote").click(function () {
+        //$("#add_note_menu").show();
+        //清空裡面的值
+        $("#txtNewFolderName").val("");
+        $("#txtNewNoteName").val("");
+        $("#selFolder")[0].selectedIndex = 0;
+
+
+    });
+    //取消新增筆記時新增筆記選單關閉
+    $("#btn_cancel_add_note").click(function () {
+        console.log("新增筆記取消");
+        $("#add_note_menu").hide();
+    });
+    //確認新增筆記或新增筆記資料夾
+    $("#btn_check_add_note").click(function () {
+        console.log("新增筆記確認");
+        //筆記資料夾ID
+        let folderid = $("#selFolder option:selected").data("folderid");
+        //筆記資料夾名稱
+        let foldername = $("#selFolder option:selected").html();
+        //新增的筆記資料夾名稱
+        let txtNewFolderName = $("#txtNewFolderName").val();
+        //新增的筆記名稱
+        let txtNewNoteName = $("#txtNewNoteName").val();
+
+        console.log("folderid = " + folderid);
+        console.log("foldername = " + foldername);
+        console.log("txtNewFolderName = " + txtNewFolderName);
+        console.log("txtNewNoteName = " + txtNewNoteName);
+        //使用者有輸入資料夾名稱，新增筆記資料夾
+        if (txtNewFolderName != "") {
+            fn筆記資料夾新增({
+                url_action: "@Url.Action("AddNoteFolder", "Note")",
+                txtNewFolderName: txtNewFolderName
+            });
+        }
+        //使用者沒有輸入資料夾名稱，新增筆記
+        else {
+            fn筆記新增({
+                new_url_action: "@Url.Action("AddNote", "Note")",
+                search_url_action: "@Url.Action("Search", "Note")",
+                folderid: folderid,
+                txtNewNoteName: txtNewNoteName,
+                url_updatefavor: "@Url.Action("UpdateFavor", "Note")",
+                url_movetotrash: "@Url.Action("MoveToTrash", "Note")",
+                url_moveoutrash: "@Url.Action("MoveOutTrash", "Note")",
+                url_deletenote: "@Url.Action("DeleteNote", "Note")",
+                url_noterename: "@Url.Action("NoteRename", "Note")",
+                url_imgstarred: "@Url.Content("~/Image/MemberImage/Starred.png")",
+                url_imgundo: "@Url.Content("~/Image/NoteImage/note_undo.png")",
+                url_imgtrash: "@Url.Content("~/Image/NoteImage/note_trash.png")"
+            });
+        }
+        //新增完畢時關閉新增筆記選單
+        //$("#add_note_menu").hide();
+    });
+
+});
+//------------------------------------------------------------------------
+//$(document).ready END========================================================
+//------------------------------------------------------------------------
+    </script>
+
+}

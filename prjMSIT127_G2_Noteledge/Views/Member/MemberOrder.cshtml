@@ -1,0 +1,90 @@
+﻿@model IEnumerable<prjMSIT127_G2_Noteledge.ViewModel.CMemberOrderSelectVM>
+
+@{
+    ViewBag.Title = "MemberOrder";
+}
+
+<style>
+    boby {
+        background-color: #F4EFEB;
+    }
+    .sysmsg_block {
+        border: 1px solid black;
+        width: 500px;
+        height: 120px;
+        padding: 0;
+        margin-bottom: 20px;
+        display: block;
+        margin-left:100px;
+    }
+        .sysmsg_block:hover {
+            background-color: #F0F0F0
+        }
+
+    .sysmsg_title {
+        display: block;
+        height: 50px;
+        width: 460px;
+        margin: auto;
+    }
+
+    .sysmsg_content {
+        display: block;
+        height: 50px;
+        width: 460px;
+        margin: auto;
+        text-align: center;
+    }
+
+    .sysmsg_img {
+        margin-top: 10px;
+        float: left;
+    }
+
+    .sysmsg_time {
+        float: right;
+    }
+</style>
+
+<section class="p-lr-15 p-t-92" style="background-color:#F4EFEB">
+    <div class="card" style="width:700px;height:550px;left:400px">
+        <div class="card-header">
+            <p style="text-align:center;height:50px;font-family: 'cwTeXYen', sans-serif;font-size:28px;font-weight:900">會員購買紀錄總覽</p>
+            <div class="card-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0" style="text-align:center">
+            @if (ViewBag.Count訂單 != 0)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="sysmsg_block" onclick="javascript:location.href='../Note/Index'">
+                        <div class="sysmsg_title">
+                            <div class="sysmsg_img">
+                                <img src="@item.fPhoto" style="width:80px;height:80px" /> <p>@item.fName</p>
+                            </div>
+                            <div class="sysmsg_time">@item.fLaunchDate</div>
+                        </div>
+                        <div class="sysmsg_content">
+                            <div>@item.fDescription </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="sysmsg_block">
+                    <p style="text-align:center;font-family: 'cwTeXYen', sans-serif;font-size:28px;font-weight:900;margin-top:30px">目前無交易紀錄</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>

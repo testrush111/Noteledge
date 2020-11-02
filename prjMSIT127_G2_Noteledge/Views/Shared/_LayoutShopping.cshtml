@@ -1,0 +1,517 @@
+﻿@using Models.MemberModels;
+@using Models.ShoppingModels;
+@using prjMSIT127_G2_Noteledge.ViewModel;
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note$edge | 讓知識變成價值</title>
+
+    <!-- Google Font:圓體字體 -->
+    <link href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css" rel="stylesheet">
+    <!--Google ICON-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <!--CSS here-->
+    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/animate.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/select2-bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/slick.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/magnific-popup.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/perfect-scrollbar.css">
+    <link rel="stylesheet" href="~/Content/adminlte.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/Shopping/main.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Shopping/util.css">
+    <style>
+        #chat {
+            position: absolute;
+            top: 600px;
+            left: 1400px;
+            z-index: 1;
+        }
+
+            #chat img {
+                height: 100px;
+                width: 100px;
+            }
+
+        #Bell {
+            text-align: center;
+            width: 800px;
+            height: 1000px;
+        }
+    </style>
+    @{
+        CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+
+        CMember memberBell = Session[CMemberSession.Session_Login_User] as CMember;
+        var SelectChat = CChatFactory.fn聊聊查詢(memberBell).OrderByDescending(n => n.fSubmitDateTime);
+        var SelectMember = CMemberFactory.fn會員查詢();
+        List<CMemberMessageViewModel> MemberMessageVM = new List<CMemberMessageViewModel>();
+        foreach (var i in SelectChat)
+        {
+
+            if (i.fMemberTo == memberBell.fMemberId && i.fIsRetract == false)
+            {
+                var members = SelectMember.FirstOrDefault(n => n.fMemberId == i.fMemberFrom);
+
+                MemberMessageVM.Add(new CMemberMessageViewModel()
+                {
+                    fMemberFrom = i.fMemberFrom,
+                    fName = members.fTheNickName,
+                    fPhoto = members.fPhoto,
+                    fMessage = i.fMessage,
+                    fSubmitDateTime = i.fSubmitDateTime.ToString("yyyy-MM-dd HH:mm")
+
+                });
+            }
+        }
+        var SelectNotices = CNoticeFactory.fn通知訊息查詢(member).Where(n => n.fCategoryType == "銷售" || n.fCategoryType == "評價留言").OrderByDescending(n => n.fNoticeDatetime).Take(10);
+        int MCount = MemberMessageVM.Count();
+        int SCount = SelectNotices.Count();
+
+
+        var SelectNoticess = CNoticeFactory.fn通知訊息查詢(member).Where(n => n.fCategoryType == "銷售" || n.fCategoryType == "評價留言").OrderByDescending(n => n.fNoticeDatetime);
+        var SelectChats = CChatFactory.fn聊聊查詢(member).Where(n => n.fMemberTo == member.fMemberId).OrderByDescending(n => n.fSubmitDateTime);
+        int MCounts = SelectChats.Count();
+        int SCounts = SelectNoticess.Count();
+        CMemberMessage memberMessage = new CMemberMessage();
+        var Mnumber = 0;
+        var Snumber = 0;
+        if (Session[CMemberSession.Session_Message_Count] == null)
+        {
+            memberMessage.MessageBell = MCounts;
+            Session[CMemberSession.Session_Message_Count] = memberMessage;
+        }
+        else
+        {
+            CMemberMessage MessageSession = Session[CMemberSession.Session_Message_Count] as CMemberMessage;
+            if (MessageSession.MessageBell < MCounts)
+            {
+                Mnumber = MCounts - MessageSession.MessageBell;
+                memberMessage.MessageBell = MCounts;
+                Session[CMemberSession.Session_Message_Count] = memberMessage;
+            }
+            else
+            {
+                Mnumber = 0;
+            }
+        }
+        if (Session[CMemberSession.Session_sale_Count] == null)
+        {
+            memberMessage.SaleBell = SCounts;
+            Session[CMemberSession.Session_sale_Count] = memberMessage;
+        }
+        else
+        {
+            CMemberMessage MessageSession = Session[CMemberSession.Session_sale_Count] as CMemberMessage;
+            if (MessageSession.SaleBell < SCounts)
+            {
+                Snumber = SCounts - MessageSession.SaleBell;
+                memberMessage.SaleBell = SCounts;
+                Session[CMemberSession.Session_sale_Count] = memberMessage;
+            }
+            else
+            {
+                Snumber = 0;
+            }
+        }
+    }
+</head>
+<body class="animsition">
+    <!-- Header -->
+    <header>
+        <!-- Header desktop -->
+        <div class="container-menu-desktop">
+            <div class="wrap-menu-desktop">
+                <nav class="limiter-menu-desktop container">
+
+                    <!-- Logo desktop -->
+                    <a href="@Url.Action("MyHome", "Home")" class="logo">
+                        <img src="~/Image/Logo/Logo_text_green2.PNG" alt="Note$edge-LOGO" />
+                    </a>
+
+                    <!-- Menu desktop -->
+                    <div class="menu-desktop">
+                        <ul class="main-menu">
+                            <li class="active-menu">
+                                @Html.ActionLink("關於Note$edge", "MyHome", "Home")
+                            </li>
+                            <li>
+                                @Html.ActionLink("我的筆記", "Index", "Note")
+                            </li>
+
+                            <li class="label1" data-label1="hot">
+                                @Html.ActionLink("筆記商城", "Index", "ShoppingHome")
+                            </li>
+                            <li>
+                                @Html.ActionLink("聯絡我們", "MyHome", "Home")
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Icon header -->
+                    <div class="wrap-icon-header flex-w flex-r-m">
+                        <div class="col-xl-6 col-lg-5">
+                            <form class="header-search-form">
+                                <input type="text" placeholder="搜尋 ....">
+                                <button><i class="material-icons">search</i></button>
+                            </form>
+                        </div>
+                        <div class="dropdown">
+                            <button type="button" class="dropdown-toggle cl0 fs-20 hov-cl2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="@member.fPhoto" class="rounded-circle" style="width:45px">
+                            </button>
+                            <div class="dropdown-menu">
+                                <p>
+                                    <a class="dropdown-item fs-16" href="@Url.Action("Index", "ShoppingAccountCenter", new {@goto= "myprofile"})">我的帳戶</a>
+                                </p>
+                                <p>
+                                    <a class="dropdown-item fs-16" href="@Url.Action("Index", "ShoppingAccountCenter", new {@goto= "purchaselist"})">購買清單</a>
+                                </p>
+                                @*<p>@Html.ActionLink("通知總覽", "Index", "ShoppingAccountCenter", null, new { @class = "dropdown-item" })</p>*@
+                                @if (member.fIsVIP == true)
+                                {
+                                    <p>
+                                        <a class="dropdown-item fs-16" href="@Url.Action("Index", "ShoppingAccountCenter", new {@goto= "seller"})">賣家中心</a>
+                                    </p>
+                                }
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fs-16" onclick="fn彈出確認登出視窗()">登出</a>
+                            </div>
+                        </div>
+                        <!-- shopping_cart -->
+                        <div class="icon-header-item cl0 hov-cl2 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" id="cartitem" data-notify="0">
+                            <i class="material-icons" style="font-size:36px">shopping_cart</i>
+                        </div>
+                        <!-- Notifications Dropdown Menu -->
+                        <div class="nav-item dropdown">
+                            <a data-toggle="dropdown" href="#">
+                                <div href="#" class="dis-block icon-header-item cl0 hov-cl2 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="@Mnumber" id="MessageBell" onclick="BellClick()">
+                                    <i class="material-icons" style="font-size:36px;">message</i>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="width:400px;height:600px;margin-top:20px;overflow: auto;" id="slider">
+                                @foreach (var i in MemberMessageVM)
+                                {
+                                    <span class="dropdown-item dropdown-header" style="height:100px" onclick="javascript:location.href='../Chat'">
+                                        <img style="width:70px;height:70px;float:left;border-radius:50%;" src="@i.fPhoto" />
+                                        <p style="font-size:20px;font-weight:900;float:left;margin-right:30px;margin-bottom:5px">@i.fName</p>
+                                        <br />
+                                        <div style="float:right;width:250px">
+                                            <p style="color: #9D9D9D; float: left; font-weight: 900; word-break: break-all;text-align:left">對您說: @i.fMessage</p>
+                                            <br />
+                                            <p style="float:right">@i.fSubmitDateTime</p>
+                                        </div>
+                                    </span>
+                                }
+
+                                <br />
+                                <span class="dropdown-item dropdown-header" style="text-align:center;margin-top:10px;font-weight:900">共有 @MCount 筆聊天記錄</span>
+                            </div>
+                        </div>
+                        <!-- Notifications Dropdown Menu -->
+                        <div class="nav-item dropdown">
+                            <a data-toggle="dropdown" href="#">
+                                <div href="#" class="dis-block icon-header-item cl0 hov-cl2 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="@Snumber" id="SaleBell" onclick="SaleClick()">
+                                    <i class="material-icons" style="font-size:36px">notifications</i>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="width:400px;height:600px;margin-top:20px;overflow: auto;" id="slider">
+
+                                @foreach (var i in SelectNotices)
+                                {
+                                    <span class="dropdown-item dropdown-header" style="height:80px" onclick="javascript:location.href='../Member/MemberOrder'">
+                                        <p style="font-size:20px;font-weight:900;float:left">@i.fCategoryType</p>
+                                        <br />
+                                        <div style="float:left;width:220px;margin-top:5px;">
+                                            <p style="color: #9D9D9D; float: left; font-weight: 900; word-break: break-all;text-align:left"> @i.fNoticeContent</p>
+                                            <br />
+                                            <p style="float:right">@i.fNoticeDatetime.ToString("yyyy-MM-dd HH:mm")</p>
+                                        </div>
+                                    </span>
+                                }
+                                <br />
+                                <span class="dropdown-item dropdown-header" style="text-align:center;margin-top:10px;font-weight:900">共有 @SCount 筆商城通知</span>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <nav id="chat">
+        <a href="@Url.Action("Index","Chat")"><img src="~/Content/2.png" /></a>
+    </nav>
+    <div id="Cart">
+        @Html.Partial("_CartPartial")
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+    <!-- Footer -->
+    <footer class="bg3 p-t-20 p-b-10">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2 col-lg-2 p-b-20 m-l-200">
+                    <h4 class="fs-16 stext-301 cl0 p-b-20">
+                        開發團隊
+                    </h4>
+                    <ul>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/Ek110tn.png" class="rounded-circle" style="width:30px"> 蕭良純
+                        </li>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/WCZ3j4g.png" class="rounded-circle" style="width:30px"> 林佑承
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-3 col-lg-3 p-b-20">
+                    <h4 class="fs-16 stext-301 cl0 p-b-20" style="opacity:0">
+                        開發團隊
+                    </h4>
+                    <ul>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/tPzIRQW.png" class="rounded-circle" style="width:30px"> 呂冠德
+                        </li>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/dgdxXKw.png" class="rounded-circle" style="width:30px"> 汪宏陽
+                        </li>
+                        <li class="stext-105 cl0 size-201 p-b-10">
+                            <img src="https://i.imgur.com/1u5FSrA.png" class="rounded-circle" style="width:30px"> 郭嘉富
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-4 col-lg-4 p-b-20">
+                    <h4 class="fs-16 stext-301 cl0 p-b-20">
+                        聯絡我們
+                    </h4>
+
+                    <p class="stext-105 cl0">
+                        地址:台北市大安區復興南路一段390號2樓
+                    </p>
+
+                    <p class="stext-105 cl0">
+                        總機：(02) 6631-6666
+                    </p>
+
+                    <p class="stext-105 cl0">
+                        傳真：(02) 6631-6598
+                    </p>
+
+                    <p class="stext-105 cl0">
+                        Email: Note$edge@gmail.com
+                    </p>
+
+                    <div class="p-t-10">
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-facebook' style='font-size:24px'></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-instagram' style='font-size:24px'></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-youtube' style='font-size:24px'></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-twitter' style='font-size:24px'></i>
+                        </a>
+                        <a href="#" class="fs-18 cl7 hov-cl0 trans-04 m-r-10">
+                            <i class='fab fa-pinterest' style='font-size:24px'></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex-c-m flex-w p-b-5">
+                    <a href="#" class="m-all-1">
+                        <img src="~/Image/icon-pay-01.png" alt="ICON-PAY">
+                    </a>
+                </div>
+
+                <p class="stext-107 cl6 txt-center">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;
+                    <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with
+                    <i class="fa fa-heart-o" aria-hidden="true"></i> by
+                    <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top -->
+    <div class="btn-back-to-top" id="myBtn">
+        <span class="symbol-btn-back-to-top">
+            <i class="material-icons"> keyboard_arrow_up</i>
+        </span>
+    </div>
+</body>
+</html>
+
+<!-- JS here -->
+<!-- Jquery, Popper, Bootstrap -->
+<script src="~/Scripts/jquery-3.2.1.min.js"></script>
+<script src="~/Scripts/popper.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/animsition.min.js"></script>
+<script src="~/Scripts/select2.min.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/daterangepicker.js"></script>
+<script src="~/Scripts/slick.min.js"></script>
+<script src="~/Scripts/Shopping/slick-custom.js"></script>
+<script src="~/Scripts/parallax100.js"></script>
+<script src="~/Scripts/jquery.magnific-popup.min.js"></script>
+<script src="~/Scripts/isotope.pkgd.min.js"></script>
+<script src="~/Scripts/perfect-scrollbar.min.js"></script>
+<script src="~/Scripts/Shopping/main.js"></script>
+<!-- sweetalert2 cdn -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<!-- AdminLTE App -->
+<script src="~/Scripts/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="~/Scripts/demo.js"></script>
+<!--商品詳細描述頁面-->
+<script src="~/Scripts/jquery.nicescroll.min.js"></script>
+<script src="~/Scripts/jquery.zoom.min.js"></script>
+
+@RenderSection("scripts", required: false)
+
+<script>
+    $(function () {
+        $(window).scroll(function () {
+            $("#chat").stop().animate({ "top": $(window).scrollTop() + 580 }, 500);
+        });
+    });
+
+
+    function BellClick() {
+        $("#MessageBell").attr("data-notify", "0")
+    }
+    function SaleClick() {
+        $("#SaleBell").attr("data-notify", "0")
+    }
+</script>
+
+<!-- 購物車Js -->
+<script type="text/javascript">
+        //網頁載入完成時執行之function
+    $(document).ready(function () {
+        console.log("ready!!");
+        fn加入購物車事件(".addtocart", "@Url.Action("AddToCart", "ShoppingHome")");
+        fn移除購物車事件(".removefromcart", "@Url.Action("RemoveFromCart", "ShoppingHome")");
+        let itemcount = $(".removefromcart").length;
+        $("#cartitem").attr("data-notify", itemcount);
+    });
+    function fn加入購物車事件(selector, URL) {
+        $(selector).click(function () {
+            let productid = $(this).data("productid");
+            let itemcount = $(".removefromcart").length;
+            let isrepeat = false;
+            //依序判斷是否有在購物車內
+            $(".removefromcart").each(function (index) {
+                let cartprodid = $(this).attr("data-productid");
+                if (productid == cartprodid)
+                    isrepeat = true;
+
+            });
+            if (isrepeat == true)
+                swal.fire("重複", "該商品已存在於購物車內!", "warning");
+            else {
+                AddToCart(productid, URL);
+                $("#cartitem").attr("data-notify", itemcount + 1);
+                swal.fire("完成", "成功加入購物車", "success");
+            }
+        });
+    }
+
+    function fn移除購物車事件(selector, URL) {
+        $(selector).click(function () {
+            let cartproductid = $(this).data("cartproductid");
+            RemoveFromCart(cartproductid, URL);
+            let itemcount = $(".removefromcart").length;
+            $("#cartitem").attr("data-notify", itemcount - 1);
+        });
+    }
+
+    function fn開關購物車事件() {
+        $('.js-show-cart').on('click', function () {
+            $('.js-panel-cart').addClass('show-header-cart');
+        });
+
+        $('.js-hide-cart').on('click', function () {
+            $('.js-panel-cart').removeClass('show-header-cart');
+        });
+    }
+    //加入productId的商品進購物車
+    function AddToCart(productid, URL) {
+        $.ajax({
+            type: 'POST',
+            dataType: "html",
+            async: true,
+            url: URL,
+            data: { ProductId: productid },
+            success: function (msg) {
+                $("#Cart").html(msg);
+                fn開關購物車事件();
+                fn移除購物車事件(".removefromcart", "@Url.Action("RemoveFromCart", "ShoppingHome")");
+            }
+        });
+    }
+
+    //移除購物車內cartproductid的商品
+    function RemoveFromCart(cartproductid, URL) {
+        $.ajax({
+            type: 'POST',
+            dataType: "html",
+            async: true,
+            url: URL,
+            data: { CartProductId: cartproductid },
+            success: function (msg) {
+                $("#Cart").html(msg);
+                fn開關購物車事件();
+                fn移除購物車事件(".removefromcart", "@Url.Action("RemoveFromCart", "ShoppingHome")");
+                //讓畫面停留在購物車
+                $(".wrap-header-cart.js-panel-cart").addClass("show-header-cart");
+            }
+        });
+    }
+
+    function fn彈出確認登出視窗() {
+        Swal.fire({
+            title: '您確定要登出帳號嗎??',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: "取消",
+            confirmButtonText: '確定',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: '您成功登出!!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "/Member/Login"
+                    }
+                });
+            }
+        });
+    }
+
+</script>

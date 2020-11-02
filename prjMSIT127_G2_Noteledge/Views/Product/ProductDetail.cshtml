@@ -1,0 +1,422 @@
+﻿@model prjMSIT127_G2_Noteledge.ViewModel.CProductDetailVM
+@{
+    ViewBag.Title = "ProductDetail";
+    Layout = "~/Views/Shared/_LayoutShopping.cshtml";
+
+}
+
+<!-- breadcrumb -->
+<section class="p-lr-15 p-t-92">
+    <div class="content-header col-md-8" style=" margin: 0 auto;float: none;">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="fs-18">
+                        商品詳細檢視
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            @Html.ActionLink("筆記商城", "Index", "ShoppingHome")
+                        </li>
+                        <li class="breadcrumb-item active">@Model.Product.fName </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!-- Product Detail -->
+
+<div class="row">
+    <div class="col-md-8" style=" margin: 0 auto;float: none; ">
+        <!--圖片區-->
+        <div class="wrap-slick3 flex-sb flex-w col-lg-6 wrap-pic-w pos-relative" style="display: inline-block;">
+            <div class="product-pic-zoom">
+                <img class="product-big-img" src="@Model.lsProductPicture.FirstOrDefault().fPicture" data-zoom-image="@Model.lsProductPicture.FirstOrDefault().fPicture" alt="" onerror="this.style.display='none';" />
+            </div>
+            <div class="product-thumbs" tabindex="1" style="overflow: hidden; outline: none;">
+                <div class="product-thumbs-track">
+
+                    @foreach (var item in Model.lsProductPicture)
+                    {
+                        <div class="pt" data-imgbigurl="@item.fPicture">
+                            <img src="@item.fPicture" alt="" onerror="this.style.display='none';">
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-lg-5 p-b-30 float-r">
+            <div class="p-r-50 p-t-5 p-lr-0-lg">
+                <h4 class="mtext-105 cl2 js-name-detail p-b-14 fs-30 font-weight-bold">
+                    @Model.Product.fName
+                </h4>
+                @if (Model.lsProductCategory.Count == 0)
+                {
+                    <span class="fs-17 float-l badge badge-secondary m-r-5">無</span>
+                }
+                else
+                {
+                    foreach (var category in Model.lsProductCategory)
+                    {
+                        <span class="fs-17 float-l badge badge-info m-r-5">@category.fCategoryName</span>
+                    }
+                }
+                <div class="mtext-106 cl2 float-r">
+                    價格: @Model.Product.fPrice.ToString("c0")
+                </div>
+
+                <div class="stext-102 cl3 p-t-23 fs-19" style="width:350px;height:300px;overflow-y: auto;">
+                    商品描述:
+                    <br /> @Model.Product.fDescription
+                </div>
+                <hr />
+                <div class="flex-w flex-m p-b-10">
+                    <button class="stext-101 cl0 size-107 bg3 bor2 hov-btn3 m-lr-10 trans-04 js-addcart-detail addtocart" data-productid="@Model.Product.fProductId">
+                        加入購物車
+                    </button>
+                    <button>
+                        @Html.ActionLink("聊聊", "Index", "Chat", new { productid = Model.Product.fProductId, sellerid = Model.MemberSeller.fMemberId, message = Model.lsProductPicture.FirstOrDefault().fPicture + "*~" + Model.Product.fDescription }, new { @class = "flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 m-lr-15 trans-04" })
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bor10 m-t-50 p-t-43 p-b-40 col-md-9" style=" margin: 50px auto;float: none;border-radius:20px">
+    <!-- Tab01 -->
+    <div class="tab01">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item p-b-10">
+                <a class="nav-link active fs-28" data-toggle="tab" href="#information" role="tab">留言</a>
+            </li>
+
+            <li class="nav-item p-b-10">
+                <a class="nav-link fs-28" data-toggle="tab" href="#reviews" role="tab">商品評價</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content p-t-43" style="overflow-y: scroll;height:400px">
+            <div class="tab-pane fade show active" id="information" role="tabpanel">
+                <div class="row">
+                    <div class="col-sm-10 col-md-4 col-lg-8 m-lr-auto">
+                        <div id="comment" class="p-b-30 m-lr-15-sm">
+                            <!-- Review -->
+                            @foreach (var item in Model.lsProductComment)
+                            {
+                                <div class="flex-w flex-t p-b-20">
+                                    <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
+                                        <img src="@Model.lsMember.FirstOrDefault(m=>m.fMemberId == @item.fMemberId).fPhoto" alt="">
+                                    </div>
+
+                                    <div class="size-207">
+                                        <div class="flex-w flex-sb-m p-b-17">
+                                            <span class="mtext-107 cl2 p-r-20 fs-18">
+                                                @Model.lsMember.FirstOrDefault(m => m.fMemberId == @item.fMemberId).fTheNickName
+                                                <small>留言時間: @item.fCommentDateTime</small>
+                                            </span>
+                                            <button type="button" class="btn btn-default btn-sm hov-btn3 likeproduct" id="@item.fCommentId" data-islike="true" data-productid="@item.fCommentId" onclick="fn商品點讚事件(@item.fCommentId)">
+                                                <span class="material-icons hov-cl1 " style="vertical-align: middle;">thumb_up</span>
+                                                <span class="fs-14">@item.fLikeCount</span>
+                                            </button>
+                                            @*<span class="cl11 hov-cl1 ">
+                                                <span class="material-icons " style="vertical-align: middle;cursor:pointer">| thumb_up_alt  </span>
+                                                <span>@item.fLikeCount</span>
+                                            </span>*@
+                                        </div>
+                                        @if (item.fIsBanned == true)
+                                        {
+                                            <p class="stext-102 cl2 fs-17" style="color:red">
+                                                <img src="~/Image/Chatimage/danger.png" style="width:50px" /> 因 @item.fContent 留言已被屏蔽
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p class="stext-102 cl2 fs-17">
+                                                留言內容:
+                                                <br />@item.fContent
+                                            </p>
+                                        }
+
+                                    </div>
+                                </div>
+                                <hr style=" border-style: dashed;" />
+                            }
+
+                        </div>
+                        @if (Model.Isbanned.Single().fIsBanned == true)
+                        {
+                            <label class="stext-102 cl3" for="message">因被禁言，無法留言</label>
+                        }
+                        else
+                        {
+                            <div class="col-12 p-b-5">
+                                <label class="stext-102 cl3 fs-20" style="display: inline-block;" for="message">
+                                    <span class="material-icons">
+                                        add_comment
+                                    </span> 留言
+                                </label>
+                                <button class="btn btn-info float-r fs-18 m-b-10" id="send-message" onclick="fn新增留言()" disabled>送出</button>
+                                <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10 fs-18" id="message" name="message" oninput="textInput(this.value)"></textarea>
+
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- 商品評價 -->
+            <div class="tab-pane fade" id="reviews" role="tabpanel">
+                <div class="row">
+                    <div class="col-sm-10 col-md-4 col-lg-8 m-lr-auto">
+                        <div class="p-b-30 m-lr-15-sm">
+                            <!-- Review -->
+                            @foreach (var item in Model.lsProductRank)
+                            {
+                                <div class="flex-w flex-t p-b-20">
+                                    <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
+                                        <img src="@Model.lsMember.FirstOrDefault(m=>m.fMemberId == @item.fMemberId).fPhoto" alt="">
+                                    </div>
+
+                                    <div class="size-207">
+                                        <div class="flex-w flex-sb-m p-b-17">
+                                            <span class="mtext-107 cl2 p-r-20 fs-18">
+                                                @Model.lsMember.FirstOrDefault(m => m.fMemberId == @item.fMemberId).fTheNickName
+                                                <small>評價時間: @item.fSubmitDataTime</small>
+                                            </span>
+                                        </div>
+
+                                        @if (item.fRank == 5)
+                                        {
+                                            <p class="stext-102 cl2 fs-17">
+                                                評價星等:🌟🌟🌟🌟🌟
+                                                <br />評價內容: @item.fComment
+                                            </p>
+                                        }
+                                        else if (item.fRank == 4)
+                                        {
+                                            <p class="stext-102 cl2 fs-17">
+                                                評價星等:🌟🌟🌟🌟
+                                                <br />評價內容: @item.fComment
+                                            </p>
+                                        }
+                                        else if (item.fRank == 3)
+                                        {
+                                            <p class="stext-102 cl2 fs-17">
+                                                評價星等:🌟🌟🌟
+                                                <br />評價內容: @item.fComment
+                                            </p>
+                                        }
+                                        else if (item.fRank == 2)
+                                        {
+                                            <p class="stext-102 cl2 fs-17">
+                                                評價星等:🌟🌟
+                                                <br />評價內容: @item.fComment
+                                            </p>
+                                        }
+                                        else if (item.fRank == 1)
+                                        {
+                                            <p class="stext-102 cl2 fs-17">
+                                                評價星等:🌟
+                                                <br />評價內容: @item.fComment
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p class="stext-102 cl2 fs-17">
+                                                評價內容:
+                                                <br /> @item.fComment
+                                            </p>
+
+                                        }
+
+                                    </div>
+                                </div>
+                                <hr style=" border-style: dashed;" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <!--Reference the SignalR library. -->
+    <script src="/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <!--Reference the autogenerated SignalR hub script. -->
+    <script src="/signalr/hubs"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(".cart-table-warp, .product-thumbs").niceScroll({
+                cursorborder: "",
+                cursorcolor: "#afafaf",
+                boxzoom: false
+            });
+
+            $('.product-thumbs-track > .pt').on('click', function () {
+                $('.product-thumbs-track .pt').removeClass('active');
+                $(this).addClass('active');
+                var imgurl = $(this).data('imgbigurl');
+                var bigImg = $('.product-big-img').attr('src');
+                if (imgurl != bigImg) {
+                    $('.product-big-img').attr({ src: imgurl });
+                    $('.zoomImg').attr({ src: imgurl });
+                    //$('.product-pic-zoom').zoom();
+                }
+            });
+
+            $('.product-pic-zoom').zoom();
+
+            var chat = $.connection.productHub;
+            chat.client.hello = function (message) {
+                console.log(message);
+            };
+
+            chat.client.newMessage = function (fPhoto, fTheNickName, fCommentDateTime, fContent) {
+                document.querySelector('#comment').appendChild(createTextBox(fPhoto, fTheNickName, fCommentDateTime, fContent));
+            }
+
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                window.sr = chat.server;
+                chat.server.sendProductId(@Model.Product.fProductId);
+            });
+
+
+        });
+
+
+
+
+        $('.js-addwish-b2').on('click', function (e) {
+            e.preventDefault();
+        });
+
+        $('.js-addwish-b2').each(function () {
+            var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to wishlist !", "success");
+
+                $(this).addClass('js-addedwish-b2');
+                $(this).off('click');
+            });
+        });
+
+        $('.js-addwish-detail').each(function () {
+            var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to wishlist !", "success");
+
+                $(this).addClass('js-addedwish-detail');
+                $(this).off('click');
+            });
+        });
+
+        /*---------------------------------------------*/
+
+        $('.js-addcart-detail').each(function () {
+            var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+            $(this).on('click', function () {
+                swal.fire(nameProduct, "成功加入購物車", "success");
+            });
+        });
+
+        function fn新增留言() {
+            $.ajax({
+                    url: "/Product/ToComment",
+                    type: "POST",
+                    data: { content: document.querySelector('#message').value, pid: @Model.Product.fProductId},
+                    success: function (msg) {
+                    console.log("新增留言成功");
+                     }
+            });
+            document.querySelector('#message').value = "";
+        }
+
+        function textInput(text) {
+            var sendButton = document.querySelector('#send-message');
+            if (text.match(/^\s*$/))
+                sendButton.setAttribute('disabled', '');
+            else
+                sendButton.removeAttribute('disabled');
+        }
+
+        function createTextBox(fPhoto, fTheNickName, fCommentDateTime, fContent) {
+            var div = document.createElement("div");
+            div.classList.add('flex-w', 'flex-t', 'p-b-40');
+
+
+            div.innerHTML = `
+                <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
+                    <img src="${fPhoto}" alt="">
+                </div>
+
+                <div class="size-207">
+                    <div class="flex-w flex-sb-m p-b-17">
+                        <span class="mtext-107 cl2 p-r-20 fs-18">
+                            ${fTheNickName}
+                            <small>留言時間: ${fCommentDateTime} </small>
+                        </span>
+
+                        <button type="button" class="btn btn-default btn-sm hov-btn3 likeproduct">
+                                 <span class="material-icons hov-cl1 " style="vertical-align: middle;">thumb_up</span>
+                                 <span class="fs-14">0</span>
+                        </button>
+                    </div>
+
+                    <p class="stext-102 cl2 fs-17">
+                        留言內容: ${fContent}
+                        <br>
+                    </p>
+                </div>
+            `;
+            return div;
+        }
+
+        function fn商品點讚事件(a) {
+            console.log($(`.likeproduct[data-productid=${a}]`).data("islike"));
+            if ($(`.likeproduct[data-productid=${a}]`).data("islike") == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Product/LikeProductDetial",
+                    data: { fCommentId: a },
+                    success: function (result) {
+                        $(`.likeproduct[data-productid=${a}]`).children("span").eq(1).text(result);
+                        $(`.likeproduct[data-productid=${a}]`).addClass("bg1");
+                        swal.fire("讚", "喜歡這項商品", "success");
+                        $(`.likeproduct[data-productid=${a}]`).data("islike", false);
+                        //$(`.likeproduct[data-productid=${a}]`).attr("data-islike", false);
+                        //console.log($(`.likeproduct[data-productid=${a}]`).data("islike"));
+                    }
+                })
+            } else if ($(`.likeproduct[data-productid=${a}]`).data("islike") == false) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Product/DislikeProductDetial",
+                    data: { fCommentId: a },
+                    success: function (result) {
+                        $(`.likeproduct[data-productid=${a}]`).children("span").eq(1).text(result);
+                        $(`.likeproduct[data-productid=${a}]`).removeClass("bg1");
+                        swal.fire("取消讚", "反悔喜歡這項商品", "warning");
+                        $(`.likeproduct[data-productid=${a}]`).data("islike", true);
+                    }
+                })
+            }
+        }
+    </script>
+}

@@ -1,0 +1,574 @@
+﻿@using Models.ManagementModels
+@using Models.MemberModels
+@using PagedList.Mvc
+@using PagedList
+
+
+@model prjMSIT127_G2_Noteledge.ViewModel.CShoppingDataViewModel
+
+@{
+    ViewBag.Title = "Index";
+    CAdmin admin = Session[CAdminSession.Session_Login_User] as CAdmin;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+<style>
+    .th1 {
+        text-align: center;
+    }
+
+    #th1 {
+        text-align: center;
+    }
+
+    .th2 {
+        width: 150px;
+        float: left;
+    }
+
+    .selected {
+        background-color: #8ED0D4;
+        border-radius: 5px;
+    }
+</style>
+
+<section class="p-t-80">
+    <div class="wrapper">
+        <aside class="main-sidebar sidebar-dark-primary">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img id="adminIMG" src="@admin.fThePhoto" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info" id="myprofile1" style="margin-top:auto;margin-bottom:auto" data-memberid="@admin.fAdminId">
+                        <span class="float-left  p-lr-5 fs-20">@admin.fName</span>
+                    </div>
+                </div>
+                <!-- Sidebar Menu -->
+                <nav class="mt-2 lsSlideNav">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="@Url.Action("HomePage", "ManagerSystem")" class="nav-link selected" style="cursor:pointer">
+                                <i class='fas fa-tachometer-alt cl2 nav-icon' style='font-size:24px;vertical-align: middle;'></i>
+                                <p class="fs-18">
+                                    管理員首頁
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="@Url.Action("adminsetupV2", "ManagerSystem")" class="nav-link" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    assignment_ind
+                                </span>
+                                <p class="fs-18">
+                                    管理員資訊
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item template">
+                            <a href="@Url.Action("MessageBoardView", "ManagerSystem")" class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    speaker_notes_off
+                                </span>
+                                <p class="fs-18">
+                                    留言板管理
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item trash">
+                            <a href="@Url.Action("BlackList", "ManagerSystem")" class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    block
+                                </span>
+                                <p class="fs-18">
+                                    黑名單
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="fs-18">
+                                管理員首頁
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item">
+                                    @Html.ActionLink("關於Note$edge", "Index", "Home")
+                                </li>
+                                <li class="breadcrumb-item active">管理員首頁</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="content">
+                <div class="container-fluid">
+                    <!--基本資訊-->
+                    <div class="row">
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>@ViewBag.membercount</h3>
+                                    <p class="fs-28">累計會員人數</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <a href="#" class="small-box-footer" id="memberinfo">詳細資訊 <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>
+                                        @ViewBag.browse
+                                    </h3>
+                                    <p class="fs-28">累計瀏覽人數</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="material-icons">
+                                        important_devices
+                                    </i>
+                                </div>
+                                <a href="#" class="small-box-footer">詳細資訊 <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>@ViewBag.totalprice</h3>
+
+                                    <p class="fs-28">累計交易金額</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="material-icons">
+                                        monetization_on
+                                    </i>
+                                </div>
+                                <a href="#" class="small-box-footer">詳細資訊 <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>@ViewBag.totalorder</h3>
+
+                                    <p class="fs-28">累計購物數量</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                </div>
+                                <a href="#" class="small-box-footer" id="noteinfo">詳細資訊 <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--會員資訊清單-->
+                    <div class="row" id="member">
+                        <div class="col-md-12">
+                            <div class="card card-info">
+                                <div class="card-header">
+                                    <h5 class="card-title fs-26">會員資訊清單</h5>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <table class="display" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    會員編號
+                                                </th>
+                                                <th>
+                                                    帳號
+                                                </th>
+                                                <th>
+                                                    密碼
+                                                </th>
+                                                <th>
+                                                    姓名
+                                                </th>
+                                                <th>
+                                                    綽號
+                                                </th>
+                                                <th>
+                                                    性別
+                                                </th>
+                                                <th>
+                                                    電話
+                                                </th>
+                                                <th>
+                                                    馬尼幣
+                                                </th>
+                                                <th>
+                                                    vip
+                                                </th>
+                                                <th>
+                                                    黑名單
+                                                </th>
+                                                <th>
+                                                    註冊時間
+                                                </th>
+                                                <th>
+                                                    最後登入時間
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.lsMember)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fMemberId)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fAccount)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fPassword)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fFirstName)@Html.DisplayFor(modelItem => item.fLastName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fTheNickName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fGender)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fMobilePhone)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fMoneyPoint)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fIsVIP)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fIsBanned)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fRegisterDateTime)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.fLastLoginDateTime)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--人氣筆記排名-->
+                    <div class="row" id="note">
+                        <div class="col-md-12">
+                            <div class="card card-danger">
+                                <div class="card-header">
+                                    <h5 class="card-title fs-26">筆記商品資訊清單</h5>
+                                    <div class="card-tools">
+                                        <span type="button" class="badge badge-pill badge-warning fs-18 m-r-10" id="free">免費</span>
+                                        <span type="button" class="badge badge-pill badge-light fs-18 m-r-10" id="paid">付費</span>
+                                        <span type="button" class="badge badge-pill badge-dark fs-18 m-r-10" id="all">全部</span>
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <table id="tdnote" class="display" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th>產品編號</th>
+                                                <th>產品名稱</th>
+                                                <th>產品費用</th>
+                                                <th>購買數量</th>
+                                                <th>筆記種類</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var p in Model.ls產品與產品分類)
+                                            {
+                                                <tr>
+                                                    <td>@Html.DisplayFor(modelItem => p.product.fProductId)</td>
+                                                    <td>@Html.DisplayFor(modelItem => p.product.fName)</td>
+                                                    <td class="noteprice" data-price="@Html.DisplayFor(modelItem => p.product.fPrice)">@Html.DisplayFor(modelItem => p.product.fPrice)</td>
+                                                    <td>@Html.DisplayFor(modelItem => p.product.fDownloadTimes)</td>
+                                                    <td>
+                                                        @foreach (var pc in p.lsProductCompare)
+                                                        {
+
+                                                            @Html.DisplayFor(modelItem => pc.fCategoryName)
+
+                                                        }
+                                                    </td>
+
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {            
+            $('table.display').DataTable();
+        });
+    </script>
+    <script>
+        $(function () {
+
+            //指定滾動到的畫面
+            $('#memberinfo').click(function () {
+                $('html, body').animate({ scrollTop: $('#member').offset().top - 90 }, 200);
+            });
+
+            $('#noteinfo').click(function () {
+                $('html, body').animate({ scrollTop: $('#note').offset().top - 90 }, 200);
+            });
+            //付費按鈕
+            $("#paid").click(function () {
+                //$("#tdnote .noteprice[data-price='0']").parent().css("background-color", "white");
+                //$("#tdnote .noteprice[data-price!='0']").parent().css("background-color", "yellow");
+                $("#tdnote .noteprice[data-price!='0']").parent().show();
+                $("#tdnote .noteprice[data-price='0']").parent().hide();
+                //$("#tdnote .noteprice[data-price!='0']").parent().css("background-color", "yellow");
+            });
+            //免費按鈕
+            $("#free").click(function () {
+                //$("#tdnote").css("background-color", "yellow");
+                //$("#tdnote .noteprice").css("background-color", "red");
+                //$("#tdnote .noteprice[data-price!='0']").css("background-color", "red");
+                $("#tdnote .noteprice[data-price='0']").parent().show();
+                $("#tdnote .noteprice[data-price!='0']").parent().hide();
+                //$("#tdnote .noteprice[data-price='0']").parent().css("background-color", "yellow");
+                //$("#tdnote .noteprice[data-price!='0']").parent().css("background-color", "white");
+            })
+            //全顯示按鈕
+            $("#all").click(function () {                
+                $("#tdnote .noteprice[data-price='0']").parent().show();
+                $("#tdnote .noteprice[data-price!='0']").parent().show();
+            })
+        });                                
+    </script>
+}
+
+
+<!--=======================原始標籤===================================-->
+@*<div>
+        <img src="@admin.fThePhoto" width="200" height="200" margin-bottom:20px ;" id="adminIMG" />
+    </div>
+    <li>@Html.ActionLink("管理員首頁", "HomePage", "ManagerSystem")</li>
+    <li>@Html.ActionLink("管理員資訊", "adminsetupV2", "ManagerSystem")</li>
+    <li>@Html.ActionLink("留言板管理", "MessageBoardView", "ManagerSystem")</li>
+    <li>@Html.ActionLink("黑名單", "BlackList", "ManagerSystem")</li>*@
+
+@*<section class="p-t-80">*@
+@*<div>
+        <table style="text-align:center" class="table table-bordered table-dark">
+            <tr>
+                <th class="th1">累計會員人數</th>
+            </tr>
+            <tr>
+                <td>@ViewBag.membercount</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table style="text-align:center" class="table table-bordered table-dark">
+            <tr>
+                <th class="th1">累計瀏覽人數</th>
+            </tr>
+            <tr>
+                <td>@ViewBag.browse</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table style="text-align:center" class="table table-bordered table-dark">
+            <tr>
+                <th class="th1">累計收入金額</th>
+            </tr>
+            <tr>
+                <td>@ViewBag.totalprice</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table style="text-align:center" class="table table-bordered table-dark">
+            <tr>
+                <th class="th1">累計購物數量</th>
+            </tr>
+            <tr>
+                <td>@ViewBag.totalorder</td>
+            </tr>
+        </table>
+    </div>*@
+@*<h2>會員資訊清單</h2>
+    <table class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    會員id
+                </th>
+                <th>
+                    帳號
+                </th>
+                <th>
+                    密碼
+                </th>
+                <th>
+                    姓
+                </th>
+                <th>
+                    名
+                </th>
+                <th>
+                    綽號
+                </th>
+                <th>
+                    性別
+                </th>
+                <th>
+                    電話
+                </th>
+                <th>
+                    馬尼幣
+                </th>
+                <th>
+                    vip
+                </th>
+                <th>
+                    黑名單
+                </th>
+                <th>
+                    註冊時間
+                </th>
+                <th>
+                    最後登入時間
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.lsMember)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fMemberId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fAccount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fPassword)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fFirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fLastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fTheNickName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fGender)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fMobilePhone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fMoneyPoint)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fIsVIP)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fIsBanned)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fRegisterDateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.fLastLoginDateTime)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>*@
+
+
+@*<div>
+            <h2>
+                人氣筆記排名
+                <input type="button" value="免費" id="free" />
+                <input type="button" value="付費" id="paid" />
+                <input type="button" value="全部" id="all" />
+            </h2>
+        </div>
+        <table id="tdnote" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>產品id</th>
+                    <th>產品名稱</th>
+                    <th>產品費用</th>
+                    <th>購買數量</th>
+                    <th>筆記種類</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.ls產品與產品分類)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => p.product.fProductId)</td>
+                        <td>@Html.DisplayFor(modelItem => p.product.fName)</td>
+                        <td class="noteprice" data-price="@Html.DisplayFor(modelItem => p.product.fPrice)">@Html.DisplayFor(modelItem => p.product.fPrice)</td>
+                        <td>@Html.DisplayFor(modelItem => p.product.fDownloadTimes)</td>
+                        <td>
+                            @foreach (var pc in p.lsProductCompare)
+                            {
+
+                                @Html.DisplayFor(modelItem => pc.fCategoryName)
+
+                            }
+                        </td>
+
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </section>*@
+
+
+
+

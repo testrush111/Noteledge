@@ -1,0 +1,69 @@
+﻿@using Models.MemberModels
+@{
+    //取得當前購物車所有內容
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+    var currentCart = ViewModel.CCartVM.CCartVM.GetCurrentCart(member);
+}
+<!-- Cart -->
+<div class="wrap-header-cart js-panel-cart">
+    <div class="s-full js-hide-cart"></div>
+
+    <div class="header-cart p-l-65 p-r-25">
+        <div class="header-cart-title flex-w flex-sb-m p-b-8">
+            <span class="mtext-103 cl2 fs-26 font-weight-bold">
+                我的購物車
+            </span>
+
+            <div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+                <i class="material-icons" style="font-size:36px">close</i>
+            </div>
+        </div>
+        <div class="header-cart-content flex-w js-pscroll">
+            @if (currentCart.lscartprooduct.Count > 0)
+            {
+                <ul class="header-cart-wrapitem w-full">
+                    @foreach (var cartitem in currentCart.lscartprooduct)
+                    {
+                        <li class="header-cart-item flex-w flex-t m-b-12">
+                            <div class="header-cart-item-img removefromcart" data-cartproductid="@cartitem.fCartProductId" data-productid="@cartitem.fProductId">
+                                <img src="@currentCart.productpic.FirstOrDefault(p => p.fProductId == cartitem.fProductId).fPicture" alt="IMG">
+                            </div>
+                            <div class="header-cart-item-txt p-t-8">
+                                <a href="#" class="header-cart-item-name m-b-5 hov-cl1 trans-04 fs-18">
+                                    @cartitem.fName
+                                </a>
+                                <span class="header-cart-item-info fs-16">
+                                    1 x @cartitem.fPrice.ToString("c0")
+                                </span>
+                            </div>
+                        </li>
+                        <hr />
+                    }
+                </ul>
+                <div class="w-full">
+                    <div class="header-cart-total w-full p-tb-40 fs-22">
+                        總計: @String.Format("共{0}元 ({1})", currentCart.TotalAmount, currentCart.Count)
+                    </div>
+
+                    <div class="header-cart-buttons flex-w w-full">
+                        @Html.ActionLink("檢視購物車", "CartView", "ShoppingHome", null, new { @class = "flex-c-m stext-101 cl0 size-111 bg3 bor2 hov-btn3 p-lr-15 trans-04 pointer m-tb-10" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                <ul class="header-cart-wrapitem w-full">
+                    <li class="mtext-103 cl2">
+                        購物車內無任何商品
+                    </li>
+                    <li class="flex-w w-full">
+                        @Html.ActionLink("現在就去逛逛", "Index", "ShoppingHome", null, new { @class = "flex-c-m stext-101 cl0 size-111 bg3 bor2 hov-btn3 p-lr-15 trans-04 pointer m-tb-10" })
+                    </li>
+                </ul>
+            }
+        </div>
+    </div>
+
+</div>
+
+

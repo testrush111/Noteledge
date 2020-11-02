@@ -1,0 +1,126 @@
+﻿@model IEnumerable<Models.ShoppingModels.CDetailOrder>
+
+@{
+    ViewBag.Title = "DetailOrder";
+}
+
+<h2>DetailOrder</h2>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+<style type="text/css">
+    .DIV1 {
+        width: 200px;
+        line-height: 50px;
+        padding: 20px;
+        border: 2px solid;
+        margin-right: 10px;
+        float: left;
+    }
+
+    .DIV2 {
+        width: 200px;
+        line-height: 50px;
+        padding: 20px;
+        border: 2px solid;
+        float: left;
+    }
+</style>
+
+<li>@Html.ActionLink("管理員首頁", "HomePage", "ManagerSystem")</li>
+<li>@Html.ActionLink("管理員資訊", "AdminSetup", "ManagerSystem")</li>
+<li>@Html.ActionLink("網站資訊統計表", "DetailOrder", "ManagerSystem")</li>
+<li>@Html.ActionLink("黑名單", "BlackList", "ManagerSystem")</li>
+<li>@Html.ActionLink("留言板管理", "MessageBoardView", "ManagerSystem")</li>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.fDetailOrderIId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fProductId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fOrderId)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.fDetailOrderIId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fProductId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fOrderId)
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    @*function drawChart(cproductid,corderid) {
+        var jsonData = $.ajax({
+            url: "@Url.Action("DetailOrder", "ManagerSystem")",
+            type: "POST",
+            datatype: "json",
+            data: { fProductId: cproductid, fOrderId: corderid }
+        }).responseText;*@
+        //var data = google.visualization.arrayToDataTable([
+        //    ['類別', '百分比'],
+        //    ['國文', 0],
+        //    ['數學', 2],
+        //    ['英文', 2],
+        //    ['理化', 2],
+        //    ['化學', 2]
+        //]);
+    function drawChart() {
+        var jsonData = $.ajax({
+            url: "getData.php",
+            dataType: "json",
+            async: false
+        }).responseText;
+
+
+
+        var options = {
+            title: '類別銷售比較圖'
+        };
+
+        var data = new google.visualization.DataTable(jsonData);
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+    }
+</script>
+<script type="text/javascript">
+    google.charts.load("current", { packages: ["corechart"] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['日', '銷售量'],
+            ['國文', 1.1],
+            ['英文', 1],
+            ['數學', 1],
+            ['歷史', 1]]);
+
+        var options = {
+            title: '商品每日銷售量',
+            legend: { position: 'none' },
+        };
+
+        var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+        chart.draw(data, options);
+    }
+</script>
+<div class="DIV1" id="piechart" style="width: 565px;height: 350px;"></div>
+<div class="DIV2" id="chart_div" style="width: 565px; height: 350px;"></div>
+

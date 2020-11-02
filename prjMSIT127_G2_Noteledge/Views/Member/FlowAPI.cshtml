@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "FlowAPI";
+}
+
+<h2>FlowAPI</h2>
+
+<form id="formWebATM" method="post" accept-charset="UTF-8"
+      action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">
+
+    @*MerchantID 商店代號:
+    <input type="text" name="MerchantID" value="@ViewBag.MerchantID" /><br />
+
+    MerchantTradeNo 商店交易編號:
+    <input type="text" name="MerchantTradeNo" value="@ViewBag.MerchantTradeNo" /><br />
+
+    MerchantTradeDate 商店交易時間:
+    <input type="text" name="MerchantTradeDate" value="@ViewBag.MerchantTradeDate" /><br />
+
+    PaymentType 交易類型:
+    <input type="text" name="PaymentType" value="aio" /><br />
+
+    TotalAmount 交易金額:
+    <input type="text" name="TotalAmount" value="@ViewBag.Amount" /><br />
+
+    TradeDesc 交易描述:
+    <input type="text" name="TradeDesc" value="建立全金流測試訂單" /><br />
+
+    ItemName 商品名稱:
+    <input type="text" name="ItemName" value="@ViewBag.ProductName" /><br />
+
+    ReturnURL 付款完成通知回傳網址:
+    <input type="text" name="ReturnURL" value="@ViewBag.Url" /><br />
+
+    ChoosePayment 預設付款方式:
+    <input type="text" name="ChoosePayment" value="ALL" /><br />
+
+    會員商店代碼:
+    <input type="text" name="StoreID" value="" /><br />
+
+    ChooseSubPayment 預設子付款方式:
+    <input type="text" name="ChooseSubPayment" value="" /><br />
+
+    ClientBackURL Client端返回廠商網址:
+    <input type="text" name="ClientBackURL" value="@ViewBag.Url" /><br />
+
+    CheckMacValue 簽章類型:
+    <input type="text" name="EncryptType" value="1" /><br />*@
+
+    CheckMacValue 檢查碼:
+    <input type="text" name="CheckMacValue" value="@ViewBag.SHA256" /><br />
+
+    <input type="submit" value="送出訂單" />
+
+</form>

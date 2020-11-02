@@ -1,0 +1,546 @@
+﻿@model IEnumerable<prjMSIT127_G2_Noteledge.ViewModel.CChatBeauViewModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutShopping.cshtml";
+}
+
+
+@helper fnlsChatBeau()
+{
+    foreach (var beau in Model)
+    {
+        <li class="nav-item">
+            <a class="beau nav-link pointer hov-btn1" style="color:#2C3E4E" id="@beau.BeauId" data-folderid="@beau.BeauId" onclick="fn更新個人聊天內容(@beau.BeauId)">
+                <span class="material-icons" style="font-size:24px">
+                    mark_email_read
+                </span> @beau.Beau
+                <span class="badge" data-count="@beau.nRead">@beau.nRead</span>
+            </a>
+        </li>
+    }
+}
+<style>
+    html {
+        height: 100%;
+    }
+
+    body {
+        height: 100%;
+        /* min-height: 100%; */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .body-content {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+        flex: 1;
+    }
+
+    /*.beau {
+        padding: 5px;
+        border: 2px solid blue;
+    }*/
+
+    .doflex {
+        display: flex;
+        flex: 1;
+    }
+
+    .lsNote {
+        flex: 1;
+    }
+
+    .IsContent {
+        display: flex;
+        flex-direction: column;
+        flex: 2;
+    }
+
+    /*#chatroom {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }*/
+
+    #chatroom .text-box-my {
+        display: flex;
+    }
+
+        #chatroom .text-box-my .padding {
+            flex: 1;
+        }
+
+        #chatroom .text-box-my .read {
+            background-color: aquamarine;
+        }
+
+        #chatroom .text-box-my .retract {
+            border: 2px solid green;
+        }
+
+    /*#input-box {
+        display: flex;
+    }
+
+        #input-box.none_display {
+            display: none;
+        }
+
+        #input-box > input {
+            flex: 1;
+            max-width: 100% !important;
+        }*/
+
+    /*.texture {
+        padding: 20px;
+        width: 250px;
+        bottom: 150px;
+        position: absolute;
+        display: none;
+    }*/
+
+    .badge {
+        background-color: red;
+    }
+
+        .badge[data-count="0"] {
+            display: none;
+        }
+</style>
+
+
+<section class="p-lr-90 p-tb-90">
+    <div class="main">
+        <div class="container">
+            <div class="content-header ">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="fs-18">
+                                聊聊紀錄
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item">
+                                    @Html.ActionLink("筆記商城", "Index", "ShoppingHome")
+                                </li>
+                                <li class="breadcrumb-item active">聊聊</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card card-info">
+                            <div class="card-header">
+                                <h3 class="card-title">聊天對象</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body p-0 lsNote">
+                                <ul class="nav nav-pills flex-column">
+                                    @fnlsChatBeau()
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!--對話區-->
+                    <div class="col-md-9">
+                        <div class="card card-info card-outline direct-chat direct-chat-info">
+                            <div class="card-header">
+                                <h2 class="card-title font-weight-bold fs-20">聊天內容</h2>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="direct-chat-messages" style="height:400px" id="chatroom">
+
+                                </div>
+                            </div>
+                            <div class="card-footer p-0">
+                                <div class="input-group" id="input-box">
+                                    <div class="btn-group dropup">
+                                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <img src="~/Content/smile.png" width="50" height="50" />
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="texture p-all-5 m-l-10">
+                                                <div>
+                                                    <button name="t1" id="t1" data-folderid="😹" onclick="fn貼圖(t1)">😹</button>
+                                                    <button name="t2" id="t2" data-folderid="😺" onclick="fn貼圖(t2)">😺</button>
+                                                    <button name="t3" id="t3" data-folderid="😻" onclick="fn貼圖(t3)">😻</button>
+                                                    <button name="t4" id="t4" data-folderid="😼" onclick="fn貼圖(t4)">😼</button>
+                                                    <button name="t5" id="t5" data-folderid="😽" onclick="fn貼圖(t5)">😽</button>
+                                                </div>
+                                                <div>
+                                                    <button name="t6" id="t6" data-folderid="😀" onclick="fn貼圖(t6)">😀</button>
+                                                    <button name="t7" id="t7" data-folderid="😁" onclick="fn貼圖(t7)">😁</button>
+                                                    <button name="t8" id="t8" data-folderid="😂" onclick="fn貼圖(t8)">😂</button>
+                                                    <button name="t9" id="t9" data-folderid="😃" onclick="fn貼圖(t9)">😃</button>
+                                                    <button name="t10" id="t10" data-folderid="😄" onclick="fn貼圖(t10)">😄</button>
+                                                </div>
+                                                <div>
+                                                    <button name="t11" id="t11" data-folderid="😅" onclick="fn貼圖(t11)">😅</button>
+                                                    <button name="t12" id="t12" data-folderid="😆" onclick="fn貼圖(t12)">😆</button>
+                                                    <button name="t13" id="t13" data-folderid="😇" onclick="fn貼圖(t13)">😇</button>
+                                                    <button name="t14" id="t14" data-folderid="😈" onclick="fn貼圖(t14)">😈</button>
+                                                    <button name="t15" id="t15" data-folderid="😉" onclick="fn貼圖(t15)">😉</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="input-box" class="none_display m-tb-5" style="display: inherit;">
+                                        <input type="text" id="message" name="message" placeholder="請輸入訊息 ..." class="p-l-10" style="width:720px" oninput="textInput(this.value)">
+                                        <div class="input-group-append">
+                                            <button type="submit" id="send-message" class="btn btn-info" onclick="fn新增聊天(chatbeauid)" disabled>送出</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+
+@section scripts{
+    <script>
+
+        function textInput(text) {
+            var sendButton = document.querySelector('#send-message');
+            if (text.match(/^\s*$/))
+                sendButton.setAttribute('disabled', '');
+            else
+                sendButton.removeAttribute('disabled');
+        }
+
+        let chatbeauid = 0;
+
+        function fn更新個人聊天內容(charId) {
+            $(`#${charId}`).parent().siblings("li").children().css("background-color", "transparent");
+            $(`#${charId}`).css("background-color", "#D5E7E4");
+            $.ajax({
+                url: `/api/ChatContent/Search/${charId}`,
+                type: "GET",
+                dataType: "json",
+                data: {},
+                success: function (msg) {
+                    document.querySelector('#input-box').classList.remove('none_display');
+                    let chatroom = document.querySelector('#chatroom');
+                    chatbeauid = charId;
+
+                    chatroom.innerText = '';
+                    console.log(msg);
+                    for (let i of msg) {
+                        chatroom.appendChild(createTextBox(i, charId != i.fMemberFrom));
+                    }
+
+                    chatroom.scrollTop = chatroom.scrollHeight;
+                }
+            });
+            fn已讀更新(charId);
+            let badge = $(`.card.card-info > .card-body > ul > li > a[data-folderid="${charId}"] > .badge`);
+            badge.text(0);
+            badge.attr('data-count', 0);
+            //$("#chatroom .text-box-my .retract").click(function () {
+            //    console.log("收回");
+            //});
+        }
+
+        function createTextBox(msg, isMy) {
+            var box = document.createElement('div');
+            var message = document.createElement('div');
+            message.classList.add("direct-chat-text");
+            message.innerText = msg.fMessage;
+            var status = document.createElement('div');
+            status.classList.add("direct-chat-infos", "clearfix");
+            var name = document.createElement('span');
+            var read = document.createElement('button');
+            read.classList.add("badge-pill", "badge-warning", "float-right", "m-r-5", "fs-16");
+            var retract = document.createElement('button');
+            retract.classList.add("badge-pill", "badge-danger", "float-right", "m-r-5", "fs-16");
+            retract.setAttribute('id', msg.fChatId);
+            //retract.onclick = fn聊天收回;
+            retract.addEventListener('click', fn聊天收回);
+            var images = document.createElement('img');
+            images.classList.add("direct-chat-img");
+            var div1 = document.createElement('div');
+            var div2 = document.createElement('div');
+            if (msg.fProductId == 0) {
+                if (msg.fIsRetract == true) {
+                    message.innerText = "已收回"
+                }
+                else {
+                    message.innerText = msg.fMessage;
+                    retract.innerText = " 收回"
+                }
+                if (msg.fIsRead == false) {
+                    read.innerText = "未讀";
+                }
+                else {
+                    read.innerText = "已讀";
+                }
+                if (isMy) {
+                    box.classList.add("direct-chat-msg", "right", "p-lr-30");
+                    name.classList.add("direct-chat-name", "float-right", "m-r-5", "fs-16");
+                    name.innerText = "自己";
+                    status.appendChild(name);
+                    box.appendChild(status);
+                    status.appendChild(read);
+                    status.appendChild(retract);
+                    images.setAttribute('src', "https://i.imgur.com/lV6rTxi.png");
+                    box.appendChild(images);
+                    div1.classList.add("chat-text-box", "right");
+                    div1.appendChild(div2);
+                    div1.appendChild(message);
+                    box.appendChild(div1);
+                } else {
+                    box.classList.add("direct-chat-msg", "left", "p-lr-30");
+                    name.classList.add("direct-chat-name", "float-left");
+                    name.innerText = "對方";
+                    status.appendChild(name);
+                    box.appendChild(status);
+                    images.setAttribute('src', "https://i.imgur.com/s83o8gn.png");
+                    box.appendChild(images);
+                    div1.classList.add("chat-text-box", "left");
+                    div1.appendChild(message);
+                    div1.appendChild(div2);
+                    box.appendChild(div1);
+                }
+            } else {
+                box.classList.add("direct-chat-msg", "left", "p-lr-30");
+                div1.classList.add("chat-text-box", "left");
+                var imghref = document.createElement('a');
+                imghref.setAttribute('href', "https://noteledge.azurewebsites.net/Product/ProductDetail?ProductId=" + msg.fProductId);
+                div1.appendChild(imghref);
+                div2.classList.add("direct-chat-text");
+                imghref.appendChild(div2);
+                var q = msg.fMessage.split("*~");
+                var img1 = document.createElement('img');
+                img1.setAttribute('src', q[0]);
+                img1.setAttribute('style', 'width:100px;height:100px');
+                var span1 = document.createElement('span');
+                span1.innerText = q[1];
+                span1.setAttribute('class', 'fs-16');
+                div2.appendChild(img1);
+                div2.appendChild(span1);
+                var div3 = document.createElement('div');
+                imghref.appendChild(div3);
+                box.appendChild(div1);
+            }
+            return box;
+        }
+
+
+        //    var name = document.createElement('span');
+        //    var message = document.createElement('span');
+        //    var box = document.createElement('div');
+        //    var read = document.createElement('div');
+        //    read.classList.add('read');
+        //    var retract = document.createElement('div');
+        //    retract.classList.add('retract');
+        //    retract.setAttribute('id', msg.fChatId);
+        //    retract.setAttribute("onclick", "fn聊天收回()");
+
+        //    //productd.setAttribute('text', msg.fMessage);
+        //    if (msg.fProductId == 0) {
+        //        if (msg.fIsRead == false) {
+        //            read.innerText = "未讀";
+        //        }
+        //        else {
+        //            read.innerText = "已讀";
+        //        }
+
+        //        if (msg.fIsRetract == true) {
+        //            message.innerText = "已收回"
+        //        }
+        //        else {
+        //            message.innerText = msg.fMessage;
+        //            retract.innerText = " 收回"
+        //        }
+
+        //        if (isMy) {
+        //            var padding = document.createElement('div');
+        //            padding.classList.add('padding');
+
+        //            name.innerText = ' < 我方'
+        //            box.classList.add('text-box-my');
+        //            box.appendChild(padding);
+        //            box.appendChild(read);
+        //            box.appendChild(message);
+        //            box.appendChild(name);
+        //            box.appendChild(retract);
+        //        } else {
+        //            name.innerText = '對方 > '
+        //            box.classList.add('text-box-he');
+        //            box.classList.add('direct-chat-text');
+        //            box.appendChild(name);
+        //            box.appendChild(message);
+        //        }
+        //    }
+        //    else {
+        //        var message = document.createElement('a');
+        //        message.setAttribute('href', "https://localhost:44300/Product/ProductDetail?ProductId=" + msg.fProductId);
+        //        var q = msg.fMessage.split("*~");
+        //        var img = document.createElement('img');
+        //        img.setAttribute('src', q[0]);
+        //        img.setAttribute('style', 'width:100px;height:100px');
+        //        message.innerText = q[1];
+        //        message.append(img);
+        //        box.appendChild(message);
+
+        //    }
+        //    return box;
+        //}
+
+        function fn新增聊天(chatbeauid) {
+            $.ajax({
+                url: `/api/ChatContent/Insert`,
+                type: "POST",
+                dataType: "json",
+                data: { fMemberTo: chatbeauid, fMessage: document.querySelector('#message').value },
+                success: function (msg) {
+                    console.log(msg);
+                    //fn更新個人聊天內容(chatbeauid);
+                    document.querySelector('#message').value = "";
+                    textInput('');
+                    fn更新聊天對象列表(chatbeauid);
+                    setTimeout('fn更新個人聊天內容(chatbeauid)', 500);
+                }
+            });
+
+        }
+
+        function fn更新聊天對象列表(chatId) {
+            var a = document.querySelector(`.card.card-info > .card-body > ul > li > a[data-folderid="${chatId}"]`).parentElement;
+            var b = document.querySelector('.card.card-info > .card-body > ul');
+
+            a.remove();
+            b.insertBefore(a, b.children[0]);
+        }
+
+        function fn貼圖(a) {
+            //console.log(a);
+            //console.log(a.textContent);
+            $.ajax({
+                url: `/api/ChatContent/Insert`,
+                type: "POST",
+                dataType: "json",
+                data: { fMemberTo: chatbeauid, fMessage: a.textContent },
+                success: function (msg) {
+                    console.log(msg);
+                    fn更新個人聊天內容(chatbeauid);
+                    fn更新聊天對象列表(chatbeauid);
+                    $(".texture").hide();
+                }
+            });
+
+            //console.log(document.getElementById("😹").textContent);
+        }
+
+        function fn貼圖顯示() {
+            $(".texture").show();
+        }
+
+        function fn聊天收回() {
+            console.log(event)
+            let b = event.target.id;
+            $.ajax({
+                url: `/api/ChatContent/Retract/${b}`,
+                type: "GET",
+                dataType: "json",
+                data: {},
+                success: function (msg) {
+                    console.log(msg);
+                    fn更新個人聊天內容(chatbeauid);
+                }
+            });
+
+        }
+
+        function fn已讀更新(charId) {
+            $.ajax({
+                url: `/api/ChatContent/Read/${charId}`,
+                type: "GET",
+                dataType: "json",
+                data: {},
+                success: function (msg) {
+                    console.log(msg);
+                }
+            }
+            );
+        }
+    </script>
+
+    <!--Reference the SignalR library. -->
+    <script src="/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <!--Reference the autogenerated SignalR hub script. -->
+    <script src="/signalr/hubs"></script>
+    <!--Add script to update the page and send messages.-->
+    <script>
+        $(function () {
+            // Declare a proxy to reference the hub.
+            var chat = $.connection.chatHub;
+            // Create a function that the hub can call to broadcast messages.
+            chat.client.hello = function (message) {
+                console.log(message);
+            };
+
+            chat.client.newMessage = function (from, meaasge, fSubmitDateTime, fProductId) {
+                if (chatbeauid == from) {
+                    fn已讀更新(chatbeauid);
+                    let chatroom = document.querySelector('#chatroom');
+                    console.log(meaasge);
+                    chatroom.appendChild(createTextBox({
+                        fIsRead: false,
+                        fIsRetract: false,
+                        fMemberFrom: from,
+                        fMemberTo: chatbeauid,
+                        fMessage: meaasge,
+                        fProductId: fProductId,
+                        fSubmitDateTime: fSubmitDateTime
+                    }, false));
+                    //fn已讀更新(chatbeauid);
+                    chatroom.scrollTop = chatroom.scrollHeight;
+                } else {
+                    fn更新聊天對象列表(from);
+                    let badge = $(`.card.card-info > .card-body > ul > li > a[data-folderid="${from}"] > .badge`);
+                    let count = parseInt(badge.text()) + 1;
+                    badge.text(count);
+                    badge.attr('data-count', count);
+                }
+            }
+
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                window.sr = chat.server;
+                chat.server.sendUserId(@Model.ToArray()[0].MyID);
+            });
+            @if(HttpContext.Current.Request.QueryString["sellerid"] != null) //C#
+            {
+                <text> //C#中要用HTML或javascript要用text包起來
+                    fn更新個人聊天內容(@HttpContext.Current.Request.QueryString["sellerid"]);
+                </text>
+            }
+        });
+    </script>
+}

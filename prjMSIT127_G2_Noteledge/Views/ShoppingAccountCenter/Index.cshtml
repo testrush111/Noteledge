@@ -1,0 +1,210 @@
+﻿@using Models.MemberModels
+@model prjMSIT127_G2_Noteledge.ViewModel.CShoppingAccountCenterVM
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutShopping.cshtml";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+}
+
+<!-- Theme style -->
+@*<link rel="stylesheet" href="~/Content/adminlte.min.css">*@
+<link rel="stylesheet" type="text/css" href="~/Content/style.css">
+<link rel="stylesheet" type="text/css" href="~/Content/mobile-style.css">
+<style>
+    .selected {
+        background-color: #8ED0D4;
+        border-radius: 5px;
+    }
+</style>
+<section class="p-t-80">
+    <div class="wrapper">
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="@member.fPhoto" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info" id="myprofile1" data-memberid="@member.fMemberId">
+                        <span class="d-block fs-20">@member.fTheNickName</span>
+                        <p class="d-block fs-13 cl4">@member.fAccount</p>
+                    </div>
+                </div>
+                <!-- Sidebar Menu -->
+                <nav class="mt-2 lsSlideNav">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a class="nav-link" id="account" style="cursor:pointer;">
+                                <i class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    person_pin
+                                </i>
+                                <p class="fs-18">
+                                    我的帳戶
+                                    <i class="right fas fa-angle-left" style=" line-height:27px;"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" id="myprofile" style="cursor:pointer;color:#2C3E4E">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p class="fs-16">個人檔案</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="mymoney" style="cursor:pointer;color:#2C3E4E">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p class="fs-16">瑪妮幣紀錄</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <i class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    receipt_long
+                                </i>
+                                <p class="fs-18">
+                                    購買清單
+                                </p>
+                            </a>
+                        </li>
+                        @*<li class="nav-item">
+                                <a href="../widgets.html" class="nav-link" id="notify">
+                                    <i class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                        announcement
+                                    </i>
+                                    <p class="fs-18">
+                                        通知總覽
+                                        <i class="right fas fa-angle-left" style=" line-height:27px;"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="../../index.html" class="nav-link" style="cursor:pointer;color:#2C3E4E">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p class="fs-16">訂單更新</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="../../index2.html" class="nav-link" style="cursor:pointer;color:#2C3E4E">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p class="fs-16">評價通知</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>*@
+                        @if (member.fIsVIP == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" id="seller" style="cursor:pointer">
+                                    <i class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                        storefront
+                                    </i>
+                                    <p class="fs-18">
+                                        賣家中心
+                                    </p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <div id="seller_block" class="p-lr-30">
+                <!--partical view-->
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log("ready 賣家中心");
+            fn賣家商品查詢事件("#seller", "@Url.Action("MyProduct", "ShoppingAccountCenter")");
+            fn個人檔案查詢事件("#myprofile", "@Url.Action("MyProfile", "ShoppingAccountCenter")");
+            fn瑪妮幣查詢事件("#mymoney", "@Url.Action("MyMoney", "ShoppingAccountCenter")");
+            fn購買清單查詢事件("#purchaselist", "@Url.Action("PurchaseList", "ShoppingAccountCenter")");
+
+            let sidebarItemId = new URLSearchParams(location.search).get('goto');
+            if (sidebarItemId) {
+                let item = document.querySelector(`#${sidebarItemId}`);
+                if (item) item.click();
+            }
+        });
+
+        function fn賣家商品查詢事件(selector,URL) {
+            $(selector).on("click", function () {
+                $(".selected").removeClass("selected");
+                $(this).addClass("selected");
+                $.ajax({
+                    url: URL,
+                    async: true,
+                    type: "POST",
+                    dataType: "html",
+                    success: function (msg) {
+                        $("#seller_block").html(msg);
+                    }
+                });
+            });
+        }
+
+        function fn個人檔案查詢事件(selector, URL) {
+            $(selector).on("click", function () {
+                let fMemberid = $("#myprofile1").data("memberid");
+                $(".selected").removeClass("selected");
+                $(this).addClass("selected");
+                $.ajax({
+                    url: URL,
+                    type: "POST",
+                    dataType: "html",
+                    data: { fMemberId: fMemberid},
+                    success: function (msg) {
+                        $("#seller_block").html(msg);
+                    }
+                });
+            });
+        }
+
+        function fn瑪妮幣查詢事件(selector, URL) {
+            $(selector).on("click", function () {
+                let fMemberid = $("#myprofile1").data("memberid");
+                $(".selected").removeClass("selected");
+                $(this).addClass("selected");
+                $.ajax({
+                    url: URL,
+                    type: "POST",
+                    dataType: "html",
+                    data: { fMemberId: fMemberid },
+                    success: function (msg) {
+                        $("#seller_block").html(msg);
+                    }
+                });
+            });
+        }
+
+        function fn購買清單查詢事件(selector, URL) {
+            $(selector).on("click", function () {
+                let fMemberid = $("#myprofile1").data("memberid");
+                $(".selected").removeClass("selected");
+                $(this).addClass("selected");
+                $.ajax({
+                    url: URL,
+                    type: "POST",
+                    dataType: "html",
+                    data: { fMemberId: fMemberid },
+                    success: function (msg) {
+                        $("#seller_block").html(msg);
+                    }
+                });
+            });
+        }
+
+    </script>
+}

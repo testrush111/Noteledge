@@ -1,0 +1,217 @@
+﻿@using Models.MemberModels
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+}
+<style>
+    .img-center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .center {
+        margin: auto;
+        width: 60%;
+        /*border: 3px solid #73AD21;*/
+        padding: 10px;
+    }
+</style>
+
+<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('../../Image/slide-05.jpg'); height:600px">
+    <h2 class="ltext-105 txt-center m-t-200 bg9 hov-bg2 cl2 op-09 hov-cl0">
+        Note$edge | 讓知識變成價值
+    </h2>
+
+    @Html.ActionLink("開始體驗", "Login", "Member", null, new { @class = "btn btn-outline-info m-t-50 bg0 fs-30 " })
+</section>
+
+<section class="p-t-10 p-b-100">
+    <div class="jumbotron bg10 cl2">
+        <h1 class="fs-50 " style="text-align: center;">關於本站</h1>
+    </div>
+    <!--會員系統介紹區塊-->
+    <div>
+        <img class="img-center" src="https://i.imgur.com/ppQ8fw4.png" />
+        <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">會員系統</h1>
+
+        <div class="center row">
+            <div class="col-md-4 p-all-20">
+                <h2>VIP</h2>
+                <h4>升級VIP後，即可開啟販售筆記，分享知識，增加收入。</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>第三方支付</h2>
+                <h4>使用歐付寶，不必出門，在家就可購買筆記。</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>小鈴鐺</h2>
+                <h4>商品販售、留言隨時掌握。</h4>
+            </div>
+        </div>
+    </div>
+    <!--筆記系統介紹區塊-->
+    <div class="bg10 p-t-30 op-08">
+        <img class="img-center" src="https://i.imgur.com/jZMigxL.png" />
+        <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">筆記創作系統</h1>
+
+        <div class="center row">
+            <div class="col-md-4 p-all-20">
+                <h2>程式碼高亮度</h2>
+                <h4>輕鬆製作程式碼筆記，工作高效率。</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>模板使用</h2>
+                <h4>不知道怎麼開始?我們有優秀的設計師製作的免費模板。</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>版本紀錄</h2>
+                <h4>再也不用擔心筆記遺失，保留寶貴的回憶。</h4>
+            </div>
+        </div>
+    </div>
+    <!--商城系統介紹區塊-->
+    <div class="p-t-30">
+        <img class="img-center" src="https://i.imgur.com/EwbdGdV.png" />
+        <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">筆記販售系統</h1>
+
+        <div class="center row">
+            <div class="col-md-4 p-all-20">
+                <h2>購買瑪尼幣</h2>
+                <h4>購入瑪尼幣，即可購買任何喜愛的筆記。</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>販售筆記</h2>
+                <h4>將精心製作的筆記，販售於筆記商城。</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>購買筆記</h2>
+                <h4>使用瑪尼幣購買喜愛的筆記，還不確定?沒關係我們有免費筆記專區。</h4>
+            </div>
+        </div>
+    </div>
+    <!--聊聊系統介紹區塊-->
+    <div class="bg10 p-t-30 op-08">
+        <img class="img-center" src="https://i.imgur.com/4kAK3kH.png" />
+        <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">評價與聊聊系統</h1>
+
+        <div class="center row">
+            <div class="col-md-4 p-all-20">
+                <h2>聊聊</h2>
+                <h4>隨時與他人討論筆記內容。</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>聊商品</h2>
+                <h4>不確定是否要購買商品?先與賣家聊聊吧。</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>商品留言、評價</h2>
+                <h4>留下想發問的商品留言，在購買後評論商品。</h4>
+            </div>
+        </div>
+    </div>
+    <!--管理系統介紹區塊-->
+    <div class="p-t-30">
+        <img class="img-center" src="https://i.imgur.com/UJK0Bn3.png" />
+        <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">網站管理系統</h1>
+
+        <div class="center row">
+            <div class="col-md-4 p-all-20">
+                <h2>網站資訊</h2>
+                <h4>後台紀錄網站累計資訊、分析商品與會員動向</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>黑名單管理</h2>
+                <h4>管理不遵守規則的使用者</h4>
+            </div>
+            <div class="col-md-4 p-all-20">
+                <h2>留言板管理</h2>
+                <h4>給予網站安全、健康的留言環境</h4>
+            </div>
+        </div>
+    </div>
+    <!--提供的服務區塊-->
+    <div class="jumbotron bg10 cl2">
+        <h1 class="fs-50 " style="text-align: center;">提供的服務</h1>
+    </div>
+
+
+    <div class="center row">
+        <div class="col-md-4 p-tb-20">
+            <h2>筆記編輯</h2>
+            <h4>編輯喜愛的內容，隨時記錄珍貴的回憶。</h4>
+        </div>
+        <div class="col-md-4 p-tb-20">
+            <h2>筆記模板</h2>
+            <h4>從我們提供的模板中開始編輯第一個筆記。</h4>
+        </div>
+        <div class="col-md-4 p-tb-20">
+            <h2>版本紀錄</h2>
+            <h4>隨時記錄版本控制，隨時回復每一個儲存點。</h4>
+        </div>
+        <div class="col-md-4 p-tb-20">
+            <h2>免費筆記專區</h2>
+            <h4>分享知識，免費購買0元筆記。</h4>
+        </div>
+
+        <div class="col-md-4 p-tb-20">
+            <h2>VIP會員</h2>
+            <h4>升級至VIP會員，新增的功能為您的筆記提供更多價值。</h4>
+        </div>
+        <div class="col-md-4 p-tb-20">
+            <h2>筆記販售</h2>
+            <h4>可瀏覽已上架的筆記商品，且能購買中意的筆記。</h4>
+        </div>
+        <div class="col-md-4 p-tb-20">
+            <h2>商品聊天</h2>
+            <h4>當購買中意的筆記後，我們提供了專屬的聊天空間，讓您能與創作者進行交流。</h4>
+        </div>
+        <div class="col-md-4 p-tb-20">
+            <h2>商品評價</h2>
+            <h4>瀏覽商城時各項商品皆有評價及留言，給予使用者更多參考資訊。</h4>
+        </div>
+        <div class="col-md-4 p-tb-20">
+            <h2>歐付寶</h2>
+            <h4>不必出門付款就可以享受優秀的筆記。</h4>
+        </div>
+    </div>
+    
+    <!--使用技術區塊-->
+    @*<div class="jumbotron bg10 cl2">
+            <h1 class="fs-50 " style="text-align: center;">使用的技術</h1>
+        </div>*@
+
+    @*<div class="center row">
+            <div class="col-md-4 p-tb-20">
+                signal R
+            </div>
+            <div class="col-md-4 p-tb-20">
+                MVC
+            </div>
+            <div class="col-md-4 p-tb-20">
+                ADO.NET
+            </div>
+            <div class="col-md-4 p-tb-20">
+                LINQ
+            </div>
+            <div class="col-md-4 p-tb-20">
+                HTML/CSS
+            </div>
+            <div class="col-md-4 p-tb-20">
+                JavaScript
+            </div>
+            <div class="col-md-4 p-tb-20">
+                jQuery
+            </div>
+            <div class="col-md-4 p-tb-20">
+                ASP.NET MVC
+            </div>
+            <div class="col-md-4 p-tb-20">
+                Ajax
+            </div>
+            <div class="col-md-4 p-tb-20">
+                Azure DevOps
+            </div>
+        </div>*@
+</section>

@@ -1,0 +1,131 @@
+﻿@using Models.MemberModels
+@model prjMSIT127_G2_Noteledge.ViewModel.CMoneyVM
+@{
+    ViewBag.Title = "_MyMoney";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+    var indexorder=1;
+    var indexincome = 1;
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="fs-18">
+                    瑪妮幣紀錄
+                </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        @Html.ActionLink("筆記商城", "Index", "ShoppingHome")
+                    </li>
+                    <li class="breadcrumb-item active">瑪妮幣紀錄</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content col-md-6" style=" margin: 0 auto;float: none;">
+    <div class="info-box">
+        <img src="https://cdn3.iconfinder.com/data/icons/finance-152/64/24-256.png" style="width:15%" />
+        <div class="info-box-content">
+            <span class="info-box-text fs-18">
+                可用的瑪妮幣
+            </span>
+            <span class="info-box-number fs-22" style="color:#FEB820;">@member.fMoneyPoint.ToString("c0")</span>
+        </div>
+        <h5>
+            <button type="button" class="btn bg-gradient-warning btn-lg fs-16 m-t-20" data-toggle="modal" data-target="#modal-lg" id="addnewbtn">
+                <i class="fas fa-plus"></i> 購買更多
+            </button>
+        </h5>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-info card-tabs">
+                <div class="card-header p-0 pt-1">
+                    <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link fs-18 active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">購買</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fs-18" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">花費</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body" style="width: 580px">
+                    <div class="tab-content" id="custom-tabs-one-tabContent">
+                        <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10px">#</th>
+                                        <th>購買內容</th>
+                                        <th>購買時間</th>
+                                        <th style="width: 40px">金額</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.lsIncome)
+                                    {
+                                        if (item.fIncomeCategory == "儲值")
+                                        {
+                                            <tr>
+                                                <td>@indexincome</td>
+                                                <td>瑪妮幣(購物金)儲值</td>
+                                                <td>@item.fPaymentDateTime</td>
+                                                <td><h5><span class="badge bg-danger float-r">@item.fIncome.ToString("c0")</span></h5></td>
+                                            </tr>
+                                            indexincome++;
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@indexincome</td>
+                                                <td>筆記販售(購物金)獲利</td>
+                                                <td>@item.fPaymentDateTime</td>
+                                                <td><h5><span class="badge bg-danger float-r">@item.fIncome.ToString("c0")</span></h5></td>
+                                            </tr>
+                                            indexincome++;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+                            <table class="table">
+                                <thead>
+                                    <tr style="text-align:center">
+                                        <th style="width: 10px">#</th>
+                                        <th>花費內容</th>
+                                        <th>花費時間</th>
+                                        <th style="width: 40px">金額</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.lsOrder)
+                                    {
+                                        <tr>
+                                            <td>@indexorder</td>
+                                            <td>您在筆記商城購買 @Model.lsOrderDetail.Where(o => o.fOrderId == item.fOrderId).Count() 項筆記</td>
+                                            <td>@item.fPurchaseDate</td>
+                                            @if (item.fTotalPrice == 0)
+                                            {
+                                                <td><h5><span class="badge bg-success float-r">免費</span></h5></td>
+                                            }
+                                            else
+                                            {
+                                                <td><h5><span class="badge bg-danger float-r">@item.fTotalPrice.ToString("c0")</span></h5></td>
+                                            }
+                                        </tr>
+                                        indexorder++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

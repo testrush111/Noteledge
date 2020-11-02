@@ -1,0 +1,548 @@
+﻿
+@using Models.MemberModels
+@{
+    ViewBag.Title = "Login";
+    CMember member = Session[CMemberSession.Session_Login_Remember] as CMember;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    .Eye {
+        cursor: pointer;
+    }
+
+    .login-options {
+        text-align: center;
+        margin: 25px auto 0;
+        min-height: 15px;
+        position: relative;
+        color: #607188;
+        font-family: "Open Sans",sans-serif;
+        font-weight: 400;
+        line-height: 1.8em;
+        -webkit-font-smoothing: subpixel-antialiased;
+        font-size: 100%;
+    }
+
+        .login-options span {
+            position: absolute;
+            top: -9px; /*調整「Or」的上、下位置*/
+            background: #fff;
+            padding: 0 15px;
+            margin: auto;
+            left: 42%;
+        }
+
+    hr {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        height: 1px;
+        width: 100%;
+        background: #E3ECF7;
+    }
+
+    hr {
+        border: 0;
+        border-top: 1px solid #eee;
+    }
+
+    .btn.btn-facebook, .btn.btn-facebook.active, .btn.btn-facebook.active:focus, .btn.btn-facebook.active:hover, .btn.btn-facebook:active, .btn.btn-facebook:active:focus, .btn.btn-facebook:active:hover, .btn.btn-facebook:focus, .btn.btn-facebook:hover, .navbar .navbar-nav > li > a.btn.btn-facebook, .navbar .navbar-nav > li > a.btn.btn-facebook.active, .navbar .navbar-nav > li > a.btn.btn-facebook.active:focus, .navbar .navbar-nav > li > a.btn.btn-facebook.active:hover, .navbar .navbar-nav > li > a.btn.btn-facebook:active, .navbar .navbar-nav > li > a.btn.btn-facebook:active:focus, .navbar .navbar-nav > li > a.btn.btn-facebook:active:hover, .navbar .navbar-nav > li > a.btn.btn-facebook:focus, .navbar .navbar-nav > li > a.btn.btn-facebook:hover, .open > .btn.btn-facebook.dropdown-toggle, .open > .btn.btn-facebook.dropdown-toggle:focus, .open > .btn.btn-facebook.dropdown-toggle:hover, .open > .navbar .navbar-nav > li > a.btn.btn-facebook.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-facebook.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-facebook.dropdown-toggle:hover {
+        background-color: #3b5998;
+        color: #FFF;
+    }
+
+    .btn {
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        user-select: none;
+        background-image: none;
+        border: none;
+        border-radius: 3px;
+        position: relative;
+        padding: 12px 30px;
+        margin: 10px 1px;
+        text-transform: uppercase;
+        letter-spacing: 0;
+        transition: box-shadow .2s cubic-bezier(.4,0,1,1),background-color .2s cubic-bezier(.4,0,.2,1);
+        outline: 0;
+        font-size: 14px;
+        font-weight: 400;
+        will-change: box-shadow,transform;
+    }
+
+    button {
+        overflow: visible;
+    }
+
+    .btn:not(.btn-fab) i {
+        vertical-align: middle;
+        font-size: 1.5em;
+        position: relative;
+        padding: 0 3px;
+    }
+
+    .btn.btn-facebook:active, .btn.btn-facebook:focus, .btn.btn-facebook:hover, .navbar .navbar-nav > li > a.btn.btn-facebook:active, .navbar .navbar-nav > li > a.btn.btn-facebook:focus, .navbar .navbar-nav > li > a.btn.btn-facebook:hover {
+        box-shadow: 0 14px 26px -12px rgba(59,89,152,.42), 0 4px 23px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(59,89,152,.2);
+    }
+
+    .btn.btn-google:active, .btn.btn-google:focus, .btn.btn-google:hover, .navbar .navbar-nav > li > a.btn.btn-google:active, .navbar .navbar-nav > li > a.btn.btn-google:focus, .navbar .navbar-nav > li > a.btn.btn-google:hover {
+        box-shadow: 0 14px 26px -12px rgba(221,75,57,.42), 0 4px 23px 0 rgba(0,0,0,.12), 0 8px 10px -5px rgba(221,75,57,.2);
+    }
+
+        .btn.btn-google, .btn.btn-google.active, .btn.btn-google.active:focus, .btn.btn-google.active:hover, .btn.btn-google:active, .btn.btn-google:active:focus, .btn.btn-google:active:hover, .btn.btn-google:focus, .btn.btn-google:hover, .navbar .navbar-nav > li > a.btn.btn-google, .navbar .navbar-nav > li > a.btn.btn-google.active, .navbar .navbar-nav > li > a.btn.btn-google.active:focus, .navbar .navbar-nav > li > a.btn.btn-google.active:hover, .navbar .navbar-nav > li > a.btn.btn-google:active, .navbar .navbar-nav > li > a.btn.btn-google:active:focus, .navbar .navbar-nav > li > a.btn.btn-google:active:hover, .navbar .navbar-nav > li > a.btn.btn-google:focus, .navbar .navbar-nav > li > a.btn.btn-google:hover, .open > .btn.btn-google.dropdown-toggle, .open > .btn.btn-google.dropdown-toggle:focus, .open > .btn.btn-google.dropdown-toggle:hover, .open > .navbar .navbar-nav > li > a.btn.btn-google.dropdown-toggle, .open > .navbar .navbar-nav > li > a.btn.btn-google.dropdown-toggle:focus, .open > .navbar .navbar-nav > li > a.btn.btn-google.dropdown-toggle:hover {
+            background-color: #dd4b39;
+            color: #FFF;
+        }
+
+    .btn.focus, .btn:focus, .btn:hover {
+        text-decoration: none;
+    }
+
+    body {
+        background-color: #F4EFEB;
+        font-family: 'cwTeXYen', sans-serif;
+    }
+
+    .main {
+        background-color: #FFFFFF;
+        width: 400px;
+        height: 580px;
+        margin: 8em auto;
+        padding-top: 15px;
+        border-radius: 1.5em;
+        box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+        margin-bottom: 70px;
+    }
+
+    .sign {
+        padding-top: 40px;
+        color: #8C55AA;
+        font-family: 'cwTeXYen', sans-serif;
+        font-weight: bold;
+        font-size: 23px;
+    }
+
+    .un {
+        width: 76%;
+        color: rgb(38, 50, 56);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+        background: rgba(136, 126, 126, 0.04);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0.02);
+        margin-bottom: 50px;
+        margin-left: 46px;
+        text-align: center;
+        margin-bottom: 27px;
+        font-family: 'cwTeXYen', sans-serif;
+        font-size: 16px;
+    }
+
+    form.form1 {
+        padding-top: 40px;
+    }
+
+    .pass {
+        width: 76%;
+        color: rgb(38, 50, 56);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+        background: rgba(136, 126, 126, 0.04);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0.02);
+        margin-bottom: 40px;
+        margin-left: 46px;
+        text-align: center;
+        font-family: 'cwTeXYen', sans-serif;
+        font-size: 16px;
+    }
+
+
+        .un:focus, .pass:focus {
+            border: 2px solid rgba(0, 0, 0, 0.18) !important;
+        }
+
+    .submit {
+        width: 280px;
+        height: 60px;
+        cursor: pointer;
+        border-radius: 3em;
+        color: #fff;
+        background: linear-gradient(to right, #9C27B0, #E040FB);
+        border: 0;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-family: 'cwTeXYen', sans-serif;
+        margin-left: 20%;
+        box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+        font-size: 20px;
+        transition-duration: 0.4s;
+    }
+
+    .forgot {
+        text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+        color: #ED7A5E;
+        padding-top: 15px;
+    }
+
+    a {
+        text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+        color: #E1BEE7;
+        text-decoration: none
+    }
+
+    input[type="checkbox"] {
+        display: none;
+    }
+
+        input[type="checkbox"] + label {
+            color: black;
+        }
+
+            input[type="checkbox"] + label span {
+                display: inline-block;
+                width: 19px;
+                height: 19px;
+                margin: -2px 10px 0 0;
+                vertical-align: middle;
+                background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) left top no-repeat;
+                cursor: pointer;
+            }
+
+        input[type="checkbox"]:checked + label span {
+            background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) -19px top no-repeat;
+        }
+
+    input[type="radio"] {
+        display: none;
+    }
+
+        input[type="radio"] + label {
+            color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        }
+
+            input[type="radio"] + label span {
+                display: inline-block;
+                width: 19px;
+                height: 19px;
+                margin: -2px 10px 0 0;
+                vertical-align: middle;
+                background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) -38px top no-repeat;
+                cursor: pointer;
+            }
+
+        input[type="radio"]:checked + label span {
+            background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) -57px top no-repeat;
+        }
+
+    .error {
+        color: #D8000C;
+        background-color: #FFBABA;
+        text-align: center;
+        margin-right: 100px;
+        margin-top: 5px;
+        font-size: 18px;
+        font-family: 'cwTeXYen', sans-serif;
+    }
+
+    .Demo {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+        top: 100px;
+        left: 350px;
+        margin-top:10px;
+    }
+
+        .Demo:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+</style>
+
+<head>
+    @*<link rel="stylesheet" href="css/style.css">*@
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    @*<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">*@
+
+</head>
+<section class="p-lr-15 p-tb-92" style="padding-top:10px;padding-bottom:0px;height:710px">
+
+
+    @Html.AntiForgeryToken()
+    @if (member != null)
+    {
+        <div class="main" style="margin-top:100px">
+            <form method="post">
+                <div class="form-horizontal">
+                    <div class="from-group">
+                        <div class="col-md-0">
+                            <input class="un " id="fAccount" name="fAccount" type="text" placeholder="輸入信箱" style="width:300px;margin-top:20px" value="@member.fAccount" />
+                        </div>
+                        <div class="col-md-0">
+                            <input class="pass" id="fPassword" name="fPassword" type="password" placeholder="輸入密碼" style="width: 250px; margin-top: 20px; float: left; margin-bottom:10px;" value="@member.fPassword" />
+                            <img id="EyeOpenClose" class="Eye" src="https://i.imgur.com/nck1Kf4.png" onclick="ChangePasswordText()" style="float: right; margin-right:55px; margin-top:25px;width:8%" />
+                        </div>
+                        <div style="margin-left:43%;margin-bottom:10px;margin-right:50px;float:left">
+                            <input type="checkbox" id="remember" name="Remember_Check" value="remember" checked />
+                            <label for="remember"><span></span>記住我</label>
+                        </div>
+                        <div class="code" style="margin-top:150px;margin-left:50px">
+                            <input type="text" name="code" style="height:35px;width:120px;border-radius:10px;float:left;border:1px solid black;margin-bottom:30px;margin-right:10px;text-align:center" />
+                            <img id="code" src="../Member/GetValidateCode/" style="float:left;margin-right:10px" />
+                            <input type="button" name="Change" value="換一張" id="Change" onclick="fn更換驗證碼()" style="border-radius:20px;width:70px;height:30px;float:left" />
+                        </div>
+                        <div style="color: red; margin-left:10px;margin-right:10px;padding-top: 55px;font-weight:bold;font-family:標楷體">
+                            <p class="error" style="margin-right: 95px; float: left; margin-bottom: 25px; margin-left: 105px; width: 180px;">@ViewBag.LoginMessage</p>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <div class="col-md-offset-0 col-md-10">
+                                <input type="submit" value="登入" class="submit" style="background: #8ED0D4; font-weight: 900; padding: 15px; margin-left: 30px; width: 330px;" />
+                                <a href="../Member/ForgetPassword" style="margin-left:52%;font-family:1200;padding-top: 0px" class="forgot">忘記密碼?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form style="margin-left:10%">
+                <button type="button" class="btn btn-google" id="btnSignIn" style="width:320px">
+                    <i class="fab fa-google-plus-g fa-lg"></i> Google 登入
+                </button>
+                <input style="margin-left:37%" type="button" onclick="javascript:location.href='../Member/AdminLogin'" value="員工登入">
+                <div id="content"></div>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="main" style="margin-top:100px">
+            <form method="post">
+                <div class="form-horizontal">
+                    <div class="from-group">
+                        <div class="col-md-0">
+                            <input class="un " id="fAccount" name="fAccount" type="text" placeholder="輸入信箱" style="width:300px;margin-top:20px" />
+                        </div>
+                        <div class="col-md-0">
+                            <input class="pass" id="fPassword" name="fPassword" type="password" placeholder="輸入密碼" style="width: 250px; margin-top: 20px; float: left; margin-bottom:10px;" />
+                            <img id="EyeOpenClose" class="Eye" src="https://i.imgur.com/nck1Kf4.png" onclick="ChangePasswordText()" style="float: right; margin-right:55px; margin-top:25px;width:8%" />
+                        </div>
+                        <div style="margin-left:43%;margin-bottom:10px;margin-right:50px;float:left">
+                            <input type="checkbox" id="remember" name="Remember_Check" value="remember" />
+                            <label for="remember"><span></span>記住我</label>
+                        </div>
+                        <div class="code" style="margin-top:150px;margin-left:50px">
+                            <input type="text" name="code" style="height:35px;width:120px;border-radius:10px;float: left;border:1px solid black;margin-bottom:30px;margin-right:10px;font-size:16px;text-align:center" />
+                            <img id="code" src="../Member/GetValidateCode/" style="float:left;margin-right:10px" />
+                            <input type="button" name="Change" value="換一張" id="Change" onclick="fn更換驗證碼()" style="border-radius:20px;width:70px;height:30px;float:left" />
+                        </div>
+                        <div style="color: red; margin-left:10px;margin-right:10px;padding-top: 55px;font-weight:bold;font-family:標楷體">
+                            <p class="error" style="margin-right: 95px; float: left; margin-bottom: 25px; margin-left: 105px; width: 180px;">@ViewBag.LoginMessage</p>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <div class="col-md-offset-0 col-md-10">
+                                <input type="submit" value="登入" class="submit" style="background: #8ED0D4; font-weight: 900; padding: 15px; margin-left: 30px; width: 330px;" />
+                                <a href="../Member/ForgetPassword" style="margin-left:52%;font-family:1200;padding-top: 0px" class="forgot">忘記密碼?</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form style="margin-left:10%">
+                <button type="button" class="btn btn-google" id="btnSignIn" style="width:320px">
+                    <i class="fab fa-google-plus-g fa-lg"></i> Google 登入
+                </button>
+                <input style="margin-top:10px;margin-left:35%;border:1px solid black;padding:5px" type="button" onclick="javascript:location.href='../Member/AdminLogin'" value="員工登入">
+                <div id="content"></div>
+            </form>
+            <div style="margin-left:10px">
+                <button class="Demo" onclick="Demo良純()">良純會員</button>
+                <button class="Demo" onclick="Demo佑承()">佑承會員</button>
+                <button class="Demo" onclick="Demo宏陽()">宏陽會員</button>
+                <button class="Demo" onclick="Demo冠德()">冠德會員</button>
+                <button class="Demo" onclick="Demo嘉富()">嘉富會員</button>
+                <button class="Demo" onclick="Demo嘉承()">嘉承會員</button>
+            </div>
+        </div>
+    }
+
+</section>
+<script>
+    function Change() {
+        var img = document.getElementById("code");
+        img.src = Math.random();
+    }
+    function ChangePasswordText() {
+        var PasswordText = document.getElementById("fPassword");
+        var Eye = document.getElementById("EyeOpenClose");
+        if (PasswordText.type == "password") {
+            PasswordText.type = "text";
+            Eye.src = "https://i.imgur.com/zGVqn8u.png"
+        } else {
+            PasswordText.type = "password";
+            Eye.src = "https://i.imgur.com/nck1Kf4.png"
+        }
+    }
+</script>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js" integrity="sha384-3LK/3kTpDE/Pkp8gTNp2gR/2gOiwQ6QaO7Td0zV76UFJVhqLl4Vl3KL1We6q6wR9" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript">
+    let CLIENT_ID = "811414016354-s7r594hi97vebqvirgbdmosv2gvcipv2.apps.googleusercontent.com";
+    //let API_KEY = '';//Javascript SDK無須 API 金鑰
+    // Array of API discovery doc URLs for APIs
+    let DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/people/v1/rest"];
+
+</script>
+
+<script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};GoogleClientInit()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
+
+
+<script type="text/javascript">
+    //jQuery處理button click event 當畫面DOM都載入時....
+    $(function () {
+        $("#btnSignIn").on("click", function () {
+            $("#content").html("");//清空顯示結果
+            GoogleLogin();//Google 登入
+        });
+        $("#btnDisconnect").on("click", function () {
+            Google_disconnect();//和Google App斷連
+        });
+    });
+
+    function GoogleClientInit() {
+        //官網範例寫client:auth2，但本人實測由於待會要呼叫gapi.client.init而不是gapi.auth2.init，所以給client即可
+        gapi.load('client', function () {
+            gapi.client.init({
+                //client_id 和 scope 兩者參數必填
+                clientId: CLIENT_ID,
+                //scope列表參考：https://developers.google.com/people/api/rest/v1/people/get
+                //"profile"是簡寫，要用完整scope名稱也可以
+                scope: "profile",//"https://www.googleapis.com/auth/userinfo.profile",
+                discoveryDocs: DISCOVERY_DOCS
+            });
+
+
+        });//end gapi.load
+    }//end GoogleClientInit function
+
+
+    function GoogleLogin() {
+        let auth2 = gapi.auth2.getAuthInstance();//取得GoogleAuth物件
+        auth2.signIn().then(function (GoogleUser) {
+            console.log("Google登入成功");
+            let user_id = GoogleUser.getId();//取得user id，不過要發送至Server端的話，為了資安請使用id_token，本人另一篇文章有範例：https://dotblogs.com.tw/shadow/2019/01/31/113026
+            console.log(`user_id:${user_id}`);
+            let AuthResponse = GoogleUser.getAuthResponse(true);//true會回傳包含access token ，false則不會
+            let id_token = AuthResponse.id_token;//取得id_token
+            //people.get方法參考：https://developers.google.com/people/api/rest/v1/people/get
+            gapi.client.people.people.get({
+                'resourceName': 'people/me',
+                //通常你會想要知道的用戶個資↓
+                'personFields': 'names,phoneNumbers,emailAddresses,addresses,residences,genders,birthdays,occupations',
+            }).then(function (res) {
+
+                //success
+                let str = JSON.stringify(res.result);//將物件列化成string，方便顯示結果在畫面上
+                //顯示授權你網站存取的用戶個資
+
+                //↑通常metadata標記primary:true的個資就是你該抓的資料
+                $.ajax({
+                    type: "POST",
+                    url: "/Member/APITest",
+                    data: { restr: str },
+                    success: function (data) {
+                        window.location.href = "../Home/MyHome/?name=" + data
+                    }
+                });
+                //請再自行Parse JSON，可以將JSON字串丟到線上parse工具查看：http://json.parser.online.fr/
+
+
+                //最終，取得用戶個資後看要填在畫面表單上或是透過Ajax儲存到資料庫(記得是傳id_token給你的Web Server而不是明碼的user_id喔)，本範例就不贅述，請自行努力XD
+
+
+            });
+
+        },
+            function (error) {
+                console.log("Google登入失敗");
+                console.log(error);
+            });
+
+    }//end function GoogleLogin
+
+    function Google_disconnect() {
+        let auth2 = gapi.auth2.getAuthInstance(); //取得GoogleAuth物件
+
+        auth2.disconnect().then(function () {
+            console.log('User disconnect.');
+        });
+    }
+
+    function fn更換驗證碼() {
+        $("#code").attr("src", "../Member/GetValidateCode?time" + new Date().getTime())
+    }
+
+    //Demo鍵-------------------------------------------------------------------------------------------------\\
+    function Demo佑承() {
+        var Account = "testrush111@gmail.com";
+        var Password = "123456";
+        $("#fAccount").val(Account);
+        $("#fPassword").val(Password);
+    }
+    function Demo宏陽() {
+        var Account = "handsomehong@gmail.com";
+        var Password = "123456";
+        $("#fAccount").val(Account);
+        $("#fPassword").val(Password);
+    }
+    function Demo嘉富() {
+        var Account = "simplefree7077@gmail.com";
+        var Password = "123456";
+        $("#fAccount").val(Account);
+        $("#fPassword").val(Password);
+    }
+    function Demo良純() {
+        var Account = "tammy@gmail.com";
+        var Password = "810831";
+        $("#fAccount").val(Account);
+        $("#fPassword").val(Password);
+    }
+    function Demo冠德() {
+        var Account = "arisu2167@gmail.com";
+        var Password = "123456";
+        $("#fAccount").val(Account);
+        $("#fPassword").val(Password);
+    }
+    function Demo嘉承() {
+        var Account = "notedgewjc2020@gmail.com";
+        var Password = "inno2100";
+        $("#fAccount").val(Account);
+        $("#fPassword").val(Password);
+    }
+
+</script>

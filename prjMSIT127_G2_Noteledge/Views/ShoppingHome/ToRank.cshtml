@@ -1,0 +1,269 @@
+﻿@model IEnumerable<prjMSIT127_G2_Noteledge.ViewModel.CProducttotal>
+
+@{
+    ViewBag.Title = "ToRank";
+    Layout = "~/Views/Shared/_LayoutShopping.cshtml";
+}
+
+@*<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>*@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/raty/2.9.0/jquery.raty.css" integrity="sha512-eAw/PBoRwV3poi1Cgw4W6dZ/7XyetSWjhSqnCevCghOJ6J+TCcJgt8qcEml8It83K6GQVZbXeFA8d3z8pgo82w==" crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raty/2.9.0/jquery.raty.min.js" integrity="sha512-81YD4qXhDCsw6Xy5tvz7XWxKfhSzqVhvh7DECpPmppQGyk/wWsnZBlkvWyCujPpydBhhoI5OP0l2699GrVS1Zw==" crossorigin="anonymous"></script>
+
+<section class="p-lr-15 p-t-92">
+    <section class="content-header col-md-8" style=" margin: 0 auto;float: none;">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="fs-18">
+                        商品評價
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            @Html.ActionLink("購買清單", "Index", "ShoppingAccountCenter")
+                        </li>
+                        <li class="breadcrumb-item active">我的訂單商品</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</section>
+
+<div class="row">
+    <div class="col-md-8" style=" margin: 0 auto;float: none;">
+        <div class="card ">
+            <div class="card-header bg-info">
+                <h3 class="card-title"></h3>
+
+                <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="table_search" class="form-control float-right" placeholder="搜尋...">
+
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: 350px;">
+                <table class="table table-head-fixed">
+                    <thead>
+                        <tr class="fs-22 text-center">
+                            @*<th>
+                                    <input checked="checked" id="selectall" name="selectall" type="checkbox" value="true" />
+                                </th>*@
+                            <th class="w-25">商品圖片</th>
+                            <th>商品明細</th>
+                            <th style="width: 150px;">商品評價</th>
+                            <th style="width:30%;">留言</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            if (item.fRank == 0)
+                            {
+                                <tr class="table_row product-item">
+                                    <td class="text-center">
+                                        <img class="m-r-10 " src="@item.fPicture" alt="IMG" style="width:150px">
+
+                                    </td>
+                                    <td>
+                                        <p class="fs-20 cl1">@Html.DisplayFor(modelItem => item.fName)</p>
+                                        <p class="fs-17">商品描述:@Html.DisplayFor(modelItem => item.fDescription)</p>
+                                    </td>
+                                    <td>
+                                        <div class="raty text-center" data-score="0" style="display:block" data-id="@item.fDetailOrderIId"></div>
+                                    </td>
+                                    <td>
+                                        <input class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10 fs-18" type="text" name="message" data-id="@item.fDetailOrderIId" />
+                                    </td>
+                                </tr>
+                            }
+                            else if (item.fRank == 1)
+                            {
+                                <tr class="table_row product-item">
+                                    <td class="text-center">
+                                        <img class=" m-r-10 " src="@item.fPicture" alt="IMG" style="width:150px">
+
+                                    </td>
+                                    <td>
+                                        <p class="fs-20 cl1">@Html.DisplayFor(modelItem => item.fName)</p>
+                                        <p class="fs-17">商品描述:@Html.DisplayFor(modelItem => item.fDescription)</p>
+                                    </td>
+                                    <td class="fs-18 text-center">
+                                        🌟
+                                    </td>
+                                    <td>
+                                        <div class="size-110 bor8 bg2 stext-102 cl2 p-lr-20 p-tb-10 fs-18">@item.fComment </div>
+                                    </td>
+                                </tr>
+                            }
+                            else if (item.fRank == 2)
+                            {
+                                <tr class="table_row product-item">
+                                    <td class="text-center">
+                                        <img class=" m-r-10 " src="@item.fPicture" alt="IMG" style="width:150px">
+
+                                    </td>
+                                    <td>
+                                        <p class="fs-20 cl1">@Html.DisplayFor(modelItem => item.fName)</p>
+                                        <p class="fs-17">商品描述:@Html.DisplayFor(modelItem => item.fDescription)</p>
+                                    </td>
+                                    <td class="fs-18 text-center">
+                                        🌟🌟
+                                    </td>
+                                    <td>
+                                        <div class="size-110 bor8 bg2 stext-102 cl2 p-lr-20 p-tb-10 fs-18">@item.fComment </div>
+                                    </td>
+                                </tr>
+                            }
+                            else if (item.fRank == 3)
+                            {
+                                <tr class="table_row product-item">
+                                    <td class="text-center">
+                                        <img class=" m-r-10 " src="@item.fPicture" alt="IMG" style="width:150px">
+
+                                    </td>
+                                    <td>
+                                        <p class="fs-20 cl1">@Html.DisplayFor(modelItem => item.fName)</p>
+                                        <p class="fs-17">商品描述:@Html.DisplayFor(modelItem => item.fDescription)</p>
+                                    </td>
+                                    <td class="fs-18 text-center">
+                                        🌟🌟🌟
+                                    </td>
+                                    <td>
+                                        <div class="size-110 bor8 bg2 stext-102 cl2 p-lr-20 p-tb-10 fs-18">@item.fComment </div>
+                                    </td>
+                                </tr>
+                            }
+                            else if (item.fRank == 4)
+                            {
+                                <tr class="table_row product-item">
+                                    <td class="text-center">
+                                        <img class=" m-r-10 " src="@item.fPicture" alt="IMG" style="width:150px">
+
+                                    </td>
+                                    <td>
+                                        <p class="fs-20 cl1">@Html.DisplayFor(modelItem => item.fName)</p>
+                                        <p class="fs-17">商品描述:@Html.DisplayFor(modelItem => item.fDescription)</p>
+                                    </td>
+                                    <td class="fs-18 text-center">
+                                        🌟🌟🌟🌟
+                                    </td>
+                                    <td>
+                                        <div class="size-110 bor8 bg2 stext-102 cl2 p-lr-20 p-tb-10 fs-18">@item.fComment </div>
+                                    </td>
+                                </tr>
+                            }
+                            else if (item.fRank == 5)
+                            {
+                                <tr class="table_row product-item">
+                                    <td class="text-center">
+                                        <img class=" m-r-10 " src="@item.fPicture" alt="IMG" style="width:150px">
+
+                                    </td>
+                                    <td>
+                                        <p class="fs-20 cl1">@Html.DisplayFor(modelItem => item.fName)</p>
+                                        <p class="fs-17">商品描述:@Html.DisplayFor(modelItem => item.fDescription)</p>
+                                    </td>
+                                    <td class="fs-18 text-center">
+                                        🌟🌟🌟🌟🌟
+                                    </td>
+                                    <td>
+                                        <div class="size-110 bor8 bg2 stext-102 cl2 p-lr-20 p-tb-10 fs-18">@item.fComment </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                @if (@Model.First().fRank == 0)
+                {
+                    <button type="button" class="btn btn-secondary fs-18 float-l">@Html.ActionLink("返回", "Index", "ShoppingAccountCenter", new { @goto = "purchaselist" }, new { style = "color:white" })</button>
+                    <button type="button" class="btn btn-info fs-18 float-r" onclick="fn評分送出()">送出</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary fs-18 float-l">@Html.ActionLink("返回", "Index", "ShoppingAccountCenter", new { @goto = "purchaselist" }, new { style = "color:white" })</button>
+                }
+
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+
+
+
+<script>
+
+    $('.raty').raty({
+        click: function (score) {
+            console.log(score);
+            $("input[name='score']").each(function () {
+                let scoreobj = $(this);
+                let score = scoreobj.val();
+                if (score === "") {
+                    score = 0;
+                }
+                let raty = scoreobj.parent();
+                console.log("id = " + raty.data("id"));
+                //debugger;
+                console.log(score);
+            });
+        },
+        starOff: "@Url.Content("~/Image/Chatimage/star-off.png")",
+        starOn: "@Url.Content("~/Image/Chatimage/star-on.png")",
+    });
+
+    function fn評分送出() {
+        var datas = $(".product-item").map(function () {
+            let productItem = $(this);
+            let scoreobj = $("input[name='score']", productItem);
+            let score = parseInt(scoreobj.val());
+
+            if (isNaN(score)) {
+                score = 0;
+            }
+            let raty = scoreobj.parent();
+
+            //console.log("id=" + raty.data("id")+ " score=" + score);
+            //var data = $({"id" : raty.data("id") , "score" : score }).serialize();
+            //debugger
+            return ({ "id": raty.data("id"), "score": score, "message": $('input[name="message"]', productItem).val() });
+        }).toArray();
+        console.log(datas);
+        debugger;
+        $.ajax({
+            url: "/ShoppingHome/ToInsert",
+            type: "POST",
+            dataType: "json",
+            data: { datas: JSON.stringify(datas) },
+             success: function (msg) {
+                 console.log(msg);
+                 Swal.fire({
+                     icon: 'OK',
+                     title: '評價',
+                     text: '評價完成囉!~',
+                 }).then((result) => {
+                         if (result.isConfirmed) {
+                             window.location.href = "../ShoppingAccountCenter?goto=purchaselist";
+                         }
+
+                 });
+             }
+        });
+    }
+
+</script>
+

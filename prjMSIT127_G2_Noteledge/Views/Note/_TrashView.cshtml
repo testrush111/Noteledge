@@ -1,0 +1,34 @@
+﻿@model IEnumerable<prjMSIT127_G2_Noteledge.ViewModel.CNoteFolderViewModel>
+@helper fnLsTrash()
+{
+    <ul class="list-group">
+        @foreach (var folder in Model)
+        {
+            foreach (var note in folder.lsNote)
+            {
+                if (note.fIsTrash)
+                {
+                    <li class="note_trash_list list-group-item d-flex align-items-center fs-16" data-folderid="@folder.fFolderId" data-noteid="@note.fNoteId" style="cursor:pointer">
+                        <button class="material-icons trash_img note_undo fs-28 cl2">
+                            restore_from_trash
+                        </button>
+                        <button class="material-icons trash_img note_trash fs-28 cl8">
+                            delete_forever
+                        </button>
+                        <span class="p-l-5">@note.fNoteListName</span>
+
+                        @*<img class="trash_img note_undo" src="@Url.Content("~/Image/NoteImage/note_undo.png")" />*@
+                        @*<img class="trash_img note_trash" src="@Url.Content("~/Image/NoteImage/note_trash.png")" />*@
+                    </li>
+
+
+
+                }
+
+            }
+        }
+    </ul>
+}
+
+@fnLsTrash()
+

@@ -1,0 +1,132 @@
+﻿@using Models.MemberModels
+@model Models.MemberModels.CMember
+@{
+    ViewBag.Title = "_MyProfile";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+    DateTime MyDate = member.fBirthDay;
+    string MemberDate = MyDate.ToString("yyyy-MM-dd");
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="fs-18">
+                    個人檔案
+                </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        @Html.ActionLink("筆記商城", "Index", "ShoppingHome")
+                    </li>
+                    <li class="breadcrumb-item active">個人檔案</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content col-md-6" style=" margin: 0 auto;float: none;">
+    <div class="card card-info">
+        <div class="card-header">
+            <h4>我的會員資訊</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" id="Form_Edit" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    <img class="m-l-200 m-tb-20" src="@member.fPhoto" width="200" height="200" id="MemberPhoto" />
+                    <br />
+                    <label class="btn btn-info" style="margin-left:238px ; margin-bottom:20px ">
+                        <input type="file" id="MemberImage" name="MemberImage" onchange="upload()" style="display: none" accept="Image/*" />
+                        <i></i>上傳相片
+                    </label>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fFirstName, "姓氏:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.fFirstName, new { htmlAttributes = new { @class = "form-control", @Value = member.fFirstName, @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.fFirstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fLastName, "名字:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.fLastName, new { htmlAttributes = new { @class = "form-control", @Value = member.fLastName, @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.fLastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fTheNickName, "暱稱:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.fTheNickName, new { htmlAttributes = new { @class = "form-control", @Value = member.fTheNickName } })
+                            @Html.ValidationMessageFor(model => model.fTheNickName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @if (member.fGender == "M")
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.RadioButton("fGender", "M", true, new { style = "display:inline-block" })男(M)
+                                @Html.RadioButton("fGender", "F", false, new { style = "display:inline-block" })女(F)
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.RadioButton("fGender", "M", false, new { style = "display:inline-block" })男(M)
+                                @Html.RadioButton("fGender", "F", true, new { style = "display:inline-block" })女(F)
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fBirthDay, "出生日期:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input class="form-control" data-val="true" data-val-date="欄位 fBirthDay 必須是日期。" data-val-required="!請點選您的出生日期"
+                                   type="date" id="fBirthDay" name="fBirthDay" value="@MemberDate" max="@DateTime.UtcNow.AddHours(08)" />
+                            @Html.ValidationMessageFor(model => model.fBirthDay, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fAccount, "信箱:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.fAccount, new { htmlAttributes = new { @class = "form-control", @Value = member.fAccount, @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.fAccount, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fPassword, "密碼:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10" style="width: 310px;">
+                            <input class="form-control text-box single-line" id="fPassword" name="fPassword" readonly="readonly" type="password" value="@member.fPassword" />
+                        </div>
+                        @*<a href="#" onclick="WindForm()" style="line-height:34px; height: 34px;">更換密碼</a>*@
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fTheAddress, "地址:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.fTheAddress, new { htmlAttributes = new { @class = "form-control", @Value = member.fTheAddress } })
+                            @Html.ValidationMessageFor(model => model.fTheAddress, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fMobilePhone, "手機:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.fMobilePhone, new { htmlAttributes = new { @class = "form-control", @Value = member.fMobilePhone } })
+                            @Html.ValidationMessageFor(model => model.fMobilePhone, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

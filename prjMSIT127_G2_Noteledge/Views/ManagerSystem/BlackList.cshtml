@@ -1,0 +1,202 @@
+﻿@model IEnumerable<Models.ManagementModels.CBlackList>
+@using Models.ManagementModels
+@{
+    ViewBag.Title = "BlackList";
+    CAdmin admin = Session[CAdminSession.Session_Login_User] as CAdmin;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- sweetalert2 cdn -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<style>
+    .selected {
+        background-color: #8ED0D4;
+        border-radius: 5px;
+    }
+</style>
+<section class="p-t-80">
+    <div class="wrapper">
+        <aside class="main-sidebar sidebar-dark-primary">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img id="adminIMG" src="@admin.fThePhoto" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info" id="myprofile1" style="margin-top:auto;margin-bottom:auto" data-memberid="@admin.fAdminId">
+                        <span class="float-left  p-lr-5 fs-20">@admin.fName</span>
+                    </div>
+                </div>
+                <!-- Sidebar Menu -->
+                <nav class="mt-2 lsSlideNav">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="@Url.Action("HomePage", "ManagerSystem")" class="nav-link" style="cursor:pointer">
+                                <i class='fas fa-tachometer-alt cl2 nav-icon' style='font-size:24px;vertical-align: middle;'></i>
+                                <p class="fs-18">
+                                    管理員首頁
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="@Url.Action("adminsetupV2", "ManagerSystem")" class="nav-link " style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    assignment_ind
+                                </span>
+                                <p class="fs-18">
+                                    管理員資訊
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item template">
+                            <a href="@Url.Action("MessageBoardView", "ManagerSystem")" class="nav-link " id="purchaselist" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    speaker_notes_off
+                                </span>
+                                <p class="fs-18">
+                                    留言板管理
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item trash">
+                            <a href="@Url.Action("BlackList", "ManagerSystem")" class="nav-link selected" id="purchaselist" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    block
+                                </span>
+                                <p class="fs-18">
+                                    黑名單
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="fs-18">
+                                黑名單管理
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item">
+                                    @Html.ActionLink("管理員首頁", "HomePage", "ManagerSystem")
+                                </li>
+                                <li class="breadcrumb-item active">黑名單</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="container-fluid">
+                    <!--黑名單內容-->
+                    <div class="row">
+                        <div class="col-md-12 p-lr-20">
+                            <table class="display" style="width:100%">
+                                <thead>
+                                    <tr class="fs-18">
+                                        <th>
+                                            黑名單編號
+                                        </th>
+                                        <th>
+                                            黑名單原因
+                                        </th>
+                                        <th>
+                                            加入時間
+                                        </th>
+                                        <th>
+                                            會員編號
+                                        </th>
+                                        <th>
+                                            解除黑名單
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr class="fs-17">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fBannedId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fReason)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fLockDateTime)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fMemberId)
+                                            </td>
+                                            <td>
+                                                <h4 style="text-align:center"><span type="button" class="unlock badge badge-danger w-full">解除</span></h4>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <script>
+        //黑名單解鎖按鈕及確認小視窗
+        $(document).ready(function () {
+            $('table.display').DataTable();
+            $(".dataTable").delegate(".unlock", "click", function () {
+                 let tr = $(this).parent().parent().parent();
+            let bannedid = tr.children("td").eq(0).text();
+            let memberid = tr.children("td").eq(3).text();
+            const swal = Swal.mixin();
+
+            swal.fire({
+                title: '解鎖確認?',
+                text: `確定要解鎖此會員嗎?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '確認',
+                cancelButtonText: '取消',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swal.fire(
+                        '已執行!!',
+                        '已將此會員解鎖。',
+                        'success'
+                    );
+
+                    $.ajax({
+                        url: "/ManagerSystem/unlockBlacklist",
+                        method: "POST",
+                        dataType: "html",
+                        data: { bannid: bannedid, memberid: memberid },
+                        success: function (msg) {
+                            console.log(msg);
+                            location.href = "../ManagerSystem/BlackList";
+                        }
+                    });
+                }
+            });
+        });
+    });
+    </script>
+}
+
+

@@ -1,0 +1,403 @@
+﻿@using Models.MemberModels
+@model IEnumerable<ViewModel.CShoppingHomeVM.CShoppingHomeVM>
+@{
+    ViewBag.Title = "Index";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+    Layout = "~/Views/Shared/_LayoutShopping.cshtml";
+}
+
+<!-- Slider -->
+
+<section class="section-slide">
+    <div class="wrap-slick1">
+        <div class="slick1">
+            <div class="item-slick1" style="background-image: url(image/slide-04.jpg); height:600px">
+                <div class="container h-full">
+                    <div class="flex-col-l-m h-full p-b-100 respon5">
+                        <div class="layer-slick1 animated visible-false m-t-80" data-appear="fadeInLeft" data-delay="1000">
+                            <h2 class="ltext-201 cl2 p-tb-10 respon1" style="font-weight:600">
+                                找尋你想擁有的知識
+                            </h2>
+                            <span class="bg3 op-08 fs-22 cl0 p-all-8 m-r-5" style="border-radius: 10px;text-align: center;">
+                                #Note$edge
+                            </span>
+                            <span class="bg3 op-08 fs-22 cl0 p-all-8 m-r-5" style="border-radius: 10px;text-align: center;">
+                                #多種筆記資源
+                            </span>
+                            <span class="bg3 op-08 fs-22 cl0 p-all-8 m-r-5" style="border-radius: 10px;text-align: center;">
+                                #你我的知識伸展台
+                            </span>
+
+                        </div>
+
+                        <div class="layer-slick1 animated visible-false p-t-80" data-appear="fadeInUp" data-delay="1400">
+                            @Html.ActionLink("來去逛逛", "Index", "Product", new { sortOrder = ViewBag.DateSortParm }, new { @class = "flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn3 p-lr-15 trans-04 m-lr-auto fs-20" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="p-lr-15 p-t-50">
+    <div class="main">
+        <div class="container">
+            <div class="row">
+                <p class="fs-40 cl2 font-weight-bold">
+                    <img src="~/Image/Shopping/promotional.png" style="width:80px" /> 熱賣商品
+                </p>
+                <hr size="8" align="center" width="100%">
+                <div id="carouselFourColumn" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators bg1">
+                        <li data-target="#carouselFourColumn" data-slide-to="0" class="active"></li>
+                        <li data-target="#carouselFourColumn" data-slide-to="1"></li>
+                        <li data-target="#carouselFourColumn" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner m-b-40">
+                        <div class="carousel-item active">
+                            <div class="row">
+
+                                @foreach (var item in Model.OrderByDescending(p => p.productpicture.fDownloadTimes).Take(4))
+                                {
+                                    <div class="col-xl-3 p-lr-5">
+                                        <div class="card">
+                                            <div style="width:300px;height:250px">
+                                                <img src="@item.productpicture.fPicture" style="display:block; margin:10px auto;width:90%;height:90%">
+                                                @if (@item.productpicture.fPrice == 0)
+                                                {
+                                                    <div class="ribbon-wrapper ribbon-lg" style="top: 0px;">
+                                                        <div class="ribbon bg-warning text-lg">
+                                                            免費
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="card-body">
+                                                <h1 class=" fs-24 font-weight-bold">@item.productpicture.fName</h1>
+                                                <hr />
+                                                <span class="fs-16"> 售價: @item.productpicture.fPrice.ToString("c0")</span>
+
+                                                @if (item.lsproductcategory.Count == 0)
+                                                {
+                                                    <span class="fs-14 float-right badge badge-secondary m-r-5">無</span>
+                                                }
+                                                else
+                                                {
+                                                    foreach (var category in item.lsproductcategory)
+                                                    {
+                                                        <span class="fs-14 float-right badge badge-info m-r-5">@category.fCategoryName</span>
+                                                    }
+                                                }
+
+                                                <div class="card-text fs-16 overflow-auto" style="height:70px">@item.productpicture.fDescription</div>
+                                                <span class="card-text fs-14">創作者:@item.member.fTheNickName</span>
+                                            </div>
+                                            <div class="card-footer">
+                                                <button class="btn btn-outline-info w-30 fs-16 addtocart" data-productid="@item.productpicture.fProductId">
+                                                    加入購物車
+                                                </button>
+                                                @Html.ActionLink("詳細資訊", "ProductDetail", "Product", new { ProductId = item.productpicture.fProductId }, new { @class = "btn btn-outline-secondary float-r fs-16 w-30" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row">
+                                @foreach (var item in Model.OrderByDescending(p => p.productpicture.fDownloadTimes).Skip(4).Take(4))
+                                {
+                                    <div class="col-xl-3 p-lr-5">
+                                        <div class="card">
+                                            <div style="width:300px;height:250px">
+                                                <img src="@item.productpicture.fPicture" style="display:block; margin:10px auto;width:90%;height:90%">
+                                                @if (@item.productpicture.fPrice == 0)
+                                                {
+                                                    <div class="ribbon-wrapper ribbon-lg" style="top: 0px;">
+                                                        <div class="ribbon bg-warning text-lg">
+                                                            免費
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="card-body">
+                                                <h1 class=" fs-24 font-weight-bold">@item.productpicture.fName</h1>
+                                                <hr />
+                                                <span class="fs-16"> 售價: @item.productpicture.fPrice.ToString("c0")</span>
+
+
+                                                @if (item.lsproductcategory.Count == 0)
+                                                {
+                                                    <span class="fs-14 float-right badge badge-secondary m-r-5">無</span>
+                                                }
+                                                else
+                                                {
+                                                    foreach (var category in item.lsproductcategory)
+                                                    {
+                                                        <span class="fs-14 float-right badge badge-info m-r-5">@category.fCategoryName</span>
+                                                    }
+                                                }
+                                                <div class="card-text fs-16 overflow-auto" style="height:70px">@item.productpicture.fDescription</div>
+                                                <span class="card-text fs-14">創作者:@item.member.fTheNickName</span>
+                                            </div>
+                                            <div class="card-footer">
+                                                <button class="btn btn-outline-info w-30 fs-16 addtocart" data-productid="@item.productpicture.fProductId">
+                                                    加入購物車
+                                                </button>
+                                                @Html.ActionLink("詳細資訊", "ProductDetail", "Product", new { ProductId = item.productpicture.fProductId }, new { @class = "btn btn-outline-secondary float-r fs-16 w-30" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <div class="row">
+                                @foreach (var item in Model.OrderByDescending(p => p.productpicture.fDownloadTimes).Skip(8).Take(4))
+                                {
+                                    <div class="col-xl-3 p-lr-5">
+                                        <div class="card">
+                                            <div style="width:300px;height:250px">
+                                                <img src="@item.productpicture.fPicture" style="display:block; margin:10px auto;width:90%;height:90%">
+                                                @if (@item.productpicture.fPrice == 0)
+                                                {
+                                                    <div class="ribbon-wrapper ribbon-lg" style="top: 0px;">
+                                                        <div class="ribbon bg-warning text-lg">
+                                                            免費
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div class="card-body">
+                                                <h1 class=" fs-24 font-weight-bold">@item.productpicture.fName</h1>
+                                                <hr />
+                                                <span class="fs-16"> 售價: @item.productpicture.fPrice.ToString("c0")</span>
+
+                                                @if (item.lsproductcategory.Count == 0)
+                                                {
+                                                    <span class="fs-14 float-right badge badge-secondary m-r-5">無</span>
+                                                }
+                                                else
+                                                {
+                                                    foreach (var category in item.lsproductcategory)
+                                                    {
+                                                        <span class="fs-14 float-right badge badge-info m-r-5">@category.fCategoryName</span>
+                                                    }
+                                                }
+                                                <div class="card-text fs-16 overflow-auto" style="height:70px">@item.productpicture.fDescription</div>
+                                                <span class="card-text fs-14">創作者:@item.member.fTheNickName</span>
+                                            </div>
+                                            <div class="card-footer">
+                                                <button class="btn btn-outline-info w-30 fs-16 addtocart" data-productid="@item.productpicture.fProductId">
+                                                    加入購物車
+                                                </button>
+                                                @Html.ActionLink("詳細資訊", "ProductDetail", "Product", new { ProductId = item.productpicture.fProductId }, new { @class = "btn btn-outline-secondary float-r fs-16 w-30" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev m-b-40" href="#carouselFourColumn" role="button" data-slide="prev" style="left:-100px">
+                        <span class="carousel-control-prev-icon bg1" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next m-b-40" href="#carouselFourColumn" role="button" data-slide="next" style="right:-100px">
+                        <span class="carousel-control-next-icon bg1" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Banner-->
+<div class="sec-banner bg0 p-t-80 p-b-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
+                <!-- Block1 -->
+                <div class="block1 wrap-pic-w">
+                    <img src="~/Image/Shopping/free.png" alt="IMG-BANNER">
+                    <a href="@Url.Action("Index","Product",new { sortOrder = "Free" })" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+                        <div class="block1-txt-child1 flex-col-l">
+                            <span class="block1-name ltext-102 trans-04 p-b-8 fs-36">
+                                免費專區
+                            </span>
+                        </div>
+                        <div class="block1-txt-child2 p-b-4 trans-05">
+                            <div class="block1-link stext-101 cl2 trans-09 fs-16">
+                                來去逛逛
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
+                <!-- Block1 -->
+                <div class="block1 wrap-pic-s img">
+                    <img src="~/Image/Shopping/new.png" alt="IMG-BANNER">
+
+                    <a href="@Url.Action("Index","Product",new { sortOrder = "New" })" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+                        <div class="block1-txt-child1 flex-col-l">
+                            <span class="block1-name ltext-102 trans-04 p-b-8 fs-36">
+                                新品推薦
+                            </span>
+                        </div>
+
+                        <div class="block1-txt-child2 p-b-4 trans-05">
+                            <div class="block1-link stext-101 cl2 trans-09 fs-16">
+                                來去逛逛
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto">
+                <!-- Block1 -->
+                <div class="block1 wrap-pic-w">
+                    <img src="~/Image/Shopping/like.png" alt="IMG-BANNER">
+
+                    <a href="@Url.Action("Index","Product",new { sortOrder = "Like_desc" })" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
+                        <div class="block1-txt-child1 flex-col-l">
+                            <span class="block1-name ltext-102 trans-04 p-b-8 fs-36">
+                                最受歡迎
+                            </span>
+                        </div>
+
+                        <div class="block1-txt-child2 p-b-4 trans-05">
+                            <div class="block1-link stext-101 cl2 trans-09 fs-16">
+                                來去逛逛
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--商品展示區-->
+<section class="bg0 p-t-23 p-b-140">
+    <div class="container" id="producttable">
+        <div class="p-b-10">
+            <p class="fs-40 cl2 font-weight-bold">
+                <img src="~/Image/Shopping/notebook.png" style="width:80px" /> 筆記商品展示區
+            </p>
+            <hr size="8" align="center" width="100%">
+        </div>
+        <div class="row">
+            @foreach (var item in Model.OrderByDescending(p=>p.productpicture.fLaunchDate).Take(8))
+            {
+                <div class="col-md-3">
+                    <div class="card card-info card-outline">
+                        <div class="card-header">
+                            <h5 class="card-title fs-22 font-weight-bold cl12" style="line-height:38px">@item.productpicture.fName</h5>
+                            <div class="card-tools">
+                                <!--下載量-->
+                                <button type="button" class="btn btn-default btn-sm hov-btn3">
+                                    <span class="material-icons" style="vertical-align: middle;">cloud_download</span>
+                                    <span class="fs-14">@item.productpicture.fDownloadTimes</span>
+                                </button>
+                                <!--點讚-->
+                                <button type="button" class="btn btn-default btn-sm hov-btn3 likeproduct" id="@item.productpicture.fProductId" data-islike="true" data-productid="@item.productpicture.fProductId" onclick="fn商品點讚事件(@item.productpicture.fProductId)">
+                                    <span class="material-icons hov-cl1 " style="vertical-align: middle;">thumb_up</span>
+                                    <span class="fs-14">@item.productpicture.fLikeCount</span>
+                                </button>
+                            </div>
+                        </div>
+                        <img class="" src="@item.productpicture.fPicture" alt="商品圖片" style="width:100%;height:250px" />
+                        @if (@item.productpicture.fPrice == 0)
+                        {
+                            <div class="ribbon-wrapper ribbon-lg">
+                                <div class="ribbon bg-warning text-lg">
+                                    免費
+                                </div>
+                            </div>
+                        }
+                        <div class="card-body fs-16">
+
+                            <p>售價:@item.productpicture.fPrice.ToString("c0")</p>
+                            <p>發行日期:@item.productpicture.fLaunchDate.ToString("yyyy/MM/dd")</p>
+                            <p>
+                                類別:
+                                @if (item.lsproductcategory.Count == 0)
+                                {
+                                    <span class="fs-14 badge badge-secondary m-lr-5">無</span>
+                                }
+                                else
+                                {
+                                    foreach (var category in item.lsproductcategory)
+                                    {
+                                        <span class="fs-14 badge badge-info m-lr-5">@category.fCategoryName</span>
+                                    }
+                                }
+
+                            </p>
+                            <p class="text-muted fs-14 cl3">創作者:@item.member.fTheNickName</p>
+                        </div>
+                        <div class="card-footer">
+
+                            <button class="btn btn-outline-info w-30 fs-16 addtocart" data-productid="@item.productpicture.fProductId">
+                                加入購物車
+                            </button>
+                            @Html.ActionLink("詳細資訊", "ProductDetail", "Product", new { ProductId = item.productpicture.fProductId }, new { @class = "btn btn-outline-secondary float-r fs-16 w-30" })
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+    <!-- Load more -->
+    <div class="flex-c-m flex-w w-full p-t-45">
+        @Html.ActionLink("更多商品", "Index", "Product", null, new { @class = "flex-c-m stext-101 cl0 size-103 bg3 bor1 hov-btn3 p-lr-15 trans-04 fs-16" })
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            console.log("進入商城首頁");
+            $(".carousel-item").first().addClass("active");
+        })
+
+        function fn商品點讚事件(a) {
+            console.log($(`.likeproduct[data-productid=${a}]`).data("islike"));
+            if ($(`.likeproduct[data-productid=${a}]`).data("islike") == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ShoppingHome/LikeProduct",
+                    data: { ProductId: a },
+                    success: function (result) {
+                        $(`.likeproduct[data-productid=${a}]`).children("span").eq(1).text(result);
+                        $(`.likeproduct[data-productid=${a}]`).addClass("bg1");
+                        swal.fire("讚", "喜歡這項商品", "success");
+                        $(`.likeproduct[data-productid=${a}]`).data("islike", false);
+                        //$(`.likeproduct[data-productid=${a}]`).attr("data-islike", false);
+                        //console.log($(`.likeproduct[data-productid=${a}]`).data("islike"));
+                    }
+                })
+            } else if ($(`.likeproduct[data-productid=${a}]`).data("islike") == false) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ShoppingHome/DislikeProduct",
+                    data: { ProductId: a },
+                    success: function (result) {
+                        $(`.likeproduct[data-productid=${a}]`).children("span").eq(1).text(result);
+                        $(`.likeproduct[data-productid=${a}]`).removeClass("bg1");
+                        swal.fire("取消讚", "反悔喜歡這項商品", "warning");
+                        $(`.likeproduct[data-productid=${a}]`).data("islike", true);
+                    }
+                })
+            }
+        }
+
+    </script>
+}
+

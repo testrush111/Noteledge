@@ -1,0 +1,286 @@
+﻿@model IEnumerable<Models.ShoppingModels.CComment>
+@using Models.ManagementModels
+@{
+    ViewBag.Title = "MessageBoardView";
+    CAdmin admin = Session[CAdminSession.Session_Login_User] as CAdmin;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .selected {
+        background-color: #8ED0D4;
+        border-radius: 5px;
+    }
+</style>
+<section class="p-t-80">
+    <div class="wrapper">
+        <aside class="main-sidebar sidebar-dark-primary">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img id="adminIMG" src="@admin.fThePhoto" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info" id="myprofile1" style="margin-top:auto;margin-bottom:auto" data-memberid="@admin.fAdminId">
+                        <span class="float-left  p-lr-5 fs-20">@admin.fName</span>
+                    </div>
+                </div>
+                <!-- Sidebar Menu -->
+                <nav class="mt-2 lsSlideNav">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="@Url.Action("HomePage", "ManagerSystem")" class="nav-link" style="cursor:pointer">
+                                <i class='fas fa-tachometer-alt cl2 nav-icon' style='font-size:24px;vertical-align: middle;'></i>
+                                <p class="fs-18">
+                                    管理員首頁
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="@Url.Action("adminsetupV2", "ManagerSystem")" class="nav-link " style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    assignment_ind
+                                </span>
+                                <p class="fs-18">
+                                    管理員資訊
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item template">
+                            <a href="@Url.Action("MessageBoardView", "ManagerSystem")" class="nav-link selected" id="purchaselist" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    speaker_notes_off
+                                </span>
+                                <p class="fs-18">
+                                    留言板管理
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item trash">
+                            <a href="@Url.Action("BlackList", "ManagerSystem")" class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    block
+                                </span>
+                                <p class="fs-18">
+                                    黑名單
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="fs-18">
+                                留言板管理
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item">
+                                    @Html.ActionLink("管理員首頁", "HomePage", "ManagerSystem")
+                                </li>
+                                <li class="breadcrumb-item active">留言板</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content">
+                <div class="container-fluid">
+                    <!--留言板內容-->
+                    <div class="row">
+                        <div class="col-md-12 p-lr-20" >
+                            <table class="display" style="width:100%">
+                                <thead>
+                                    <tr class="fs-18">
+                                        <th>
+                                            留言編號
+                                        </th>
+                                        <th>
+                                            留言時間
+                                        </th>
+                                        <th>
+                                            留言內容
+                                        </th>
+                                        <th>
+                                            是否已遮蔽
+                                        </th>
+                                        <th>
+                                            產品編號
+                                        </th>
+                                        <th>
+                                            會員編號
+                                        </th>
+                                        <th>
+                                            遮蔽留言
+                                        </th>
+                                        <th>
+                                            加入黑名單
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+
+                                        <tr class="fs-17">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fCommentId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fCommentDateTime)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fContent)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fIsBanned)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fProductId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.fMemberId)
+                                            </td>
+                                            <td>
+                                                
+                                                <select name="hidereason" class="ban">
+                                                    <option value="請選擇遮蔽原因" id="reason">遮蔽原因</option>
+                                                    <option value="確定要以'不雅留言'作為遮蔽原因嗎" id="indecent">不雅留言</option>
+                                                    <option value="確定要以'人身攻擊'作為遮蔽原因嗎" id="humanattack">人身攻擊</option>
+                                                    <option value="確定要以'惡意發言'作為遮蔽原因嗎" id="malice">惡意發言</option>
+                                                </select>
+                                               
+                                            </td>
+                                            <td>
+                                                
+                                                <select name="blackreason" class="black">
+                                                    <option value="">黑名單原因</option>
+                                                    <option value="屢次不雅發言">屢次不雅留言</option>
+                                                    <option value="屢次人身攻擊">屢次人身攻擊</option>
+                                                    <option value="屢次惡意發言">屢次惡意發言</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+@section scripts{
+    <script>     
+        //ajax撈出留言板資料並在遮蔽留言時傳送訊息給提示(Notice)資料庫
+        $(document).ready(function () {
+            $('table.display').DataTable();  
+
+            $(".dataTable").delegate(".ban", "change", function () {
+                let tr = $(this).parent().parent();
+                //遮蔽原因
+                let hidereason = $(this).find('option:selected').text();
+                //指向留言串的id
+                let id = tr.children("td").eq(0).text();
+                let comment = tr.children("td").eq(5).text();
+                id = id.trim();
+                
+                console.log(hidereason);
+
+                const swal = Swal.mixin();
+
+                swal.fire({
+                    title: '確認遮蔽?',
+                    text: `確定要以${hidereason}作為遮蔽原因嗎?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '確認',
+                    cancelButtonText: '取消',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        swal.fire(
+                            '已遮蔽!!',
+                            '已將此留言遮蔽。',
+                            'success'
+                        );
+                        $.ajax({
+                            url: "/ManagerSystem/commentboard",
+                            method: "POST",
+                            dataType: "html",
+                            data: { commentid: id, content: hidereason, memberid: comment },
+                            success: function (msg) {
+                                console.log(msg);
+                                location.href = "../ManagerSystem/MessageBoardView";
+                            }
+                        });
+                    }
+                })          
+             });
+            //ajax撈出留言板資料並在加入黑名單時傳送訊息給提示(Notice)資料庫
+            $(".dataTable").delegate(".black", "change", function () {
+                let tr = $(this).parent().parent();
+                let blackreason = $(this).find('option:selected').text();
+                let id = tr.children("td").eq(5).text();
+                id = id.trim();
+                console.log(blackreason);
+                const swal = Swal.mixin();
+
+                swal.fire({
+                    title: '確認加入?',
+                    text: `確定要以${blackreason}作為加入黑名單的原因嗎?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '確認',
+                    cancelButtonText: '取消',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        swal.fire(
+                            '已執行!!',
+                            '已將此會員加入黑名單。',
+                            'success'
+                        );
+                        //debugger;
+                        $.ajax({
+                            url: "/ManagerSystem/intoblacklist",
+                            method: "POST",
+                            dataType: "html",
+                            data: { memberid: id, blackreason: blackreason },
+                            success: function (msg) {
+                                console.log(msg);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+<!--==================原始標籤===================-->
+<!--<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->
+<!-- sweetalert2 cdn -->
+<!--<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>-->
+@*<h2>MessageBoardView</h2>*@
+
+@*<li>@Html.ActionLink("管理員首頁", "HomePage", "ManagerSystem")</li>
+    <li>@Html.ActionLink("管理員資訊", "adminsetupV2", "ManagerSystem")</li>
+    <li>@Html.ActionLink("留言板管理", "MessageBoardView", "ManagerSystem")</li>
+    <li>@Html.ActionLink("黑名單", "BlackList", "ManagerSystem")</li>*@

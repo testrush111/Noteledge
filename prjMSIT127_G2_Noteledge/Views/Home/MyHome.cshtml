@@ -1,0 +1,406 @@
+﻿@using Models.MemberModels
+@{
+    ViewBag.Title = "MyHome";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+
+}
+
+<style>
+    .img-center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .center {
+        margin: auto;
+        width: 60%;
+        /*border: 3px solid #73AD21;*/
+        padding: 10px;
+    }
+
+    .VIP {
+        display: none;
+    }
+
+
+
+    .sides {
+        animation: 0.7s curtain cubic-bezier(.86,0,.07,1) 0.4s both;
+        display: grid;
+        grid-template-columns: 50vw 50vw;
+    }
+
+    .intro {
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+    }
+
+    .sides {
+        position: relative;
+    }
+
+    .side {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        font-size: 4vw;
+    }
+
+    .monkey {
+        background: #FFE4B5;
+        color: #534325;
+    }
+
+    .robot {
+        background-color: #1b636f;
+        color: #ffffff;
+    }
+
+    .name {
+        margin: 0.3em;
+    }
+
+    .emoji {
+        font-size: 3em;
+    }
+
+    .versus {
+        position: absolute;
+        width: 9vw;
+        height: 9vw;
+        background: #ffffff;
+        border-radius: 50%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        margin: auto;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8vw;
+        color: #123456;
+        border-width: 10px;
+        border-style: solid;
+        border-color: #1b636f #dcc9a1 #dcc9a1 #1b636f;
+        transform: rotate(-45deg);
+    }
+
+        .versus span {
+            transform: rotate(35deg);
+        }
+
+
+    .bt {
+        border: none; /* 去掉邊框 */
+        background: #FFD700; /* 改背景色 */
+        color: black; /* 字改成白色 */
+        font-size: 28px; /* 改字體大小 */
+        padding: 20px; /* 按鈕內邊距離 */
+        width: 210px; /* 按鈕寬度 */
+        border-radius: 5px; /* 圓角5px */
+        font-family: 'cwTeXYen', sans-serif;
+        margin-bottom: 20px
+    }
+
+        .bt span {
+            transition: 0.7s; /* 過渡0.5秒 */
+        }
+
+        .bt:hover span {
+            padding-right: 25px; /* 當滑鼠在按鈕上時span內邊右距離25px */
+        }
+
+        .bt span:after {
+            content: "»»"; /* span後面追加內容為» */
+            opacity: 0; /* 透明度為0 */
+            transition: 0.5s; /* 加個0.5秒的過渡 */
+        }
+
+        .bt:hover span:after {
+            opacity: 1; /* 透明度為1，就是顯示 */
+        }
+</style>
+
+<!-- 理念介紹 -->
+<section class="bg-img1 txt-center p-lr-15 p-tb-92" style="background-image: url('../../Image/slide-05.jpg'); height:600px">
+    <h2 class="ltext-105 txt-center m-t-200 bg9 hov-bg2 cl2 op-09 hov-cl0">
+        Note$edge | 讓知識變成價值
+    </h2>
+    <h6 class="fs-30 txt-center bg9 hov-bg2 cl2 op-09 hov-cl0" style="text-align: center;">讓個人的知識，變廣大的智慧。</h6>
+
+</section>
+
+<section class="p-b-100">
+    
+    <div>
+        <div>
+            @if (member != null)
+            {
+                if (member.fIsVIP != true)
+                {
+            <form id="formWebATM" method="post" accept-charset="UTF-8"
+                  action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">
+                <div class="VIP">
+                    MerchantID 商店代號:
+                    <input type="text" name="MerchantID" value="@ViewBag.MerchantID" />
+                    <br />
+
+                    MerchantTradeNo 商店交易編號:
+                    <input type="text" name="MerchantTradeNo" value="@ViewBag.MerchantTradeNo" />
+                    <br />
+
+                    MerchantTradeDate 商店交易時間:
+                    <input type="text" name="MerchantTradeDate" value="@ViewBag.MerchantTradeDate" />
+                    <br />
+
+                    PaymentType 交易類型:
+                    <input type="text" name="PaymentType" value="aio" />
+                    <br />
+
+                    TotalAmount 交易金額:
+                    <input type="text" name="TotalAmount" value="@ViewBag.Amount" />
+                    <br />
+
+                    TradeDesc 交易描述:
+                    <input type="text" name="TradeDesc" value="建立全金流測試訂單" />
+                    <br />
+
+                    ItemName 商品名稱:
+                    <input type="text" name="ItemName" value="@ViewBag.ProductName" />
+                    <br />
+
+                    ReturnURL 付款完成通知回傳網址:
+                    <input type="text" name="ReturnURL" value="@ViewBag.Url" />
+                    <br />
+
+                    ChoosePayment 預設付款方式:
+                    <input type="text" name="ChoosePayment" value="ALL" />
+                    <br />
+
+                    會員商店代碼:
+                    <input type="text" name="StoreID" value="" />
+                    <br />
+
+                    ChooseSubPayment 預設子付款方式:
+                    <input type="text" name="ChooseSubPayment" value="" />
+                    <br />
+
+                    ClientBackURL Client端返回廠商網址:
+                    <input type="text" name="ClientBackURL" value="@ViewBag.Url" />
+                    <br />
+
+                    CheckMacValue 簽章類型:
+                    <input type="text" name="EncryptType" value="1" />
+                    <br />
+
+                    CheckMacValue 檢查碼:
+                    <input type="text" name="CheckMacValue" value="@ViewBag.SHA256" />
+                    <br />
+                </div>
+                <div class="jumbotron bg10 cl2">
+                    <h1 class="fs-50 " style="text-align: center;">升級資訊</h1>
+                </div>
+                <div class="intro">
+                    <div class="sides">
+                        <div class="side monkey m-l-150" style="border-radius:30px">
+                            <h2 class="name" style="display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 4vw; ">
+                                Note$edge
+                                <br>尊爵VIP
+                            </h2>
+                            <div class="emoji">🤖</div>
+                            <div>
+                                <p style="text-align:center">好處</p>
+                                <p style="font-size: 34px;color:#ED7A5E;font-family: 'cwTeXYen', sans-serif;margin-bottom:10px">可將精心製作的筆記販售於本平台筆記商城</p>
+                            </div>
+                            <button class="bt" onclick="UpdateVIP"> <span>前往升級</span></button>
+                        </div>
+                        <div class="versus">
+                            <span>vs</span>
+                        </div>
+                        <div class="side robot m-r-150" style="border-radius:30px">
+                            <h2 class="name" style="display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 4vw;">
+                                Note$edge
+                                <br>一般會員
+                            </h2>
+                            <div class="emoji">🐒</div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+                }
+                else
+                {
+                    <div class="col-md-12 p-tb-20" style="text-align:center">
+                        <img src="~/Image/Logo/Logo_vertical_white.png" />
+                        @*<button style="margin-left:100px" class="btn btn-success" onclick="location.href='@Url.Action("Index", "ShoppingHome")'">前往商城</button>*@
+                    </div>
+
+                    <section class="p-t-10 p-b-100">
+                        <div class="jumbotron bg10 cl2">
+                            <h1 class="fs-50 " style="text-align: center;">關於本站</h1>
+                        </div>
+                        <!--會員系統介紹區塊-->
+                        <div>
+                            <img class="img-center" src="https://i.imgur.com/ppQ8fw4.png" />
+                            <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">會員系統</h1>
+
+                            <div class="center row">
+                                <div class="col-md-4 p-all-20">
+                                    <h2>VIP</h2>
+                                    <h4>升級VIP後，即可開啟販售筆記，分享知識，增加收入。</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>第三方支付</h2>
+                                    <h4>使用歐付寶，不必出門，在家就可購買筆記。</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>小鈴鐺</h2>
+                                    <h4>商品販售、留言隨時掌握。</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!--筆記系統介紹區塊-->
+                        <div class="bg10 p-t-30 op-08">
+                            <img class="img-center" src="https://i.imgur.com/jZMigxL.png" />
+                            <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">筆記創作系統</h1>
+
+                            <div class="center row">
+                                <div class="col-md-4 p-all-20">
+                                    <h2>程式碼高亮度</h2>
+                                    <h4>輕鬆製作程式碼筆記，工作高效率。</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>模板使用</h2>
+                                    <h4>不知道怎麼開始?我們有優秀的設計師製作的免費模板。</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>版本紀錄</h2>
+                                    <h4>再也不用擔心筆記遺失，保留寶貴的回憶。</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!--商城系統介紹區塊-->
+                        <div class="p-t-30">
+                            <img class="img-center" src="https://i.imgur.com/EwbdGdV.png" />
+                            <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">筆記販售系統</h1>
+
+                            <div class="center row">
+                                <div class="col-md-4 p-all-20">
+                                    <h2>購買瑪尼幣</h2>
+                                    <h4>購入瑪尼幣，即可購買任何喜愛的筆記。</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>販售筆記</h2>
+                                    <h4>將精心製作的筆記，販售於筆記商城。</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>購買筆記</h2>
+                                    <h4>使用瑪尼幣購買喜愛的筆記，還不確定?沒關係我們有免費筆記專區。</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!--聊聊系統介紹區塊-->
+                        <div class="bg10 p-t-30 op-08">
+                            <img class="img-center" src="https://i.imgur.com/4kAK3kH.png" />
+                            <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">評價與聊聊系統</h1>
+
+                            <div class="center row">
+                                <div class="col-md-4 p-all-20">
+                                    <h2>聊聊</h2>
+                                    <h4>隨時與他人討論筆記內容。</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>聊商品</h2>
+                                    <h4>不確定是否要購買商品?先與賣家聊聊吧。</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>商品留言、評價</h2>
+                                    <h4>留下想發問的商品留言，在購買後評論商品。</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!--管理系統介紹區塊-->
+                        <div class="p-t-30">
+                            <img class="img-center" src="https://i.imgur.com/UJK0Bn3.png" />
+                            <h1 class="p-t-12 cl12 font-weight-bold" style="text-align: center;">網站管理系統</h1>
+
+                            <div class="center row">
+                                <div class="col-md-4 p-all-20">
+                                    <h2>網站資訊</h2>
+                                    <h4>後台紀錄網站累計資訊、分析商品與會員動向</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>黑名單管理</h2>
+                                    <h4>管理不遵守規則的使用者</h4>
+                                </div>
+                                <div class="col-md-4 p-all-20">
+                                    <h2>留言板管理</h2>
+                                    <h4>給予網站安全、健康的留言環境</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!--提供的服務區塊-->
+                        <div class="jumbotron bg10 cl2">
+                            <h1 class="fs-50 " style="text-align: center;">提供的服務</h1>
+                        </div>
+
+
+                        <div class="center row">
+                            <div class="col-md-4 p-tb-20">
+                                <h2>筆記編輯</h2>
+                                <h4>編輯喜愛的內容，隨時記錄珍貴的回憶。</h4>
+                            </div>
+                            <div class="col-md-4 p-tb-20">
+                                <h2>筆記模板</h2>
+                                <h4>從我們提供的模板中開始編輯第一個筆記。</h4>
+                            </div>
+                            <div class="col-md-4 p-tb-20">
+                                <h2>版本紀錄</h2>
+                                <h4>隨時記錄版本控制，隨時回復每一個儲存點。</h4>
+                            </div>
+                            <div class="col-md-4 p-tb-20">
+                                <h2>免費筆記專區</h2>
+                                <h4>分享知識，免費購買0元筆記。</h4>
+                            </div>
+
+                            <div class="col-md-4 p-tb-20">
+                                <h2>VIP會員</h2>
+                                <h4>升級至VIP會員，新增的功能為您的筆記提供更多價值。</h4>
+                            </div>
+                            <div class="col-md-4 p-tb-20">
+                                <h2>筆記販售</h2>
+                                <h4>可瀏覽已上架的筆記商品，且能購買中意的筆記。</h4>
+                            </div>
+                            <div class="col-md-4 p-tb-20">
+                                <h2>商品聊天</h2>
+                                <h4>當購買中意的筆記後，我們提供了專屬的聊天空間，讓您能與創作者進行交流。</h4>
+                            </div>
+                            <div class="col-md-4 p-tb-20">
+                                <h2>商品評價</h2>
+                                <h4>瀏覽商城時各項商品皆有評價及留言，給予使用者更多參考資訊。</h4>
+                            </div>
+                            <div class="col-md-4 p-tb-20">
+                                <h2>歐付寶</h2>
+                                <h4>不必出門付款就可以享受優秀的筆記。</h4>
+                            </div>
+                        </div>
+
+                    </section> }
+            }
+            else
+            {
+                <input type="submit" value="升級VIP" onclick="UpdateVIP" class="btn btn-success" />
+            }
+
+        </div>
+    </div>
+
+</section>

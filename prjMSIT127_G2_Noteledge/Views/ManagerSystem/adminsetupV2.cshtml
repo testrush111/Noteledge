@@ -1,0 +1,321 @@
+﻿@using Models.ManagementModels
+
+@model Models.ManagementModels.CAdmin
+
+@{
+    ViewBag.Title = "ManagerSetup";
+    CAdmin admin = Session[CAdminSession.Session_Login_User] as CAdmin;
+    DateTime MyDate = admin.fBirthDay;
+    string MemberDate = MyDate.ToString("yyyy-MM-dd");
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .selected {
+        background-color: #8ED0D4;
+        border-radius: 5px;
+    }
+</style>
+<section class="p-t-80">
+    <div class="wrapper">
+        <aside class="main-sidebar sidebar-dark-primary">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img id="IMG" src="@admin.fThePhoto" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info" id="myprofile1" style="margin-top:auto;margin-bottom:auto" data-memberid="@admin.fAdminId">
+                        <span class="float-left  p-lr-5 fs-20">@admin.fName</span>
+                    </div>
+                </div>
+                <!-- Sidebar Menu -->
+                <nav class="mt-2 lsSlideNav">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="@Url.Action("HomePage", "ManagerSystem")" class="nav-link" style="cursor:pointer">
+                                <i class='fas fa-tachometer-alt cl2 nav-icon' style='font-size:24px;vertical-align: middle;'></i>
+                                <p class="fs-18">
+                                    管理員首頁
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="@Url.Action("adminsetupV2", "ManagerSystem")" class="nav-link selected" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    assignment_ind
+                                </span>
+                                <p class="fs-18">
+                                    管理員資訊
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item template">
+                            <a href="@Url.Action("MessageBoardView", "ManagerSystem")" class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    speaker_notes_off
+                                </span>
+                                <p class="fs-18">
+                                    留言板管理
+                                </p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item trash">
+                            <a href="@Url.Action("BlackList", "ManagerSystem")" class="nav-link" id="purchaselist" style="cursor:pointer">
+                                <span class="material-icons cl2 nav-icon" style="vertical-align: middle;">
+                                    block
+                                </span>
+                                <p class="fs-18">
+                                    黑名單
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="content-wrapper">
+            <section class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="fs-18">
+                                管理員資料
+                            </h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item">
+                                    @Html.ActionLink("管理員首頁", "HomePage", "ManagerSystem")
+                                </li>
+                                <li class="breadcrumb-item active">管理員資料</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content col-md-6" style=" margin: 0 auto;float: none;">
+                <div class="card card-info">
+                    <!--個人資訊-->
+                    <div class="card-body">
+                        <form method="post" id="Form_Edit" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <hr />
+                                <img src="@admin.fThePhoto" width="200" height="200" style="margin-left:200px ; margin-bottom:20px ;" id="adminIMG" />
+                                <br />
+                                <label class="btn btn-info" style="margin-left:238px ; margin-bottom:20px ">
+                                    <input type="file" id="Image" name="Image" onchange="upload()" style="display: none" accept="Image/*" />
+                                    <i></i>上傳圖片
+                                </label>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.fName, "姓氏:", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-12">
+                                        @Html.EditorFor(model => model.fName, new { htmlAttributes = new { @class = "form-control", @Value = admin.fName } })
+                                        @Html.ValidationMessageFor(model => model.fName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+
+
+
+                                @if (admin.fGender == "M")
+                                {
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-12">
+                                            @Html.RadioButton("fGender", "M", true)男(M)
+                                            @Html.RadioButton("fGender", "F")女(F)
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-12">
+                                            @Html.RadioButton("fGender", "M")男(M)
+                                            @Html.RadioButton("fGender", "F", true)女(F)
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.fBirthDay, "出生日期:", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-12">
+                                        <input class="form-control" data-val="true" data-val-date="欄位 fBirthDay 必須是日期。" data-val-required="!請點選您的出生日期"
+                                               type="date" id="fBirthDay" name="fBirthDay" value="@MemberDate" max="@DateTime.UtcNow.AddHours(08)" />
+                                        @Html.ValidationMessageFor(model => model.fBirthDay, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.fAdminAccount, "信箱:", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-12">
+                                        @Html.EditorFor(model => model.fAdminAccount, new { htmlAttributes = new { @class = "form-control", @Value = admin.fAdminAccount } })
+                                        @Html.ValidationMessageFor(model => model.fAdminAccount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.fAdminPassword, "密碼:", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-12" style="width: 310px;">
+                                        <input class="form-control text-box single-line" id="fPassword" name="fAdminPassword" type="password" value="@admin.fAdminPassword" />
+                                    </div>                                    
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.fTheAddress, "地址:", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-12">
+                                        @Html.EditorFor(model => model.fTheAddress, new { htmlAttributes = new { @class = "form-control", @Value = admin.fTheAddress } })
+                                        @Html.ValidationMessageFor(model => model.fTheAddress, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.fMobilePhone, "手機:", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-12">
+                                        @Html.EditorFor(model => model.fMobilePhone, new { htmlAttributes = new { @class = "form-control", @Value = admin.fMobilePhone } })
+                                        @Html.ValidationMessageFor(model => model.fMobilePhone, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-12">
+                                            <input type="submit" value="修改" class="btn btn-primary fs-18 float-r" OnClick="fn彈出視窗()" name="EditorMember" />
+                                            <p></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>                   
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<script>
+    function upload() {
+        var oFReader = new FileReader();
+        var file = document.getElementById("Image").files[0];
+        oFReader.readAsDataURL(file);
+        oFReader.onloadend = function (oFRevent) {
+            var src = oFRevent.target.result;
+            $("#adminIMG").attr("src", src);
+        };
+    };
+</script>
+
+<!--=======================原始標籤===================================-->
+@*<li>@Html.ActionLink("管理員首頁", "HomePage", "ManagerSystem")</li>
+<li>@Html.ActionLink("管理員資訊", "adminsetupV2", "ManagerSystem")</li>
+<li>@Html.ActionLink("留言板管理", "MessageBoardView", "ManagerSystem")</li>
+<li>@Html.ActionLink("黑名單", "BlackList", "ManagerSystem")</li>
+<h2>個人資料</h2>
+
+<div class="col-md-12">
+
+</div>
+<form method="post" id="Form_Edit" enctype="multipart/form-data">
+
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        <img src="@admin.fThePhoto" width="200" height="200" style="margin-left:200px ; margin-bottom:20px ;" id="adminIMG" />
+        <br />
+        <label class="btn btn-info" style="margin-left:238px ; margin-bottom:20px ">
+            <input type="file" id="Image" name="Image" onchange="upload()" style="display: none" accept="Image/*" />
+            <i></i>上傳圖片
+        </label>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fName, "姓氏:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.fName, new { htmlAttributes = new { @class = "form-control", @Value = admin.fName, @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.fName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+
+        @if (admin.fGender == "M")
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    @Html.RadioButton("fGender", "M", true)男(M)
+                    @Html.RadioButton("fGender", "F")女(F)
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.fGender, "性別:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    @Html.RadioButton("fGender", "M")男(M)
+                    @Html.RadioButton("fGender", "F", true)女(F)
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fBirthDay, "出生日期:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                <input class="form-control" data-val="true" data-val-date="欄位 fBirthDay 必須是日期。" data-val-required="!請點選您的出生日期"
+                       type="date" id="fBirthDay" name="fBirthDay" value="@MemberDate" max="@DateTime.Now" />
+                @Html.ValidationMessageFor(model => model.fBirthDay, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fAdminAccount, "信箱:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.fAdminAccount, new { htmlAttributes = new { @class = "form-control", @Value = admin.fAdminAccount, @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.fAdminAccount, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fAdminPassword, "密碼:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12" style="width: 310px;">
+                <input class="form-control text-box single-line" id="fPassword" name="fAdminPassword" readonly="readonly" type="password" value="@admin.fAdminPassword" />
+            </div>
+            <a href="#" onclick="WindForm()" style="line-height:34px; height: 34px;">更換密碼</a>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fTheAddress, "地址:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.fTheAddress, new { htmlAttributes = new { @class = "form-control", @Value = admin.fTheAddress } })
+                @Html.ValidationMessageFor(model => model.fTheAddress, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fMobilePhone, "手機:", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.fMobilePhone, new { htmlAttributes = new { @class = "form-control", @Value = admin.fMobilePhone } })
+                @Html.ValidationMessageFor(model => model.fMobilePhone, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="修改" class="btn btn-primary" OnClick="fn彈出視窗()" name="EditorMember" />
+                <p></p>
+            </div>
+        </div>
+    </div>
+</form>*@
+
+
+

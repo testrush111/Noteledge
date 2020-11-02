@@ -1,0 +1,253 @@
+﻿@model IEnumerable<Models.MemberModels.CNotice>
+
+@{
+    ViewBag.Title = "MemberNotice";
+
+}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    boby {
+        background-color: #F4EFEB;
+    }
+
+    .sysmsg_block {
+        border: 1px solid black;
+        width: 500px;
+        height: 120px;
+        padding: 0;
+        margin-bottom: 20px;
+        display: block;
+        margin-left: 100px;
+    }
+
+        .sysmsg_block:hover {
+            background-color: #F0F0F0
+        }
+
+    .sysmsg_title {
+        display: block;
+        height: 50px;
+        width: 460px;
+        margin: auto;
+    }
+
+    .sysmsg_content {
+        display: block;
+        height: 50px;
+        width: 460px;
+        margin: auto;
+    }
+
+    .sysmsg_img {
+        margin-top: 10px;
+        float: left;
+    }
+
+    .sysmsg_time {
+        float: right;
+    }
+
+    body {
+        font-family: Arial;
+    }
+
+    /* Style the tab */
+    .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+    }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 18px;
+            font-weight: 900;
+            font-family: 'cwTeXYen', sans-serif;
+        }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+                background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+                background-color: #ccc;
+            }
+
+    /* Style the tab content */
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+    }
+</style>
+<section class="p-lr-15 p-t-92" style="background-color:#F4EFEB">
+    <div class="card" style="width:700px;height:650px;left:400px">
+        <div class="card-header">
+            <p style="text-align:center;height:50px;font-family: 'cwTeXYen', sans-serif;font-size:28px;font-weight:900">系統通知總覽</p>
+            <div class="card-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0" >
+            <div class="tab" style="padding-left:220px">
+                <button class="tablinks" onclick="openCity(event, 'All')">全部</button>
+                <button class="tablinks" onclick="openCity(event, 'System')">系統</button>
+                <button class="tablinks" onclick="openCity(event, 'Sales')">銷售</button>
+                <button class="tablinks" onclick="openCity(event, 'Message')">留言</button>
+            </div>
+
+            <div id="All" class="tabcontent" style="display:block">
+                <div class="card-body table-responsive p-0">
+                    @foreach (var item in Model)
+                    {
+                        <div class="sysmsg_block">
+                            @if (item.fCategoryType == "系統" || item.fCategoryType == "管理員")
+                            {
+                                <div class="sysmsg_title">
+                                    <div class="sysmsg_img">
+                                        <img src="~/Image/MemberImage/系統.png" style="width:80px;height:80px;margin-top:10px" />
+                                    </div>
+                                    <div class="sysmsg_time">@item.fNoticeDatetime.ToString("yyyy/MM/dd hh:mm")</div>
+                                </div>
+                            }
+                            else if (item.fCategoryType == "銷售")
+                            {
+                                <div class="sysmsg_title" onclick="javascript:location.href='../ShoppingHome'">
+                                    <div class="sysmsg_img">
+                                        <img src="~/Image/MemberImage/銷售.png" style="width:80px;height:80px;margin-top:10px" />
+                                    </div>
+                                    <div class="sysmsg_time">@item.fNoticeDatetime.ToString("yyyy/MM/dd hh:mm")</div>
+                                </div>
+                            }
+                            else if (item.fCategoryType == "評價留言")
+                            {
+                                <div class="sysmsg_title" onclick="javascript:location.href='../ShoppingHome'">
+                                    <div class="sysmsg_img">
+                                        <img src="~/Image/MemberImage/評價留言.png" style="width:80px;height:80px;margin-top:10px" />
+                                    </div>
+                                    <div class="sysmsg_time">@item.fNoticeDatetime.ToString("yyyy/MM/dd hh:mm")</div>
+                                </div>
+                            }
+                            <div class="sysmsg_content" style="font-size:18px;font-family: 'cwTeXYen', sans-serif;font-weight:800;width:350px;margin-left:120px">@item.fNoticeContent</div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div id="System" class="tabcontent">
+                <div class="card-body table-responsive p-0">
+                    @foreach (var item in Model)
+                    {
+                        if (item.fCategoryType == "系統" || item.fCategoryType == "管理員")
+                        {
+
+                            <div class="sysmsg_block">
+                                <div class="sysmsg_title">
+                                    <div class="sysmsg_img">
+                                        <img src="~/Image/MemberImage/系統.png" style="width:80px;height:80px;margin-top:10px" />
+                                    </div>
+                                    <div class="sysmsg_time">@item.fNoticeDatetime.ToString("yyyy/MM/dd hh:mm")</div>
+                                </div>
+                                <div class="sysmsg_content" style="font-size:18px;font-family: 'cwTeXYen', sans-serif;font-weight:800;width:350px;margin-left:120px">@item.fNoticeContent</div>
+                            </div>
+                        }
+
+                    }
+                </div>
+            </div>
+
+            <div id="Sales" class="tabcontent">
+                <div class="card-body table-responsive p-0">
+                    @if (ViewBag.Count銷售 != 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            if (item.fCategoryType == "銷售")
+                            {
+                                <div class="sysmsg_block">
+                                    <div class="sysmsg_title" onclick="javascript:location.href='../ShoppingHome'">
+                                        <div class="sysmsg_img">
+                                            <img src="~/Image/MemberImage/銷售.png" style="width:80px;height:80px;margin-top:10px" />
+                                        </div>
+                                        <div class="sysmsg_time">@item.fNoticeDatetime.ToString("yyyy/MM/dd hh:mm")</div>
+                                    </div>
+                                    <div class="sysmsg_content" style="font-size:18px;font-family: 'cwTeXYen', sans-serif;font-weight:800;width:350px;margin-left:120px">@item.fNoticeContent</div>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="sysmsg_block">
+                            <p style="text-align:center;font-family: 'cwTeXYen', sans-serif;font-size:28px;font-weight:900;margin-top:30px">目前無交易紀錄</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div id="Message" class="tabcontent">
+                <div class="card-body table-responsive p-0">
+                    @if (ViewBag.Count留言 != 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            if (item.fCategoryType == "評價留言")
+                            {
+                                <div class="sysmsg_block">
+                                    <div class="sysmsg_title" onclick="javascript:location.href='../ShoppingHome'">
+                                        <div class="sysmsg_img">
+                                            <img src="~/Image/MemberImage/評價留言.png" style="width:80px;height:80px;margin-top:10px" />
+                                        </div>
+                                        <div class="sysmsg_time">@item.fNoticeDatetime.ToString("yyyy/MM/dd hh:mm")</div>
+                                    </div>
+                                    <div class="sysmsg_content" style="font-size:18px;font-family: 'cwTeXYen', sans-serif;font-weight:800;width:350px;margin-left:120px">@item.fNoticeContent</div>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="sysmsg_block">
+                            <p style="text-align:center;font-family: 'cwTeXYen', sans-serif;font-size:28px;font-weight:900;margin-top:30px">目前無交易紀錄</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>

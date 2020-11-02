@@ -1,0 +1,274 @@
+﻿@using PagedList.Mvc
+@using PagedList
+@model IPagedList<ViewModel.CShoppingHomeVM.CShoppingHomeVM>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutShopping.cshtml";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+<section class="bg-img1 txt-center p-lr-15 p-tb-150" style="background-image: url('Image/slide-01.jpg');">
+
+    <h2 class="ltext-105 cl2 txt-center p-t-50 fs-36">
+        Note$edge 所有商品
+    </h2>
+</section>
+
+<!-- Product -->
+<div class="bg0 m-t-23 p-b-140">
+    <div class="container">
+        <div class="flex-w flex-sb-m p-b-52">
+            <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+                <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter="*">
+                    @Html.ActionLink("所有筆記商品", "Index", "Product", new { sortOrder = ViewBag.DateSortParm }, new { @class = "filter-link stext-106 trans-04 fs-20 cl2" })
+                </button>
+
+                <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
+                    @Html.ActionLink("熱門下載", "Index", new { sortOrder = "DownLoad_desc" }, new { @class = "filter-link stext-106 trans-04 fs-20 cl2" })
+                </button>
+
+                <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
+                    @Html.ActionLink("最受歡迎", "Index", new { sortOrder = "Like_desc" }, new { @class = "filter-link stext-106 trans-04 fs-20 cl2" })
+                </button>
+                <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
+                    @Html.ActionLink("新品推薦", "Index", new { sortOrder = "New" }, new { @class = "filter-link stext-106 trans-04 fs-20 cl2" })
+                </button>
+                <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
+                    @Html.ActionLink("免費專區", "Index", new { sortOrder = "Free" }, new { @class = "filter-link stext-106 trans-04 fs-20 cl2" })
+                </button>
+            </div>
+
+            <div class="flex-w flex-c-m m-tb-10">
+                <div class="flex-c-m stext-106 cl2  fs-16 size-104 bor4 pointer hov-btn3 trans-04 m-r-8 m-tb-4 js-show-filter">
+                    <span class="material-icons icon-filter cl2 m-r-6 fs-20 trans-04">
+                        filter_list
+                    </span>
+                    <span class="material-icons icon-close-filter cl2 m-r-6 fs-20 trans-04 dis-none">
+                        close
+                    </span>
+                    篩選
+                </div>
+
+                <div class="flex-c-m stext-106 cl2  fs-16 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
+                    <span class="material-icons icon-search cl2 m-r-6 fs-20 trans-04">
+                        search
+                    </span>
+                    <span class="material-icons icon-close-search cl2 m-r-6 fs-20 trans-04 dis-none">
+                        close
+                    </span>
+                    搜尋
+                </div>
+            </div>
+
+            <!-- Search product -->
+            <div class="dis-none panel-search w-full p-t-10 p-b-15">
+                <form class="bor8 dis-flex" action="/Product" method="post">
+                    <button class="btn btn-navbar size-109 flex-c-m fs-16 cl2 hov-btn3 trans-04 m-lr-5" type="submit">
+                        <span class="material-icons">search</span>
+                    </button>
+                    @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "input-group-lg mtext-107 cl2 size-114 plh2 p-lr-15", placeholder = "搜尋..." })
+                </form>
+            </div>
+
+            <!-- Filter -->
+            <div class="dis-none panel-filter w-full p-t-10">
+                <div class="wrap-filter flex-w fs-16 bg10 w-full p-lr-40 p-t-27 p-lr-15-sm">
+                    <div class="col-md-4 p-r-15 p-b-27">
+                        <div class="mtext-102 cl2 fs-20 p-tb-5 m-b-10 txt-center bg7 op-09">
+                            日期
+                        </div>
+
+                        <ul>
+                            <li class="p-b-6" id="sortorder">
+                                @Html.ActionLink("日期:最新 → 最舊", "Index", new { sortOrder = ViewBag.DateSortParm }, new { @class = "filter-link stext-106 trans-04 fs-16" })
+                            </li>
+
+                            <li class="p-b-6" id="sortorder">
+                                @Html.ActionLink("日期:最舊 → 最新", "Index", new { sortOrder = "Date" }, new { @class = "filter-link stext-106 trans-04 fs-16" })
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-4 p-r-15 p-b-27">
+                        <div class="mtext-102 cl2 fs-20 p-tb-5 m-b-10 txt-center bg7 op-09">
+                            金額
+                        </div>
+                        <ul>
+                            <li class="p-b-6" id="sortorder">
+                                @Html.ActionLink("價格:低 → 高", "Index", new { sortOrder = "Price" }, new { @class = "filter-link stext-106 trans-04 fs-16" })
+                            </li>
+
+                            <li class="p-b-6" id="sortorder">
+                                @Html.ActionLink("價格:高 → 低", "Index", new { sortOrder = "Price_desc" }, new { @class = "filter-link stext-106 trans-04 fs-16" })
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-4 p-b-27">
+                        <div class="mtext-102 cl2 fs-20 p-tb-5 m-b-10 txt-center bg7 op-09">
+                            類別
+                        </div>
+
+                        <div class="flex-w p-t-4 m-r--5">
+                            @Html.ActionLink("程式", "Index", new { searchString = "Education" }, new { @class = "flex-c-m stext-107 cl2 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 fs-16", id = "searchstring" })
+                            @Html.ActionLink("讀書計畫", "Index", new { searchString = "Education" }, new { @class = "flex-c-m stext-107 cl2 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 fs-16" })
+                            @Html.ActionLink("語言學習", "Index", new { searchString = "Education" }, new { @class = "flex-c-m stext-107 cl2 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 fs-16" })
+                            @Html.ActionLink("升學資訊", "Index", new { searchString = "Education" }, new { @class = "flex-c-m stext-107 cl2 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 fs-16" })
+                            @Html.ActionLink("面試技巧", "Index", new { searchString = "Education" }, new { @class = "flex-c-m stext-107 cl2 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 fs-16" })
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3">
+                    <div class="card card-info card-outline">
+                        <div class="card-header">
+                            <h5 class="card-title fs-20 cl12" style="line-height:38px">@item.productpicture.fName</h5>
+                            <div class="card-tools">
+                                <!--下載量-->
+                                <button type="button" class="btn btn-default btn-sm hov-btn3">
+                                    <span class="material-icons" style="vertical-align: middle;">cloud_download</span>
+                                    <span class="fs-14">@item.productpicture.fDownloadTimes</span>
+                                </button>
+                                <!--點讚-->
+                                <button type="button" class="btn btn-default btn-sm hov-btn3 likeproduct" id="@item.productpicture.fProductId" data-islike="true" data-productid="@item.productpicture.fProductId" onclick="fn商品點讚事件(@item.productpicture.fProductId)">
+                                    <span class="material-icons hov-cl1 " style="vertical-align: middle;">thumb_up</span>
+                                    <span class="fs-14">@item.productpicture.fLikeCount</span>
+                                </button>
+                            </div>
+                        </div>
+                        <img class="" src="@item.productpicture.fPicture" alt="商品圖片" style="width:100%;height:250px" />
+
+                        @if (@item.productpicture.fPrice == 0)
+                        {
+                            <div class="ribbon-wrapper ribbon-lg">
+                                <div class="ribbon bg-warning text-lg">
+                                    免費
+                                </div>
+                            </div>
+                        }
+                        <div class="card-body fs-16">
+                            <p>售價:@item.productpicture.fPrice.ToString("c0")</p>
+                            <p>發行日期:@item.productpicture.fLaunchDate.ToString("yyyy/MM/dd")</p>
+                            <p>
+                                類別:
+                                @if (item.lsproductcategory.Count == 0)
+                                {
+                                    <span class="fs-14 badge badge-secondary m-lr-5">無</span>
+                                }
+                                else
+                                {
+                                    foreach (var category in item.lsproductcategory)
+                                    {
+                                        <span class="fs-14 badge badge-info m-lr-5">@category.fCategoryName</span>
+                                    }
+                                }
+                            </p>
+                            <p class="text-muted fs-14 cl3">創作者:@item.member.fTheNickName</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-outline-info w-30 fs-16 addtocart" data-productid="@item.productpicture.fProductId">
+                                加入購物車
+                            </button>
+                            @Html.ActionLink("詳細資訊", "ProductDetail", "Product", new { ProductId = item.productpicture.fProductId }, new { @class = "btn btn-outline-secondary float-r fs-16 w-30" })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="container" style="text-align: center">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    </div>
+</div>
+
+@section scripts{
+    <script>
+
+        var getUrlString = location.href; //location.href取得網址
+        var url = new URL(getUrlString); //將網址 (字串轉成URL)
+        var sortparm = url.searchParams.get('sortOrder'); //括弧裡面帶入欲取得結果的KEY鍵值參數
+        var searchparm = url.searchParams.get('searchString');
+        var isotopeButton = $('.filter-tope-group button');
+        var sortoderLink = $('#sortorder a');
+
+        $(document).ready(function () {
+            console.log("熱門下載ready!");
+
+        });
+
+        function fn商品點讚事件(a) {
+            console.log($(`.likeproduct[data-productid=${a}]`).data("islike"));
+            if ($(`.likeproduct[data-productid=${a}]`).data("islike") == true) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ShoppingHome/LikeProduct",
+                    data: { ProductId: a },
+                    success: function (result) {
+                        $(`.likeproduct[data-productid=${a}]`).children("span").eq(1).text(result);
+                        $(`.likeproduct[data-productid=${a}]`).addClass("bg1");
+                        swal.fire("讚", "喜歡這項商品", "success");
+                        $(`.likeproduct[data-productid=${a}]`).data("islike", false);
+                        //$(`.likeproduct[data-productid=${a}]`).attr("data-islike", false);
+                        //console.log($(`.likeproduct[data-productid=${a}]`).data("islike"));
+                    }
+                })
+            } else if ($(`.likeproduct[data-productid=${a}]`).data("islike") == false) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ShoppingHome/DislikeProduct",
+                    data: { ProductId: a },
+                    success: function (result) {
+                        $(`.likeproduct[data-productid=${a}]`).children("span").eq(1).text(result);
+                        $(`.likeproduct[data-productid=${a}]`).removeClass("bg1");
+                        swal.fire("取消讚", "反悔喜歡這項商品", "warning");
+                        $(`.likeproduct[data-productid=${a}]`).data("islike", true);
+                    }
+                })
+            }
+        }
+
+        switch (sortparm) {
+            //首頁畫面
+            case "DownLoad_desc":
+                $(isotopeButton[1]).addClass('how-active1');
+                break;
+            case "Like_desc":
+                $(isotopeButton[2]).addClass('how-active1');
+                break;
+            case "New":
+                $(isotopeButton[3]).addClass('how-active1');
+                break;
+            case "Free":
+                $(isotopeButton[4]).addClass('how-active1');
+                break;
+            //篩選器內
+            case "Date":
+                $(sortoderLink[1]).addClass('filter-link-active');
+                break;
+            case "Price":
+                $(sortoderLink[2]).addClass('filter-link-active');
+                break;
+            case "Price_desc":
+                $(sortoderLink[3]).addClass('filter-link-active');
+                break;
+            default:
+                $(isotopeButton[0]).addClass('how-active1');
+                $(sortoderLink[0]).addClass('filter-link-active');
+                break;
+        }
+
+        //顯示搜尋內容
+        if ($('#SearchString').val() != "") {
+            $('.js-show-search').addClass('show-search');
+            $('.panel-search').show();
+        }
+    </script>
+}

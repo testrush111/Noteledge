@@ -1,0 +1,399 @@
+﻿@model ViewModel.CCartVM.CCartVM
+@{
+    ViewBag.Title = "CartView";
+    Layout = "~/Views/Shared/_LayoutShopping.cshtml";
+}
+@*<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>*@
+<!-- 若需相容 IE11，要加載 Promise Polyfill-->
+<!--<script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>-->
+<!-- breadcrumb -->
+
+
+<section class="p-lr-15 p-t-92">
+    <section class="content-header col-md-8" style=" margin: 0 auto;float: none;">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="fs-18">
+                        購物車檢視
+                    </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item">
+                            @Html.ActionLink("筆記商城", "Index", "ShoppingHome")
+                        </li>
+                        <li class="breadcrumb-item active">我的購物車</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</section>
+<!-- Shoping Cart -->
+<div class="row">
+    <div class="col-md-8" style=" margin: 0 auto;float: none;">
+        <div class="card ">
+            <div class="card-header bg-info">
+                <h3 class="card-title"></h3>
+
+                <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="table_search" class="form-control float-right" placeholder="搜尋...">
+
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-default">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body table-responsive p-0" style="height: 350px;">
+                <table class="table table-head-fixed">
+                    <thead>
+                        <tr class="fs-22 text-center">
+                            @*<th>
+                                    <input checked="checked" id="selectall" name="selectall" type="checkbox" value="true" />
+                                </th>*@
+                            <th>商品圖片</th>
+                            <th style="width:400px">商品明細</th>
+                            <th>商品金額</th>
+                            <th>變更項目</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.lscartprooduct)
+                        {
+
+                            <tr class="table_row">
+                                @*<td>
+                                        @Html.CheckBox(item.fCartProductId.ToString(), true, new { @class = "case" })
+                                    </td>*@
+                                <td>
+                                    <button type="button" class="btn detail_picture" data-toggle="modal" data-target="#exampleModal" data-productid="@item.fProductId">
+                                        <img class="float-l m-r-10 " src="@Model.productpic.FirstOrDefault(p => p.fProductId == item.fProductId).fPicture" alt="IMG" style="width:150px">
+                                    </button>
+                                </td>
+                                <td>
+                                    <p>@Html.ActionLink(@item.fName, "ProductDetail", "Product", new {ProductId = item.fProductId },new { @class="fs-20 cl1 hov-cl2"}  )</p>
+                                    @*<p class="fs-20">@Html.DisplayFor(modelItem => item.fName)</p>*@
+                                    <p class="fs-17">商品描述:@Html.DisplayFor(modelItem => item.fDescription)</p>
+                                    <p class="fs-17">上架時間:@Html.DisplayFor(modelItem => item.fLaunchDate)</p>
+                                </td>
+                                <td>
+                                    <h5 class="text-center">@item.fPrice.ToString("c0")</h5>
+                                </td>
+                                <td class="text-center">
+                                    @Html.ActionLink("聊聊", "Index", "Chat", new { productid = item.fProductId, sellerid = item.fMemberSellerId, message = Model.productpic.FirstOrDefault(p => p.fProductId == item.fProductId).fPicture + "*~" + item.fDescription }, new { @class = "badge badge-pill badge-info fs-18 p-tb-5" })
+                                    @Html.ActionLink("下次再買", "PurchaseNextTime", "ShoppingHome", new { CartProductId = item.fCartProductId }, new { @class = "badge badge-pill badge-warning fs-18 p-tb-5", OnClick = "return swal.fire('完成', '已將商品變更', 'success')" })
+                                    <!--方法是HttpPost，需要提交表單-->
+                                    @using (Html.BeginForm("RemoveCartProduct", "ShoppingHome", FormMethod.Post, new { style = "display: inline-block;" }))
+                                    {
+                                    <input type="hidden" name="CartProductId" value="@item.fCartProductId" />
+                                    <span>
+                                        @Html.ActionLink("刪除", "RemoveCartProduct", null,
+                                        new { @class = "badge badge-pill badge-danger fs-18 deletethis p-tb-5" })
+                                    </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer">
+                <div class="fs-20 float-r">
+                    <span class="mtext-101 cl2" id="count">
+                        共 @Model.Count 項商品
+                    </span>
+                    <span class="mtext-101 cl2">
+                        總金額:
+                    </span>
+                    <span class="mtext-110 cl2" id="totalamount">
+                        @Model.TotalAmount.ToString("c0")
+                    </span>
+                </div>
+                <div class="flex-w flex-sb-m p-b-15 p-lr-40 p-lr-15-sm">
+                    <div class="flex-w flex-m m-r-20 m-tb-5 rightA">
+                        @*@Html.ActionLink("商品評價", "ToRank", "ShoppingHome", null, new { @class = "flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10" })*@
+                        <!--方法是HttpPost，需要提交表單-->
+                        @using (Html.BeginForm("CartClear", "ShoppingHome"))
+                        {
+                            <input type="hidden" name="CartId" value="@Model.mycart.fCartId" />
+                            <span>
+                                @Html.ActionLink("整批刪除", "CartClear", null,
+                                                   new { @class = "flex-c-m stext-101 cl0 size-119 bg3 bor13 hov-btn3 p-lr-15 trans-04 pointer m-r-10 deleteall" })
+                            </span>
+                        }
+                        @Html.ActionLink("繼續選購", "Index", "ShoppingHome", new { CartId = Model.mycart.fCartId }, new { @class = "flex-c-m stext-101 cl0 size-119 bg3 bor13 hov-btn3 p-lr-15 trans-04 pointer m-r-10" })
+                        <!--待改變連結位置-->
+                        <button class="flex-c-m stext-101 cl0 size-119 bg3 bor13 hov-btn3 p-lr-15 trans-04 pointer m-r-10" onclick="fn彈出視窗()">立即結帳</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade p-t-92" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-20" id="exampleModalLabel">商品圖片</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="detail_pictureblock">
+
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators" id="pictureslide">
+                    </ol>
+                    <div class="carousel-inner" id="insertimg">
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <span class="carousel-control-custom-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-custom-icon" aria-hidden="true">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log("ready!");
+        });
+
+        $("#selectall").on("click", function () {
+            $(".case").prop("checked", this.checked);
+            $("#count").text("共 " + countNum() + " 項商品");
+            $("#totalamount").text("NT$" + sumAmount());
+        });
+
+        $(".case").on("click", function () {
+            if ($(".case").length == $(".case:checked").length) {
+                $("#selectall").prop("checked", true);
+            }
+            else {
+                $("#selectall").prop("checked", false);
+            }
+
+            $("#count").text("共 " + countNum() + " 項商品");
+            $("#totalamount").text("NT$" + sumAmount());
+        });
+
+        function countNum() {
+            var cb = document.getElementsByClassName("case");
+            var count = 0;
+            for (var i = 0; i < cb.length; i++) {
+                if (cb[i].checked) {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        function sumAmount() {
+            var cb = document.getElementsByClassName("case");
+            var totalamount = 0;
+            for (var i = 0; i < cb.length; i++) {
+                if (cb[i].checked) {
+                    totalamount += parseInt($(cb[i]).parent().siblings().eq(2).text());
+                }
+            }
+            return totalamount;
+        }
+
+        $(function () {
+            //刪除單一商品
+            $(".deletethis").click(function (e) {
+                // 停止事件的默認動作,<a>不會再執行「連結到某個網址」這個動作
+                e.preventDefault();
+                var _form = $(this).closest("form");
+                //get a reference to the container form
+                const swal = Swal.mixin();
+
+                swal.fire({
+                    title: '刪除',
+                    text: "確定要將商品刪除?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '確認',
+                    cancelButtonText: '取消',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        swal.fire(
+                            '成功刪除!',
+                            '已將購物車內的商品刪除',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                _form.submit();
+                            }
+                        })
+                    }
+                });
+            });
+
+
+            //刪除全部商品
+            $(".deleteall").click(function(e) {
+                // 停止事件的默認動作,<a>不會再執行「連結到某個網址」這個動作
+                e.preventDefault();
+                var _form = $(this).closest("form");
+                //get a reference to the container form
+                const swal = Swal.mixin();
+
+                swal.fire({
+                    title: '刪除',
+                    text: "確定要將商品全部刪除?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '確認',
+                    cancelButtonText: '取消',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        swal.fire(
+                            '成功刪除!',
+                            '已將購物車內的商品全部刪除',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                _form.submit();
+                            }
+                        })
+                    }
+                });
+            });
+        })
+
+
+        function fn彈出視窗() {
+            $.ajax({
+                url: "/ShoppingHome/ToDetial",
+                type: "POST",
+                success: function (msg) {
+                    if (msg >=@Model.TotalAmount) {
+                        Swal.fire({
+                            title: "訂單確認",
+                            text: "您的瑪妮幣:" + msg + " 訂單總計:" +@Model.TotalAmount,
+                            imageUrl: 'https://cdn3.iconfinder.com/data/icons/finance-152/64/24-256.png',
+                            imageWidth: 200,
+                            imageHeight: 200,
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: '確定',
+                            cancelButtonText: '反悔'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.fire(
+                                    '訂單新增完成!',
+                                    '您的瑪妮幣剩餘:' + (msg - @Model.TotalAmount),
+                                    'success'
+                                ).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "../ShoppingHome/CartView";
+                                    }
+                                });
+                                $.ajax({
+                                    url: "/ShoppingHome/ToOrder",
+                                    type: "POST",
+                                    data: { totalprice: @Model.TotalAmount, remain: msg - @Model.TotalAmount, cartId: @Model.mycart.fCartId},
+                                    success: function (msg) {
+                                        console.log("新增訂單成功");
+                                        }
+                                    });
+                            }
+                        })
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '您的瑪妮幣不足!',
+                            text: '您的瑪妮幣剩餘:' + msg+' 請前往儲值~',
+                        })
+                    }
+                }
+            });
+            //Swal.fire({
+            //    title: 'Are you sure?',
+            //    text: "You won't be able to revert this!",
+            //    imageUrl: 'https://cdn3.iconfinder.com/data/icons/finance-152/64/24-256.png',
+            //    showCancelButton: true,
+            //    confirmButtonColor: '#3085d6',
+            //    cancelButtonColor: '#d33',
+            //    confirmButtonText: 'Yes, delete it!'
+            //}).then((result) => {
+            //    if (result.isConfirmed) {
+            //        Swal.fire(
+            //            'Deleted!',
+            //            'Your file has been deleted.',
+            //            'success'
+            //        )
+            //    }
+            //})
+            //Swal.fire(
+            //    "查詢作業失敗", //標題
+            //    "您所輸入的序號不存在或是系統被玩壞了!", //訊息內容(可省略)
+            //    "error" //圖示(可省略) success/info/warning/error/question
+            //    //圖示範例：https://sweetalert2.github.io/#icons
+            //);
+        }
+
+    </script>
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        fn商品詳細圖片查詢事件(".detail_picture", "@Url.Action("ProductPicture", "ShoppingAccountCenter")")
+    });
+    function fn商品詳細圖片查詢事件(selector,URL) {
+        $(selector).on("click", function () {
+            let productid = $(this).data("productid");
+            $.ajax({
+                type: 'POST',
+                url: URL,
+                data: { ProductId: productid },
+                success: function (msg) {
+                    var obj = JSON.parse(msg);
+                    //清空內容
+                    $("#insertimg").empty();
+                    $("#pictureslide").empty();
+                    //forEach動態生成標籤
+                    obj.forEach((items, index) => {
+                        $("#pictureslide").append(`<li data-target="#carouselExampleIndicators" data-slide-to="${index}" class=""></li>`);
+                        $("#insertimg").append(`<div class="carousel-item">
+                                                <img class= "d-block w-100" src = "${items.fPicture}" alt = "First slide" >
+                                                </div >`
+                        );
+
+                        $(".carousel-item").first().addClass("active");
+                        $(".carousel-indicators li").first().addClass("active");
+                    })
+                }
+            });
+        });
+    }
+    </script>
+}

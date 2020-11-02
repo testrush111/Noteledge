@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Models.NoteModels.CVersion>
+@helper fnLsVersion()
+{
+    <div class="list-group" style=" height: 100px; overflow-y: scroll;">
+        <ul class="bg0" style="border-color:grey">
+            @foreach (var version in Model)
+            {
+                <li class="version_list template_list list-group-item-action fs-15 p-l-10 p-t-5" style="cursor:pointer;" data-versionid="@version.fVersionId" data-noteid="@version.fNoteId">
+                    <span class="material-icons" style="vertical-align: middle;">
+                        alarm
+                    </span>
+                    @version.fEditDateTime
+                </li>
+            }
+
+        </ul>
+    </div>
+    <div id="version_content" class="version_content">
+        <div id="version_editor" style="background: #fff;height: 300px;" class="ql-container ql-snow">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button id="closeVersionSection" class="btn btn-danger">關閉</button>
+        <button id="revertVersion" class="btn btn-success">回復</button>
+    </div>
+}
+
+@fnLsVersion()
+<script>
+    var quill2 = new Quill("#version_editor", {
+        theme: "bubble" // 模板
+    });
+    quill2.editor.enable(false);
+    $(document).ready(function () {
+        $("#closeVersionSection").click(function () {
+            $("#version_block").hide();
+        });
+
+        $("#revertVersion").click(function () {
+            let NoteId = $(".select_version").data("noteid");
+            //取得版本紀錄編輯器的內容
+            var JsonContent = JSON.stringify(quill2.getContents());
+            console.log("筆記回復");
+
+            //筆記回復
+            $.ajax({
+                url: "@Url.Action("UpdateVersion", "Note")",
+                type: "POST",
+                dataType: "html",
+                data: { NoteId: NoteId, JsonContent: JsonContent},
+                success: function (msg) {
+                    console.log(msg);
+                    //alert("已回復此版本！");
+                    quill.setContents("");
+                    quill.setContents(JSON.parse(JsonContent));
+
+                    const swal = Swal.mixin();
+                    swal.fire({
+                        title: '版本回復',
+                        text: "已經回復此版本",
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: '確認'
+                    })
+                }
+            });
+        });
+    });
+
+    $(".version_list").on("click", (function () {
+        //點選某一個紀錄的versionid
+        let versionid = $(this).data("versionid");
+        $(this).addClass("select_version");
+        $(".version_list").not(this).removeClass("select_version");
+        $.ajax({
+            url: "@Url.Action("SearchVersionJsonContent", "Note")",
+            type: "POST",
+            dataType: "html",
+            data: { Versionid: versionid},
+            success: function (msg) {
+                console.log(msg);
+                quill2.setContents("");
+                quill2.setContents(JSON.parse(msg));
+            }
+        });
+    }));
+</script>

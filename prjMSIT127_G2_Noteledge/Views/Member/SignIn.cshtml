@@ -1,0 +1,333 @@
+﻿@model Models.MemberModels.CMember
+
+@{
+    ViewBag.Title = "SignIn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<style>
+    label {
+        font-weight: 900;
+    }
+    .county {
+     display:none
+    }
+    .a {
+        margin-right: 0px
+    }
+
+    body {
+        background-color: #F4EFEB;
+        font-family: 'cwTeXYen', sans-serif;
+    }
+
+    .main {
+        background-color: #FFFFFF;
+        width: 850px;
+        height: 700px;
+        margin: 7em auto;
+        margin-top:100px;
+        margin-bottom:0px;
+        border-radius: 1.5em;
+        box-shadow: 0px 11px 35px 2px rgba(0, 0, 0, 0.14);
+    }
+
+    .sign {
+        padding-top: 40px;
+        color: #8C55AA;
+        font-family: 'cwTeXYen', sans-serif;
+        font-weight: bold;
+        font-size: 23px;
+    }
+
+    .un {
+        width: 76%;
+        color: rgb(38, 50, 56);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+        background: rgba(136, 126, 126, 0.04);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0.02);
+        margin-bottom: 50px;
+        margin-left: 46px;
+        text-align: center;
+        margin-bottom: 27px;
+        font-family: 'cwTeXYen', sans-serif;
+        font-size: 16px
+    }
+
+    form.form1 {
+        padding-top: 40px;
+    }
+
+    .pass {
+        width: 76%;
+        color: rgb(38, 50, 56);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+        background: rgba(136, 126, 126, 0.04);
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        outline: none;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0.02);
+        margin-bottom: 50px;
+        margin-left: 46px;
+        text-align: center;
+        margin-bottom: 27px;
+        font-family: 'cwTeXYen', sans-serif;
+        font-size:16px
+    }
+
+
+        .un:focus, .pass:focus {
+            border: 2px solid rgba(0, 0, 0, 0.18) !important;
+        }
+
+    .submit {
+        cursor: pointer;
+        border-radius: 5em;
+        color: #fff;
+        background: linear-gradient(to right, #9C27B0, #E040FB);
+        border: 0;
+        padding-left: 40px;
+        padding-right: 40px;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        font-family: 'cwTeXYen', sans-serif;
+        margin-left: 35%;
+        font-size: 13px;
+        box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    }
+
+    .forgot {
+        text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+        color: #E1BEE7;
+        padding-top: 15px;
+    }
+
+    a {
+        text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
+        color: #E1BEE7;
+        text-decoration: none
+    }
+
+    .Demo {
+        background-color: white;
+        color: black;
+        border: 2px solid #008CBA;
+        position:absolute;
+        top:100px;
+        left:350px
+    }
+
+    .Demo:hover {
+            background-color: #008CBA;
+            color: white;
+    }
+
+</style>
+
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+    <title>Sign in</title>
+</head>
+
+<section class="p-lr-15 p-tb-92" style="padding-top: 40px;padding-bottom:10px;background-color:#F4EFEB">
+    <button class="Demo"x onclick="NewMerberDemo()">新使用者</button>
+    @using (Html.BeginForm("SignIn", "Member", FormMethod.Post, new { id = "DemoForm" }))
+    {
+
+        @Html.AntiForgeryToken()
+        <div class="main" style="padding-top:40px;padding-left:50px;margin-bottom: 40px;height: 720px;">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group" style="width:400px;float:left">
+                @Html.LabelFor(model => model.fFirstName, "姓氏:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input class="un" id="fFirstName" name="fFirstName" placeholder="例:郭" type="text" value="" required />
+                    @Html.ValidationMessageFor(model => model.fFirstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group" style="width:400px;float:left">
+                @Html.LabelFor(model => model.fLastName, "名字:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input class="un" id="fLastName" name="fLastName" placeholder="例:先生" type="text" value="" required />
+                </div>
+            </div>
+
+            <div class="form-group" style="width: 400px; float: left; margin-bottom: 45px;">
+                <label class="control-label col-md-2" for="fGender" style="margin-top:15px">性別:</label>
+                <div class="col-md-10">
+                    <input style="float:left;margin-left:100px" checked="checked" id="fGender" name="fGender" type="radio" value="M" /><p style="float:left">男(M)</p>
+                    <input style="float:left;margin-left:30px" id="fGender" name="fGender" type="radio" value="F" /><p style="float:left">女(F)</p>
+                </div>
+            </div>
+
+            <div class="form-group" style="width:400px;float:left">
+                @Html.LabelFor(model => model.fTheNickName, "暱稱:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input class="un" maxlength=15 id="fTheNickName" name="fTheNickName" placeholder="例:小明" type="text" value="" required />
+                </div>
+            </div>
+
+            <div class="form-group" style="width:400px;float:left">
+                @Html.LabelFor(model => model.fAccount, "信箱:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input class="un" maxlength=100 min=10 id="fAccount" name="fAccount" placeholder="例:xxxxxxx@gmail.com" type="email" value="" required />
+                </div>
+            </div>
+
+            <div class="form-group" style="width:400px;float:left">
+                @Html.LabelFor(model => model.fPassword, "密碼:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10" style="width: 270px; float: left; padding-right: 0px;">
+                    <input class="pass" minlength=5 maxlength=25 id="fPassword" name="fPassword" placeholder="例:123456789" type="password" value="" required />
+                </div>
+                <img id="EyeOpenClose" src="https://i.imgur.com/nck1Kf4.png" onclick="ChangePasswordText()" style="margin-top:10px;float:left;cursor: pointer" />
+            </div>
+
+            <div class="form-group" style="width:400px;float:left">
+                <label class="control-label col-md-2" for="fBirthDay">生日:</label>
+                <div class="col-md-10" style="float:left">
+                    <input style="width: 224.5px;margin-left: 50px" class="form-control text-box single-line" max="@ViewBag.Today" id="fBirthDay" name="fBirthDay" type="date" value="" required />
+                </div>
+            </div>
+
+            <div class="form-group" style="width:400px;float:left">
+                @Html.LabelFor(model => model.fMobilePhone, "手機:", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <input class="un" id="fMobilePhone" name="fMobilePhone" placeholder="例:0911-111111" type="text" pattern="\d{4}\d{6}" value="" required />
+                    @Html.ValidationMessageFor(model => model.fMobilePhone, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div>
+                <label class="control-label col-md-2" for="fTheAddress">地址:</label>
+                <div class="form-group" id="zipcode" style="width:125px;margin-left:65px;float:left;margin-bottom:20px"></div>
+                <input style="margin-top:20px;width:500px" class="un" id="fTheAddress" name="fTheAddress" placeholder="例:XX路XX巷" type="text" value="" required />
+            </div>
+
+
+            <div style="color:red">
+                @ViewBag.Message
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="button" value="註冊" class="submit" style="background: #8ED0D4; font-weight: 900; padding: 15px;margin-left: 45px;width: 630px;" onclick="fn彈出視窗()" />
+                </div>
+            </div>
+        </div>
+    }
+
+
+</section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+<script src="~/Scripts/jquery.twzipcode-1.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    $("#zipcode").twzipcode({
+        css: ["city form-control", "town form-control", "county", "district"], // 自訂 "城市"、"地區" class 名稱
+        countyName: "fCity", // 自訂城市 select 標籤的 name 值
+        districtName: "fTown", // 自訂地區 select 標籤的 name 
+        countySel: "台北市",
+        districtSel: "大安區",
+        zipcodeIntoDistrict: true,
+    });
+
+</script>
+
+@section Scripts {
+    <script>
+
+        function ChangePasswordText() {
+            var PasswordText = document.getElementById("fPassword");
+            var Eye = document.getElementById("EyeOpenClose");
+            if (PasswordText.type == "password") {
+                PasswordText.type = "text";
+                Eye.src = "https://i.imgur.com/zGVqn8u.png"
+            } else {
+                PasswordText.type = "password";
+                Eye.src = "https://i.imgur.com/nck1Kf4.png"
+            }
+        }
+
+        //Demo鍵-------------------------------------------------------------------------------------------------\\
+        function NewMerberDemo() {
+            var FastName = "汪";
+            var LastName = "嘉承";
+            var NickName = "大安朴敘俊";
+            var Email = "notedgewjc2020@gmail.com";
+            var Password = "inno2100";
+            var BirthDay = "1997-08-19";
+            var Phone = "0983915326"
+            var Address = "和平東路二段106號3樓";
+            $("#fFirstName").val(FastName);
+            $("#fLastName").val(LastName);
+            $("#fTheNickName").val(NickName);
+            $("#fAccount").val(Email);
+            $("#fPassword").val(Password);
+            $("#fBirthDay").val(BirthDay);
+            $("#fMobilePhone").val(Phone);
+            $("#fTheAddress").val(Address);
+        }
+
+        function fn彈出視窗() {
+            Swal.fire({
+                title: '您確定資料正確嗎?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText:"取消",
+                confirmButtonText: '確定',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var data = $("#DemoForm").serialize();
+                    $.ajax({
+                        type: "POST",
+                        url: "/Member/SignIn",
+                        data: data,
+                        success: function (data) {
+                            var status = data;
+                            //var statue = JSON.Parse(data)  JSON
+                            if (status == "新增成功") {
+                                Swal.fire(
+                                    status,
+                                    '',
+                                    'success'
+                                ).then((result) =>
+                                {
+                                    if (result.isConfirmed)
+                                    {
+                                        window.location.href = "../Member/Login"
+                                    }
+                                });
+                            };
+                            if (status == "新增失敗") {
+                                Swal.fire(
+                                    status,
+                                    'Email信箱與人重複，請重新輸入',
+                                    'error'
+                                )
+                                return;
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+}

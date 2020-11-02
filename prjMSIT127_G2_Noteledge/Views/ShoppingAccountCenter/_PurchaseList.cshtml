@@ -1,0 +1,118 @@
+﻿@using Models.MemberModels
+@model prjMSIT127_G2_Noteledge.ViewModel.CPurchaseListVM
+@{
+    ViewBag.Title = "_PurchaseList";
+    CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+
+}
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="fs-18">
+                    購買清單
+                </h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        @Html.ActionLink("筆記商城", "Index", "ShoppingHome")
+                    </li>
+                    <li class="breadcrumb-item active">購買清單</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="content col-md-8" style=" margin: 0 auto;float: none;">
+    @foreach (var order in Model.lsOrder.OrderByDescending(o => o.fPurchaseDate))
+    {
+        <div class="col-md-12">
+            <div class="card card-outline card-info">
+                <div class="card-header">
+                    <h3 class="card-title">訂單編號: OT_@order.fPurchaseDate.Year@order.fPurchaseDate.Month@order.fPurchaseDate.Day@order.fOrderId</h3>
+                    <div class="card-tools">
+
+                        <button type="button" class="btn btn-warning btn-sm float-l fs-16" id="addnewbtn">
+                            <i class="fas fa-plus"></i> @Html.ActionLink("加入評價", "ToRank", "ShoppingHome", new { orderid = order.fOrderId }, new { style = "color:black;" })
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+
+                    </div>
+                    <!-- /.card-tools -->
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr style="text-align:center">
+                                <th>商品封面</th>
+                                <th>商品名稱</th>
+                                <th>賣家帳號</th>
+                                <th>金額</th>
+                            </tr>
+                        </thead>
+                        <tbody style ="text-align:center">
+
+                            @foreach (var detailorder in Model.lsOrderDetail.Where(o => o.fOrderId == order.fOrderId))
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@detailorder.fPhoto" style="width:80px" />
+                                    </td>
+                                    <td>@detailorder.fName</td>
+
+
+                                    @foreach (var product in Model.lsProductPicture.Where(p => p.fProductId == detailorder.fProductId))
+                                    {
+                                        <td>@Model.lsMemberSeller.FirstOrDefault(s => s.fMemberId == product.fMemberSellerId).fTheNickName</td>
+                                    }
+
+
+                                    @if (detailorder.fPrice == 0)
+                                    {
+                                        <td>
+                                            <span class="badge bg-success float-r fs-16">免費</span>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <span class="badge bg-danger float-r  fs-16">@detailorder.fPrice.ToString("c0")</span>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                            </tbody>
+</table>
+
+                </div>
+                <div class="card-footer">
+                    @if (order.fTotalPrice == 0)
+                    {
+                        <h5>
+                            訂單時間: @order.fPurchaseDate
+                            <span class="badge bg-success float-r  fs-18">免費</span>
+                        </h5>
+                    }
+                    else
+                    {
+                        <h5>
+                            訂單時間: @order.fPurchaseDate
+                            <span class="badge bg-danger float-r fs-18">總金額:@order.fTotalPrice.ToString("c0")</span>
+                        </h5>
+                    }
+
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+
+    }
+
+
+</section>

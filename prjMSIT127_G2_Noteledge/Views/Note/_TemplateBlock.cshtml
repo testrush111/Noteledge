@@ -1,0 +1,87 @@
+﻿@model IEnumerable<prjMSIT127_G2_Noteledge.Models.NoteModels.CTemplate>
+
+@helper fnLsTemplate()
+{
+    <div id="tamplate_title">我的模板 </div>
+    
+    <div class="list-group">
+        @foreach (var t in Model)
+        {
+            <button data-templateid="@t.fTemplateId" type="button" class="template_list list-group-item list-group-item-action fs-18">@t.fName</button>
+        }
+    </div>
+    <div id="template_content" class="template_content">
+        <div id="template_editor" style="background: #fff;" class="ql-container ql-snow">
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button id="closeTemplate" class="btn btn-danger">關閉</button>
+        <button id="useTemplate" class="btn btn-success">套用</button>
+    </div>
+}
+
+@fnLsTemplate()
+<script>
+    var quill3 = new Quill("#template_editor", {
+        theme: "bubble" // 模板
+    });
+    quill3.editor.enable(false);
+    $(document).ready(function () {
+        //查詢樣板
+        $(".template_list").on("click", function () {
+            //樣板ID
+            let TemplateId = $(this).data("templateid");
+            $(".template_list").removeClass("select_template");
+            $(this).addClass("select_template");
+            $.ajax({
+                url: "@Url.Action("SearchTemplateContent", "Note")",
+                type: "POST",
+                dataType: "html",
+                data: { TemplateId: TemplateId },
+                success: function (msg) {
+                    quill3.setContents("");
+                    quill3.setContents(JSON.parse(msg));
+                }
+            });
+        });
+        //使用套版
+        $("#useTemplate").on("click", function () {
+                //預設資料夾ID
+            let FolderId = $(".folder_list").filter(function () {
+                    return this.innerHTML === '未分類筆記';
+                }).data("folderid");
+            //樣板名稱
+            let TxtNewNoteName = $(".select_template").text();
+            //樣板內容
+            let Content = JSON.stringify(quill3.getContents());
+
+            $.ajax({
+                url: "@Url.Action("AddTemplate", "Note")",
+                type: "POST",
+                dataType: "html",
+                data: { FolderId: FolderId, TxtNewNoteName: TxtNewNoteName, Content: Content },
+                success: function (msg) {
+                    let noteid = msg;
+                    let folder_list_id = "#folder_list_id_" + FolderId;
+                    $(folder_list_id).nextAll("li").show();
+                    $(folder_list_id).parent().append("<li class='note_list p-l-20 m-tb-5' data-noteid='" + noteid + "' style='display:list-item' oncontextmenu='return false;'><a class='fs-17 m-l-20'>" + TxtNewNoteName + "</a></li>");
+
+                    $("#template_block").hide();
+
+                    swal.fire({
+                        title: '樣板新增',
+                        text: "已經成功新增樣板！",
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: '確認',
+                        reverseButtons: true
+                    });
+                }
+            });
+        });
+        //關閉樣板
+        $("#closeTemplate").on("click", function () {
+            $("#template_block").hide();
+        });
+    });
+</script>

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "prjMSIT127_G2_Noteledge", "prjMSIT127_G2_Noteledge\prjMSIT127_G2_Noteledge.csproj", "{ECDA8AE7-6E84-48A1-9646-8C32C13FCFC9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECDA8AE7-6E84-48A1-9646-8C32C13FCFC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDA8AE7-6E84-48A1-9646-8C32C13FCFC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECDA8AE7-6E84-48A1-9646-8C32C13FCFC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECDA8AE7-6E84-48A1-9646-8C32C13FCFC9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D8822B8C-BE0E-4751-BD73-92F8F948A7B3}
+	EndGlobalSection
+EndGlobal

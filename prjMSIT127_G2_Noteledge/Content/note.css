@@ -1,0 +1,219 @@
+﻿.select_version {
+    background-color: #D5E7E4;
+    color: #2C3E4E;
+}
+.select_note {
+    background-color: #D5E7E4;
+}
+.select_note a {
+    color: white;
+}
+/*.image-parent {
+    max-width: 40px;
+}*/
+
+.ui-sortable :hover {
+    background-color: #F1F7F6;
+}
+/*==========================================================*/
+/*我的模板區塊*/
+#template_block {
+    border-radius: 20px;
+    padding: 0px;
+    background-color: #F1F7F6;
+    width: 400px;
+    top: 10%;
+    left: 40%;
+    position: absolute;
+    display: none;
+}
+/*我的模板內容*/
+#template_content {
+    overflow-y: auto;
+    height: 200px;
+    margin: 20px;
+}
+.list-group {
+    /*display: inline-block;*/
+    /*margin-left: 20px;*/
+    width: 90%;
+    margin:10px auto;
+}
+/*我的模板標頭*/
+#tamplate_title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    font-size: 20px;
+    font-weight: bold;
+    background: #65C2C6;
+    color: white;
+    border-radius: 10px 10px 0 0;
+}
+/*版本紀錄區塊*/
+#version_block {
+    border-radius: 20px;
+    padding: 0px;
+    background-color: #F1F7F6;
+    width: 400px;
+    top: 10%;
+    left: 40%;
+    position: absolute;
+    display: none;
+
+}
+/*版本紀錄標頭*/
+#version_block_title {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    font-size: 20px;
+    font-weight: bold;
+    /*background: #65C2C6;*/
+    color: white;
+    border-radius: 10px 10px 0 0;
+}
+/*版本紀錄內容*/
+#version_content {
+    height: 100%;
+    margin: 20px;
+}
+/*垃圾桶區塊*/
+#trash_block {
+    padding: 10px;
+    overflow-y: auto;
+    height: 300px;
+    width: 250px;
+    top: 36%;
+    position: absolute;
+    display: none;
+    z-index: 9999;
+}
+
+.list-group li:hover {
+    background-color: #F0F0F0;
+}
+/*垃圾桶圖示*/
+.trash_img {
+    /*padding-right: 0px;
+    display: inline-block;
+    float: right;*/
+}
+
+#add_note_menu {
+    border-radius: 20px;
+    padding: 0px;
+    background-color: #F1F7F6;
+    width: 250px;
+    top: 200px;
+    left: 200px;
+    position: absolute;
+    display: none;
+}
+
+    #add_note_menu input, select {
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+#folder_menu {
+    /*background-color: white;
+    position: absolute;
+    display: none;*/
+    display: none;
+    background-color: #F4EFEB;
+    border-radius: 10px;
+    box-shadow: 0 5px 5px rgba(64,64,64, 0.15);
+    position: absolute;
+    left: 100%;
+    right: 0;
+    z-index: 100;
+    width: 10%;
+    top: 0;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+    #folder_menu p:hover {
+        background-color: #E8DCD5;
+        border-radius: 5px;
+    }
+
+#note_menu {
+    /*background-color: white;
+    position: absolute;
+    display: none;*/
+    display: none;
+    background-color: #F4EFEB;
+    border-radius: 10px;
+    box-shadow: 0 5px 5px rgba(64,64,64, 0.15);
+    position: absolute;
+    left: 100%;
+    right: 0;
+    z-index: 100;
+    width: 10%;
+    top: 0;
+    flex-direction: column;
+    margin-top: 15px;
+}
+    #note_menu p:hover {
+        background-color: #E8DCD5;
+        border-radius: 5px;
+    }
+
+/*.content {
+    width: 600px;
+    float: left;
+}*/
+/*筆記編輯區*/
+/*#editor {
+    overflow-y: auto;
+    height: 100px;
+}
+
+.lsSlideNav {
+    background-color: #8ed0d4;
+    width: 250px;
+    height: 700px;
+    float: left;
+}
+
+    .lsSlideNav ul {
+        width: 100%;
+        list-style: none;
+        padding-left: 10px;
+    }
+
+        .lsSlideNav ul li {
+            color: white;
+            font-size: 1.5em;
+            display: block;
+            border-radius: 5px;
+        }*/
+
+.selected {
+    background-color: #8ED0D4;
+    border-radius:5px;
+}
+
+/*.lsNote {
+    width: 250px;
+    height: 100%;
+    float: left;
+}*/
+
+.lsNote ul li {
+    list-style: none;
+    /*margin-left: 18px;*/
+    display: none;
+}
+
+/*   .lsNote a {
+        text-decoration: none;
+        color: black;
+    }*/
+

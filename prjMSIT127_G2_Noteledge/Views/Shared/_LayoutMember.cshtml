@@ -1,0 +1,74 @@
+﻿@using Models.MemberModels
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note$edge | 讓知識變成價值</title>
+
+    <!-- Google Font:圓體字體 -->
+    <link href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css" rel="stylesheet">
+    <!--Google ICON-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @{
+        CMember member = Session[CMemberSession.Session_Login_User] as CMember;
+    }
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Note$edge", "MyHome", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    @if (member.fIsVIP == true)
+                    {
+                        <ul class="nav navbar-nav">
+                            <li style="margin-left:400px">@Html.ActionLink("我的筆記", "Index", "Note")</li>
+                            <li>@Html.ActionLink("筆記商城", "Index", "ShoppingHome")</li>
+                            <li>@Html.ActionLink("管理員", "HomePage", "ManagerSystem")</li>
+                            <li>@Html.ActionLink("會員設定", "MemberSetup", "Member")</li>
+                            <li>@Html.ActionLink("會員通知", "MemberNotice", "Member")</li>
+                            <li>@Html.ActionLink("會員訂單", "MemberOrder", "Member")</li>
+                            <li>@Html.ActionLink("登出", "Index", "Home")</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="nav navbar-nav">
+                            <li style="margin-left:350px">@Html.ActionLink("我的筆記", "Index", "Note")</li>
+                            <li>@Html.ActionLink("筆記商城", "Index", "ShoppingHome")</li>
+                            <li>@Html.ActionLink("管理員", "HomePage", "ManagerSystem")</li>
+                            <li>@Html.ActionLink("會員設定", "MemberSetup", "Member")</li>
+                            <li>@Html.ActionLink("會員通知", "MemberNotice", "Member")</li>
+                            <li>@Html.ActionLink("會員訂單", "MemberOrder", "Member")</li>
+                            <li>@Html.ActionLink("成為VIP", "LvVIP", "Member")</li>
+                            <li>@Html.ActionLink("登出", "Index", "Home")</li>
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+   
+</body>
+</html>
+
+@RenderSection("scripts", required: false)
